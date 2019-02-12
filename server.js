@@ -1,22 +1,15 @@
-//express is the web framework we’re using to work with node.
 var express = require('express');
 var app = express();
-//bodyparser is mainly for parsing json.
 var bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
 const multer = require('multer');
-const router = express.Router();
 
 
-//To be able to access our API from an angular application, we need to enable cors.
 const cors = require('cors')
-//We configure it to allow any domain by creating an option-object.
 const corsOptions = {
   origin: '*',
   optionsSuccessStatus: 200
 }
-//We tell express to use the cors-middleware with our configuration.
 app.use(cors(corsOptions))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -92,6 +85,19 @@ function initial() {
   });
 
 }
+// ---- Authentication ----
+require('rootpath')();
+
+const jwt = require('./app/helpers/jwt');
+const errorHandler = require('./app/helpers/error-handler');
+
+// use JWT auth to secure the api
+app.use(jwt());
+// api routes
+app.use('/auths', require('./app/controller/auth.controller'));
+// global error handler
+app.use(errorHandler);
+
 
 // ---- Create a Server ----
 var server = app.listen(8080, function () {

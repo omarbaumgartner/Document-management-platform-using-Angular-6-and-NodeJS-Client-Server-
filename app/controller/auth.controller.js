@@ -1,34 +1,21 @@
-const db = require('../config/db.config.js');
-const User = db.users;
+const express = require('express');
+const router = express.Router();
+const userService = require('../services/auth.service');
 
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
+// routes
+router.post('/authenticate', authenticate);
+router.get('/', getAll);
 
-exports.signin = (req, res) => {
-    console.log("Sign-In");
+module.exports = router;
 
-    User.findOne({
-        where: {
-            email: req.body.email
-        }
-    }).then(user => {
-        if (!user) {
-            return res.status(404).send('User Not Found.');
-        }
+function authenticate(req, res, next) {
+    userService.authenticate(req.body)
+        .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
+        .catch(err => next(err));
+}
 
-        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!passwordIsValid) {
-            return res.status(401).send({ auth: false, accessToken: null, reason: "Invalid Password!" });
-        }
-
-        var token = jwt.sign({ id: user.id }, config.secret, {
-            expiresIn: 86400 // expires in 24 hours
-        });
-
-        res.status(200).send({ auth: true });
-        console.log("Success");
-        console.log(auth);
-    }).catch(err => {
-        res.status(500).send('Error -> ' + err);
-    });
+function getAll(req, res, next) {
+    userService.getAll()
+        .then(users => res.json(users))
+        .catch(err => next(err));
 }
