@@ -1,0 +1,104 @@
+//express is the web framework we’re using to work with node.
+var express = require('express');
+var app = express();
+//bodyparser is mainly for parsing json.
+var bodyParser = require('body-parser');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
+const router = express.Router();
+
+
+//To be able to access our API from an angular application, we need to enable cors.
+const cors = require('cors')
+//We configure it to allow any domain by creating an option-object.
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200
+}
+//We tell express to use the cors-middleware with our configuration.
+app.use(cors(corsOptions))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+const db = require('./app/config/db.config.js');
+// force: true will drop the table if it already exists
+db.sequelize.sync({ force: false }).then(() => {
+  console.log('Drop and Resync with { force: false }');
+  initial();
+});
+
+// ---- Routes Imports ----
+require('./app/route/user.route.js')(app);
+require('./app/route/doc.route.js')(app);
+require('./app/route/auth.route.js')(app);
+
+
+function initial() {
+
+  // ---- Users ----
+  let users = []
+
+  // Init data -> save to MySQL
+  const User = db.users;
+  for (let i = 0; i < users.length; i++) {
+    User.create(users[i]);
+  }
+
+  // ---- Docs ----
+  let docs = []
+  // Init data -> save to MySQL
+  const Doc = db.docs;
+  for (let i = 0; i < docs.length; i++) {
+    Doc.create(docs[i]);
+  }
+
+  // ---- Upload ----
+  const DIR = './uploads';
+  let storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, DIR);
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.fieldname + '-' + Date.now() + '.' + path.extname(file.originalname));
+    }
+  });
+  let upload = multer({ storage: storage });
+
+
+  app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+  });
+  app.get('/api', function (req, res) {
+    res.end('file catcher example');
+  });
+  app.post('/api/upload', upload.single('photo'), function (req, res) {
+    if (!req.file) {
+      console.log("No file received");
+      return res.send({
+        success: false
+      });
+    } else {
+      console.log('file received');
+      return res.send({
+        success: true
+      })
+    }
+  });
+
+}
+
+// ---- Create a Server ----
+var server = app.listen(8080, function () {
+
+  let host = server.address().address
+  let port = server.address().port
+
+  console.log("App listening at http://%s:%s", host, port);
+})
+

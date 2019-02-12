@@ -1,0 +1,29 @@
+{
+  "name": "nodejs-express-sequelizejs-postgresql",
+  "version": "1.0.0",
+  "description": "nodejs-express-sequelizejs-postgresql",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "NodeJs-Express-RestAPIs-SequelizeJs-CRUD-PostgreSQL"
+  ],
+  "author": "JSA",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "formidable": "^1.2.1",
+    "jsonwebtoken": "^8.4.0",
+    "multer": "^1.4.1",
+    "pg": "^7.8.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.42.0",
+    "swagger-ui-express": "^4.0.2"
+  },
+  "devDependencies": {}
+}
