@@ -1,0 +1,30 @@
+<div class="row">
+  <aside class="col-sm-6">
+    <div class="card">
+      <article class="card-body">
+        <a href="" class="float-right btn btn-outline-primary">Sign up</a>
+        <h4 class="card-title mb-4 mt-1">Sign in</h4>
+        <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label>Your email</label>
+            <input type="email" id="email" class="form-control" placeholder="Email" formControlName="email">
+          </div> <!-- form-group// -->
+          <div class="form-group">
+            <label>Your password</label>
+            <input type="password" id="password" class="form-control" placeholder="******" formControlName="password">
+          </div> <!-- form-group// -->
+          <div class="form-group">
+            <div class="checkbox">
+              <label> <input type="checkbox"> Save password </label>
+            </div> <!-- checkbox .// -->
+          </div> <!-- form-group// -->
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block" [disabled]="signInForm.invalid"> Login </button>
+          </div> <!-- form-group// -->
+          <p class="text-danger">{{ errorMessage }}</p>
+          <a class="float-right" href="#">Forgot?</a>
+        </form>
+      </article>
+    </div> <!-- card.// -->
+  </aside>
+</div>

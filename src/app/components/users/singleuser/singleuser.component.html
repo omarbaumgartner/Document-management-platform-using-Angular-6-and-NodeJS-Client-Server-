@@ -1,0 +1,99 @@
+<div class="container">
+  <h2 *ngIf=!modify><span class="badge badge-light">{{user.firstname}}&nbsp;{{user.lastname}}</span></h2>
+
+  <!-- If Not Modify -->
+  <div class="w-75 p-3">
+    <div style="float:right;position:relative;z-index: 2;"><span (click)="delete()" *ngIf=!modify
+        class="btn btn-danger"><i class="fas fa-minus-circle"></i></span></div>
+    <div style="float:right;position:relative;z-index: 2;"><span (click)="onModify()" *ngIf=!modify
+        class="btn btn-info"><i class="far fa-edit"></i></span></div>
+    <div *ngIf=!modify class="list-group-item">
+      <div class="form-group">
+        <label style="font-weight: bold;" for="firstname">First Name :</label> &nbsp;
+        <span>{{user.firstname}}</span>
+      </div>
+
+      <div class="form-group">
+        <label style="font-weight: bold;" for="lastname">Last Name :</label> &nbsp;
+        <span>{{user.lastname}}</span>
+      </div>
+
+      <div class="form-group">
+        <label style="font-weight: bold;" for="role">Role :</label> &nbsp;
+        <span>{{user.role}}</span>
+      </div>
+
+      <div class="form-group">
+        <label style="font-weight: bold;" for="email">Email :</label> &nbsp;
+        <span>{{user.email}}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- If Modify -->
+  <div [hidden]="submitted" class="w-75 p-3">
+    <form *ngIf=modify #detailUserForm="ngForm" class="list-group-item">
+      <div class="form-group">
+        <label for="firstname" style="font-weight: bold;">First Name</label>
+        <input type="text" class="form-control" id="firstname" required [(ngModel)]="user.firstname" name="firstname"
+          #firstname="ngModel">
+        <div [hidden]="firstname.valid || firstname.pristine" class="alert alert-danger">
+          First Name is required
+        </div>
+        <h1 *ngIf=!modify>{{user.firstname}}</h1>
+      </div>
+
+      <div class="form-group">
+        <label for="lastname" style="font-weight: bold;">Last Name</label>
+        <input type="text" class="form-control" id="lastname" required [(ngModel)]="user.lastname" name="lastname"
+          #lastname="ngModel">
+        <div [hidden]="lastname.valid || lastname.pristine" class="alert alert-danger">
+          Last Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role" style="font-weight: bold;">Role</label>
+        <select class="form-control" id="role" required [(ngModel)]="user.role" name="role" #role="ngModel">
+          <option value="Rédacteur/Propriétaire">Rédacteur/Propriétaire</option>
+          <option value="Reviewer">Reviewer</option>
+          <option value="Project Manager">Project Manager</option>
+          <option value="QA Manager">QA Manager</option>
+          <option value="Administrateur">Administrateur</option>
+        </select>
+        <div [hidden]="role.valid || role.pristine" class="alert alert-danger">
+          Role is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" style="font-weight: bold;">Email</label>
+        <input type="string" class="form-control" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+          placeholder="User's Email" required [(ngModel)]="user.email" name="email" #email="ngModel">
+        <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
+          Email is required/invalid
+        </div>
+      </div>
+
+      <div class="btn-group btn-group-sm">
+        <button type="button" class="btn btn-dark" routerLink="/users" (click)="onModifyCancel()">Back</button>
+
+        <button type="button" class="btn btn-success" (click)="update()"
+          [disabled]="!detailUserForm.form.valid">Update</button>
+      </div>
+    </form>
+  </div>
+
+  <div [hidden]="!submitted">
+    <p>{{message}}</p>
+    <div class="btn-group btn-group-sm">
+      <button type="button" class="btn btn-dark" (click)="goBack()">Back</button>
+    </div>
+  </div>
+  <button type="button" class="btn btn-dark" (click)="goBack()" *ngIf=!modify>Back</button>
+
+  <!--
+<button type="button" class="btn btn-info" (click)="onModify()" *ngIf=!modify>Modify</button>
+<button type="button" class="btn btn-danger" (click)="delete()" *ngIf=!modify>Delete</button>
+-->
+</div>

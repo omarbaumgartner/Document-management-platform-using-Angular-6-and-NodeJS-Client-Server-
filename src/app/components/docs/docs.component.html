@@ -1,0 +1,40 @@
+<app-fileuploader></app-fileuploader>
+<div class="row">
+  <div class="col-3" style="background-color: rgba(255, 255, 255, 0.6);">
+    <br>
+    <h4>Répertoire général</h4>
+    <br>
+    <div class="container">
+    </div>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <!-- This is the tree node template for leaf nodes -->
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <!-- use a disabled button to provide padding for tree leaf -->
+        <div (click)="fileclick(node.fileurl)" class="files"><i class="fas fa-file"></i>&nbsp;<span>{{node.name}}</span>
+        </div>
+      </mat-tree-node>
+
+      <!-- This is the tree node template for expandable nodes -->
+      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        <div class="files"><i *ngIf=!treeControl.isExpanded(node) class="fas fa-folder"></i>
+          <i *ngIf=treeControl.isExpanded(node) class="fas fa-folder-open"></i>
+          &nbsp;{{node.name}}
+        </div>
+      </mat-tree-node>
+    </mat-tree>
+    <br>
+  </div>
+  <div class="col-9 " style="background-color: rgba(66, 139, 202, 0.6)">
+    <br>
+    <h4>Prévisualisation</h4>
+    <br>
+    <div style="float: none; margin: 0 auto;">
+      <iframe class="controls" frameborder="0" style="min-height: 150vh; width: 100%" [src]="controllerSrc"> </iframe>
+    </div>
+  </div>
+</div>
