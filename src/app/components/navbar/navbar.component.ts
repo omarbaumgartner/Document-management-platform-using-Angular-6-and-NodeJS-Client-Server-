@@ -13,37 +13,35 @@ import { UsersService } from 'src/app/services/users/users.service';
 export class NavbarComponent implements OnInit {
 
   // déclaration d'une variable booléenne isAuth.
-  isAuth: boolean;
-  idu: string;
-  ida: string;
-  test: string;
+  isAuth = this.authService.isAuth;
+  session: any;
 
 
   // injection de authService
-  constructor(private route: ActivatedRoute,
-    private authService: AuthService,
-    private userService: UsersService) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    // firebase.auth().onAuthStateChanged sera déclenché à chaque fois que l’état d’authentifcation est changé par l’utilisateur
-    firebase.auth().onAuthStateChanged(
-      (user) => {
-        if (user) {
-          this.isAuth = true;
-          // L'utilisateur est connecté
-        } else {
-          this.isAuth = false;
-          // L'utilisateur n'est pas connecté
-        }
-      }
-    );
-  }
+    if (JSON.parse(localStorage.getItem('currentUser'))) {
+      this.session = JSON.parse(localStorage.getItem('currentUser'));
+      console.log(this.session.user.email)
+    }
+    if (this.session = ! null) {
+      //this.isAuth = true;
+    }
+    else { } //this.isAuth = false;
 
-  onSignOut() {
-    this.authService.signOutUser();
+    this.isAuth.subscribe(() => {
+      console.log("message");
+    })
+
   }
 
 
+
+  logout() {
+    localStorage.removeItem('currentUser');
+    //this.isAuth = false;
+  }
 
 }
 

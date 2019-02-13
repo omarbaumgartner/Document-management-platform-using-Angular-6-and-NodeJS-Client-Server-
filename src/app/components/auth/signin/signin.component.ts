@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import * as firebase from 'firebase';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { UsersService } from 'src/app/services/users/users.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signin',
@@ -11,41 +10,57 @@ import { UsersService } from 'src/app/services/users/users.service';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
+
   signInForm: FormGroup;
   errorMessage: string;
   returnUrl: string;
   error = '';
+  connected: any;
 
   constructor(private formBuilder: FormBuilder,
     private authService: AuthService,
+    private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit() {
-    this.initForm();
-  }
-  initForm() {
     this.signInForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
     });
 
+    //reset login status
+    this.authService.logout();
+
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
+
 
   onSubmit() {
     const email = this.signInForm.get('email').value;
     const password = this.signInForm.get('password').value;
-    this.authService.login(email, password);
+    this.authService.onlogin(email, password)
+      .pipe(first())
+      .subscribe(
+        data => {
+          this.authService.isAuth = true;
+          this.router.navigate([this.returnUrl]);
 
 
-    /*  FireBase Auth 
-      this.authService.signInUser(email, password).then(
-       () => {
-         this.router.navigate(['/home']);
-       },
-       (error) => {
-         this.errorMessage = error;
-       }
-     );
+        },
+        error => {
+          this.error = error;
+        });
+
+
+    /*  if (this.connected == true) {
+      this.router.navigate(['/home']);
+      this.authService.isConnected = true;
+      console.log(this.authService.isConnected);
+    }
+    else {
+      this.errorMessage = "Identifiant ou mot de passe incorrect";
+    }
     */
   }
 

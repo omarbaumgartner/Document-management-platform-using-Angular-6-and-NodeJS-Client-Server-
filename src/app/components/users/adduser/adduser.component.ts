@@ -3,6 +3,7 @@ import { User } from 'src/app/models/User.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Md5 } from 'ts-md5/dist/md5';
 
 
 @Component({
@@ -39,9 +40,13 @@ export class AdduserComponent {
   }
 
   private save(): void {
-    console.log(this.user);
+    const md5 = new Md5();
+    this.user.password = md5.appendStr(this.user.password).end();
     this.userService.addUser(this.user)
       .subscribe();
   }
+
+
+
 
 }

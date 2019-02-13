@@ -35,7 +35,7 @@ const appRoutes: Routes = [
   { path: 'home', component: DocsComponent },
   { path: 'auth/signin', component: SigninComponent },
   { path: 'users', component: UsersComponent },
-  { path: 'users/user/add', component: AdduserComponent },
+  { path: 'users/user/add', component: AdduserComponent, canActivate: [AuthGuardService] },
   {
     path: 'users/:id',
     component: SingleuserComponent
