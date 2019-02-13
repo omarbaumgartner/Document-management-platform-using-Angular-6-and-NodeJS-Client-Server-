@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../config/db.config');
 const User = db.users;
 const bcrypt = require('bcryptjs');
+const users = require('../controller/user.controller.js');
 
 
 // users hardcoded for simplicity, store in a db for production applications
@@ -12,46 +13,24 @@ module.exports = {
     authenticate,
     getAll
 };
-/*async function authenticate({ email, password }) {
-
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-        const token = jwt.sign({ sub: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60) }, config.secret);
-        const { password, ...userWithoutPassword } = user;
-        return {
-            ...userWithoutPassword,
-            token
-        };
-    }
-}*/
 
 // Working --
 async function authenticate({ email, password }) {
     const user = await User.findOne({ where: { 'email': email } });
     //  const user = User.find({ where: { 'email': email }, where: { 'password': password } });
     if (user && user.password == password) {
+        //insertion BDD du token
         const token = jwt.sign({ sub: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), role: 'hisrole' }, config.secret);
+        user.token = token;
+        User.update({ "token": token },
+            { where: { 'id': user.id } });
         return {
             user,
             token
-        };
+        }
+
     }
 }
-
-
-/*async function authenticate({ email, password }) {
-    const user = await User.findOne({ email });
-    if (user && bcrypt.compareSync(password, user.hash)) {
-        const { hash, ...userWithoutHash } = user.toObject();
-        const token = jwt.sign({ sub: user.id }, config.secret);
-        return {
-            ...userWithoutHash,
-            token
-        };
-    }
-}*/
-
-
 
 async function getAll() {
     return users.map(u => {

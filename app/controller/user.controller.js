@@ -9,7 +9,8 @@ exports.create = (req, res) => {
 		"lastname": req.body.lastname,
 		"role": req.body.role,
 		"email": req.body.email,
-		"password": req.body.password
+		"password": req.body.password,
+		"token": "token"
 	}).then(user => {
 		// Send created user to client
 		res.json(user);
