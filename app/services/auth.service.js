@@ -20,6 +20,7 @@ async function authenticate({ email, password }) {
     //  const user = User.find({ where: { 'email': email }, where: { 'password': password } });
     if (user && user.password == password) {
         //insertion BDD du token
+        //changemlent
         const token = jwt.sign({ sub: user.id, exp: Math.floor(Date.now() / 1000) + (60 * 60), role: 'hisrole' }, config.secret);
         user.token = token;
         User.update({ "token": token },
