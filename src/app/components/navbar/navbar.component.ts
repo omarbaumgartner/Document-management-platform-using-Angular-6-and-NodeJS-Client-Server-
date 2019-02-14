@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import * as firebase from 'firebase';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { UsersService } from 'src/app/services/users/users.service';
+
 
 
 @Component({
@@ -12,35 +10,38 @@ import { UsersService } from 'src/app/services/users/users.service';
 })
 export class NavbarComponent implements OnInit {
 
-  // déclaration d'une variable booléenne isAuth.
-  isAuth = this.authService.isAuth;
+  isConnected: boolean;
+  currentstatus = this.authService.currentstatus;
   session: any;
 
-
-  // injection de authService
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {
+    this.currentstatus.subscribe((val) => {
+      this.isConnected = val;
+    })
+  }
 
   ngOnInit() {
+
     if (JSON.parse(localStorage.getItem('currentUser'))) {
       this.session = JSON.parse(localStorage.getItem('currentUser'));
       console.log(this.session.user.email)
+      if (this.session = ! null) {
+        this.connect();
+      }
     }
-    if (this.session = ! null) {
-      //this.isAuth = true;
+    else {
+      this.logout();
     }
-    else { } //this.isAuth = false;
+  }
 
-    this.isAuth.subscribe(() => {
-      console.log("message");
-    })
-
+  connect() {
+    this.authService.connexion(this.currentstatus);
   }
 
 
-
   logout() {
+    this.authService.deconnexion(this.currentstatus);
     localStorage.removeItem('currentUser');
-    //this.isAuth = false;
   }
 
 }

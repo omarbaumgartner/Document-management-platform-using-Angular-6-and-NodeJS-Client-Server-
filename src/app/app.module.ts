@@ -4,7 +4,6 @@ import { AppComponent } from './app.component';
 
 //Modules 
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTreeModule, MatIconModule } from '@angular/material';
@@ -26,13 +25,14 @@ import { SingleuserComponent } from './components/users/singleuser/singleuser.co
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FileuploaderComponent } from './components/docs/fileuploader/fileuploader.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
 
 const appRoutes: Routes = [
   //Example : 
-  { path: 'home', component: DocsComponent },
+  { path: 'home', component: DocsComponent, canActivate: [AuthGuardService] },
   { path: 'auth/signin', component: SigninComponent },
   { path: 'users', component: UsersComponent },
   { path: 'users/user/add', component: AdduserComponent, canActivate: [AuthGuardService] },

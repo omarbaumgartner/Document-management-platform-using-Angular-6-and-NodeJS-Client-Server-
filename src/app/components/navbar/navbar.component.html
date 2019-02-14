@@ -15,17 +15,16 @@
         <a class="nav-link" routerLink="/users">Users
         </a>
       </li>
-
     </ul>
 
-    <ul class="navbar-nav ml-auto nav-flex-icons" *ngIf="!isAuth">
+    <ul class="navbar-nav ml-auto nav-flex-icons" *ngIf="!isConnected">
 
       <li class="nav-item avatar dropdown">
         <a class="nav-link active" routerLink="/auth/signin">Login</a>
       </li>
 
     </ul>
-    <ul class="navbar-nav ml-auto nav-flex-icons" *ngIf="isAuth">
+    <ul class="navbar-nav ml-auto nav-flex-icons" *ngIf="isConnected">
       <li class="nav-item">
         <a class="nav-link waves-effect waves-light">1
           <i class="far fa-envelope"></i>

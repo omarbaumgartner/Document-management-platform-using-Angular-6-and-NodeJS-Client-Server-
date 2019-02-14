@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { first } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-signin',
@@ -15,12 +16,13 @@ export class SigninComponent implements OnInit {
   errorMessage: string;
   returnUrl: string;
   error = '';
-  connected: any;
 
   constructor(private formBuilder: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router) {
+
+  }
 
   ngOnInit() {
     this.signInForm = this.formBuilder.group({
@@ -43,25 +45,12 @@ export class SigninComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          this.authService.isAuth = true;
           this.router.navigate([this.returnUrl]);
-
-
+          this.authService.connexion(this.authService.currentstatus);
         },
         error => {
           this.error = error;
         });
-
-
-    /*  if (this.connected == true) {
-      this.router.navigate(['/home']);
-      this.authService.isConnected = true;
-      console.log(this.authService.isConnected);
-    }
-    else {
-      this.errorMessage = "Identifiant ou mot de passe incorrect";
-    }
-    */
   }
 
 
