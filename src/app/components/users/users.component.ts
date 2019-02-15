@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/User.model';
 import { UsersService } from 'src/app/services/users/users.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -12,7 +13,8 @@ export class UsersComponent implements OnInit {
 
   users: User[];
 
-  constructor(private userService: UsersService) { }
+  constructor(private userService: UsersService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.getUsers();
@@ -26,4 +28,10 @@ export class UsersComponent implements OnInit {
         }
       );
   }
+
+  viewProfile(id: any) {
+    this.router.navigate(['/users/' + id]);
+
+  }
+
 }

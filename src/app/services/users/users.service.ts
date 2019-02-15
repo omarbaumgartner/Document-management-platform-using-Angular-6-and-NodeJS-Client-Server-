@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/User.model';
+import { AuthService } from '../auth/auth.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,8 +14,7 @@ const httpOptions = {
 export class UsersService {
   private usersUrl = 'http://localhost:8080/api/users';  // URL to web api
   constructor(
-    private http: HttpClient
-  ) { }
+    private http: HttpClient) { }
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.usersUrl)
@@ -38,5 +38,6 @@ export class UsersService {
 
   updateUser(user: User): Observable<any> {
     return this.http.put(this.usersUrl, user, httpOptions);
+
   }
 }

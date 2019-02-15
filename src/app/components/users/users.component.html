@@ -2,7 +2,7 @@
 <br>
 <div class="w-75 p-3">
   <div *ngFor="let user of users " class="list-group-item" style="width: 120%; font-size:larger;">
-    <div [routerLink]="['/users', user.id]" style="color:black; cursor:pointer;">
+    <div (click)="viewProfile(user.id)" style="color:black; cursor:pointer;">
 
       <span class="badge badge-dark">{{user.id}}</span> &nbsp;
 
@@ -15,7 +15,6 @@
       &nbsp;&nbsp;
       <span class="badge badge-light">{{ user.email }}</span>
       <br>
-      <span class="badge badge-light">password : {{ user.password }}</span>
     </div>
   </div>
 </div>

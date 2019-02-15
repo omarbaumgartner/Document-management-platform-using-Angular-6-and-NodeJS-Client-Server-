@@ -21,9 +21,7 @@ export class AdduserComponent {
 
   constructor(
     private userService: UsersService,
-    private location: Location,
-    private formBuilder: FormBuilder
-  ) { }
+    private location: Location) { }
 
   newUser(): void {
     this.submitted = false;

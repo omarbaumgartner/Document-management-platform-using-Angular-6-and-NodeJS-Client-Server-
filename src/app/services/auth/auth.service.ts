@@ -1,10 +1,9 @@
-import { Injectable, TemplateRef } from '@angular/core';
-import * as firebase from 'firebase';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Md5 } from 'ts-md5';
 import { map } from 'rxjs/operators';
-import { User } from 'src/app/models/User.model';
-import { Observable, of, interval, Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -14,13 +13,15 @@ export class AuthService {
 
   apiUrl = "http://localhost:8080";
   currentstatus = new BehaviorSubject<boolean>(false);
+  session: any;
+  test: any;
+  canEdit: boolean;
+  canDelete: boolean;
 
 
-  constructor(private http: HttpClient) { }
-
-
-
-
+  constructor(private http: HttpClient,
+    private router: Router) {
+  }
 
   onlogin(email: string, password: any) {
     password = Md5.hashStr(password);
@@ -32,81 +33,53 @@ export class AuthService {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           console.log("Logged in, check localStorage")
           localStorage.setItem('currentUser', JSON.stringify(user));
+          this.session = JSON.parse(localStorage.getItem('currentUser'));
         }
         else {
           console.log("There is an error");
         }
+
         return user;
 
       }));
   }
 
   logout() {
-    // remove user from local storage to log user out
     console.log("Logged out");
+    // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
-  }
-
-  onAuth() {
-
   }
 
   connexion(term) {
     term.next(true);
-
   }
 
   deconnexion(term) {
     term.next(false);
   }
 
-
-
-
-  // *ngIf="user$ | async as user"
-
-  // *ngIf="(user$ | async) as user
-
-
-
-
-  /* ------------- FireBase Auth
-
-  createNewUser(email: string, password: string) {
-    return new Promise(
-      (resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(
-          () => {
-            resolve();
-          },
-          (error) => {
-            reject(error);
-          }
-        );
+  onCheckAccount(canEdit: boolean, canDelete: boolean) {
+    {
+      this.session = JSON.parse(localStorage.getItem('currentUser'));
+      if ('/users/' + this.session.user.id == this.router.url || this.session.user.role == "Administrateur") {
+        canEdit = true;
+        console.log("OwnProfile => canEdit" + canEdit);
       }
-    );
-  }
 
-  signInUser(email: string, password: string) {
-    return new Promise(
-      (resolve, reject) => {
-        firebase.auth().signInWithEmailAndPassword(email, password).then(
-          () => {
-            resolve();
-          },
-          (error) => {
-            reject(error);
-          }
-        );
+      else if (this.session.user.role == "Administrateur") {
+        canDelete = true;
+        console.log("Admin => canDelete " + canDelete);
       }
-    );
+      else {
+        canEdit = false;
+        canDelete = false;
+        console.log("Visitor")
+      }
+    }
   }
 
-    signOutUser() {
-    firebase.auth().signOut();
-  }
 
-  */
+
 
 
 

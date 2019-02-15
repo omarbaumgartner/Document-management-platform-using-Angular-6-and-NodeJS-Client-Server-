@@ -38,7 +38,7 @@ const appRoutes: Routes = [
   { path: 'users/user/add', component: AdduserComponent, canActivate: [AuthGuardService] },
   {
     path: 'users/:id',
-    component: SingleuserComponent
+    component: SingleuserComponent, canActivate: [AuthGuardService]
   },
   //Empty link
   {

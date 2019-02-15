@@ -3,6 +3,7 @@ import { User } from 'src/app/models/User.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from 'src/app/services/users/users.service';
 import { Location } from '@angular/common';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 
 @Component({
@@ -15,34 +16,46 @@ export class SingleuserComponent implements OnInit {
   user = new User();
   submitted = false;
   message: string;
-  modify: boolean;
+  userModify: boolean = false;
+  adminModify: boolean = false;
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
     private userService: UsersService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location
-  ) { }
+    private location: Location) {
+
+  }
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id');
     this.userService.getUser(id)
       .subscribe(user => this.user = user);
+    if (JSON.parse(localStorage.getItem('currentUser'))) { this.authService.session = JSON.parse(localStorage.getItem('currentUser')); }
+    this.onCheckAccount();
+
   }
 
   update(): void {
     this.submitted = true;
     this.userService.updateUser(this.user)
-      .subscribe(result => this.message = "User Updated Successfully!");
+      .subscribe(result => {
+        this.message = "User Updated Successfully!";
+      });
+
+
+
   }
 
   delete(): void {
     this.submitted = true;
-    this.modify = true;
+    this.adminModify = true;
     this.userService.deleteUser(this.user.id)
       .subscribe(result => this.message = "User Deleted Successfully!");
-
-
   }
 
   goBack(): void {
@@ -50,11 +63,37 @@ export class SingleuserComponent implements OnInit {
   }
 
   onModify() {
-    this.modify = true;
+    if (this.isAdmin == true)
+      this.adminModify = true;
+    else
+      this.userModify = true;
   }
 
   onModifyCancel() {
-    this.modify = false;
+    if (this.isAdmin == true)
+      this.adminModify = false;
+    else
+      this.userModify = false;
   }
 
+  onCheckAccount() {
+    {
+      this.authService.session = JSON.parse(localStorage.getItem('currentUser'));
+      if ('/users/' + this.authService.session.user.id == this.router.url && this.authService.session.user.role != "Administrateur") {
+        this.canEdit = true;
+        console.log("OwnProfile => canEdit : " + this.canEdit);
+      }
+
+      else if (this.authService.session.user.role == "Administrateur") {
+        this.canDelete = true;
+        this.isAdmin = true;
+        console.log("Admin => canEdit and canDelete : " + this.canDelete);
+      }
+      else {
+        this.canEdit = false;
+        this.canDelete = false;
+        console.log("Visitor")
+      }
+    }
+  }
 }

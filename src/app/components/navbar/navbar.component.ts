@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 
 
@@ -14,7 +15,9 @@ export class NavbarComponent implements OnInit {
   currentstatus = this.authService.currentstatus;
   session: any;
 
-  constructor(private authService: AuthService) {
+
+  constructor(private authService: AuthService,
+    private router: Router) {
     this.currentstatus.subscribe((val) => {
       this.isConnected = val;
     })
@@ -23,9 +26,8 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
 
     if (JSON.parse(localStorage.getItem('currentUser'))) {
-      this.session = JSON.parse(localStorage.getItem('currentUser'));
-      console.log(this.session.user.email)
-      if (this.session = ! null) {
+      this.authService.session = JSON.parse(localStorage.getItem('currentUser'));
+      if (this.authService.session = ! null) {
         this.connect();
       }
     }
@@ -42,6 +44,13 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.authService.deconnexion(this.currentstatus);
     localStorage.removeItem('currentUser');
+    this.router.navigate(['/auth/signin']);
+  }
+
+  myProfile() {
+    this.session = JSON.parse(localStorage.getItem('currentUser'));
+    this.router.navigate(['/users/' + this.session.user.id]);
+
   }
 
 }
