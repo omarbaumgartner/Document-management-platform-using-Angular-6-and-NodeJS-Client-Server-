@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/User.model';
-import { AuthService } from '../auth/auth.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -20,10 +19,16 @@ export class UsersService {
     return this.http.get<User[]>(this.usersUrl)
   }
 
-  getUser(id: number): Observable<User> {
-    const url = `${this.usersUrl}/${id}`;
+  getUserById(id: number): Observable<User> {
+    const url = `${this.usersUrl + "/id"}/${id}`;
     return this.http.get<User>(url);
   }
+
+  getUserByToken(token: any): Observable<User> {
+    const url = `${this.usersUrl + "/token"}/${token}`;
+    return this.http.get<User>(url);
+  }
+
 
   addUser(user: User): Observable<User> {
     return this.http.post<User>(this.usersUrl, user, httpOptions);

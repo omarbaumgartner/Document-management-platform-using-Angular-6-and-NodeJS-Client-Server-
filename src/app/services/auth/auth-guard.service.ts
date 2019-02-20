@@ -1,44 +1,37 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
-import * as firebase from 'firebase';
+import { AuthService } from './auth.service';
+import { UsersService } from '../users/users.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuardService {
+  user: any;
+  userToken: any;
+  isConnected: boolean;
+  currentstatus = this.authService.currentstatus;
 
   // injection du Router dans le constructor
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+    private authService: AuthService,
+    private userSerivce: UsersService) {
+    this.currentstatus.subscribe((val) => {
+      this.isConnected = val;
+    })
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (localStorage.getItem('currentUser')) {
-      // logged in so return true
+    this.userToken = this.authService.getToken();
+    if (this.isConnected == true && this.userToken != undefined)
       return true;
+    else {
+      this.authService.logout(this.currentstatus);
+      this.router.navigate(['auth/signin']);
+      return false;
     }
-    // not logged in so redirect to login page with the return url
-    this.router.navigate(['auth/signin'], { queryParams: { returnUrl: state.url } });
-    return false;
-  }
-  // Création de méthode CanActivate qui retournera une observable booléenne , une promise booléenne ou une booléenne
-  /*canActivate(): Observable<boolean> | Promise<boolean> | boolean {
-    return new Promise(
-      (resolve, reject) => {
-        firebase.auth().onAuthStateChanged(
-          (user) => {
-            // Si l'utilisateur est connecté, on lui donne accés aux routes
-            if (user) {
-              resolve(true);
-            }
-            // Sinon il sera redirigé vers la page de connexion
-            else {
-              this.router.navigate(['/auth', 'signin']);
-              resolve(false);
-            }
-          }
-        );
-      }
-    );
-  }*/
 
-} 
+  }
+}
+

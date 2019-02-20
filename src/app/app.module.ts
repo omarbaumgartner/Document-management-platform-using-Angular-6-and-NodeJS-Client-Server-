@@ -32,9 +32,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const appRoutes: Routes = [
   //Example : 
-  { path: 'home', component: DocsComponent, canActivate: [AuthGuardService] },
+  { path: 'home', component: DocsComponent },
   { path: 'auth/signin', component: SigninComponent },
-  { path: 'users', component: UsersComponent },
+  { path: 'users', canActivate: [AuthGuardService], component: UsersComponent },
   { path: 'users/user/add', component: AdduserComponent, canActivate: [AuthGuardService] },
   {
     path: 'users/:id',

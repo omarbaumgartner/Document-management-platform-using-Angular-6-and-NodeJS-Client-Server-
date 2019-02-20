@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { first } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-signin',
@@ -13,9 +12,11 @@ import { Observable } from 'rxjs';
 export class SigninComponent implements OnInit {
 
   signInForm: FormGroup;
-  errorMessage: string;
   returnUrl: string;
-  error = '';
+  emailpattern = "@instadeep.com";
+  email: string;
+  error: any;
+  iserror: boolean;
 
   constructor(private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -26,12 +27,12 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     this.signInForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{2,15}/)]],
       password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
     });
 
     //reset login status
-    this.authService.logout();
+    this.authService.logout(this.authService.currentstatus);
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -39,7 +40,7 @@ export class SigninComponent implements OnInit {
 
 
   onSubmit() {
-    const email = this.signInForm.get('email').value;
+    const email = this.signInForm.get('email').value + this.emailpattern;
     const password = this.signInForm.get('password').value;
     this.authService.onlogin(email, password)
       .pipe(first())
@@ -49,7 +50,8 @@ export class SigninComponent implements OnInit {
           this.authService.connexion(this.authService.currentstatus);
         },
         error => {
-          this.error = error;
+          this.iserror = true;
+          this.error = error.error.message;
         });
   }
 

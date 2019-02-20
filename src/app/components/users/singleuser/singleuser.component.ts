@@ -33,7 +33,7 @@ export class SingleuserComponent implements OnInit {
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id');
-    this.userService.getUser(id)
+    this.userService.getUserById(id)
       .subscribe(user => this.user = user);
     if (JSON.parse(localStorage.getItem('currentUser'))) { this.authService.session = JSON.parse(localStorage.getItem('currentUser')); }
     this.onCheckAccount();
@@ -46,9 +46,6 @@ export class SingleuserComponent implements OnInit {
       .subscribe(result => {
         this.message = "User Updated Successfully!";
       });
-
-
-
   }
 
   delete(): void {
@@ -78,13 +75,13 @@ export class SingleuserComponent implements OnInit {
 
   onCheckAccount() {
     {
-      this.authService.session = JSON.parse(localStorage.getItem('currentUser'));
-      if ('/users/' + this.authService.session.user.id == this.router.url && this.authService.session.user.role != "Administrateur") {
+      this.authService.session = this.authService.getPayload();
+      if ('/users/' + this.authService.session.id == this.router.url && this.authService.session.role != "Administrateur") {
         this.canEdit = true;
         console.log("OwnProfile => canEdit : " + this.canEdit);
       }
 
-      else if (this.authService.session.user.role == "Administrateur") {
+      else if (this.authService.session.role == "Administrateur") {
         this.canDelete = true;
         this.isAdmin = true;
         console.log("Admin => canEdit and canDelete : " + this.canDelete);

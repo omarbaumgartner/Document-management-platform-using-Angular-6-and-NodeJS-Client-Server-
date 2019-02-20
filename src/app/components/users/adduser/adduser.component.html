@@ -1,27 +1,132 @@
-<h3>Add User</h3>
-<div [hidden]="submitted" class="w-50 p-3">
-  <form #addUserForm="ngForm">
+<!--<div class="card">
+  <h3>Add User</h3>
+
+  <div [hidden]="submitted" class="w-50 p-3">
+    <form #addUserForm="ngForm">
+      <div class="form-group">
+        <label for="firstname">First Name</label>
+        <input type="text" class="form-control" id="firstname" placeholder="User's FirstName" required
+          [(ngModel)]="user.firstname" name="firstname" #firstname="ngModel">
+        <div [hidden]="firstname.valid || firstname.pristine" class="alert alert-danger">
+          First Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lastname">Last Name</label>
+        <input type="text" class="form-control" id="lastname" placeholder="User's LastName" required
+          [(ngModel)]="user.lastname" name="lastname" #lastname="ngModel">
+        <div [hidden]="lastname.valid || lastname.pristine" class="alert alert-danger">
+          Last Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select class="form-control" id="role" required [(ngModel)]="user.role" name="role" #role="ngModel">
+          <option [ngValue]="undefined" selected>User's Role</option>
+          <option value="Rédacteur/Propriétaire">Rédacteur/Propriétaire</option>
+          <option value="Reviewer">Reviewer</option>
+          <option value="Project Manager">Project Manager</option>
+          <option value="QA Manager">QA Manager</option>
+          <option value="Administrateur">Administrateur</option>
+        </select>
+        <div [hidden]="role.valid || role.pristine" class="alert alert-danger">
+          Role is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="string" class="form-control" minlength="4" maxlength="10" id="email"
+          pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{4,10}$" placeholder="User's Email" required [(ngModel)]="user.email"
+          name="email" #email="ngModel">
+        <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
+          Email is required/invalid
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" pattern="[0-9a-zA-Z]{6,}"
+          placeholder="User's Password" required [(ngModel)]="user.password" name="password" #password="ngModel">
+        <div [hidden]="password.length || password.pristine" class="alert alert-danger">
+          Password is invalid. Minimum 6 characters.
+        </div>
+      </div>
+
+      <div class="btn-group btn-group-sm">
+        <button type="button" class="btn btn-dark" (click)="goBack()">Back</button>
+        <button type="button" class="btn btn-dark" (click)="addUser()" [disabled]="!addUserForm.form.valid">Add</button>
+      </div>
+    </form>
+  </div>
+
+  <div [hidden]="!submitted">
+    <p>Submitted Successfully! -> <span class="badge badge-light">{{user.firstname}} {{user.lastname}}</span></p>
+    <div class="btn-group btn-group-sm">
+      <button type="button" class="btn btn-dark" (click)="goBack()">Users</button>
+      <button type="button" class="btn btn-dark" (click)="newUser(); addUserForm.reset()">Add again</button>
+    </div>
+  </div>
+</div>
+<br>-->
+<div class="card">
+  <h1>Add User</h1>
+  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" style="width: 60%;">
+
     <div class="form-group">
-      <label for="firstname">First Name</label>
-      <input type="text" class="form-control" id="firstname" placeholder="User's FirstName" required
-        [(ngModel)]="user.firstname" name="firstname" #firstname="ngModel">
-      <div [hidden]="firstname.valid || firstname.pristine" class="alert alert-danger">
-        First Name is required
+      <label for="firstname">First Name </label>
+      <input type="text" class="form-control" id="firstname" formControlName="firstname" placeholder="User's FirstName"
+        name="firstname" required [ngClass]="{ 'is-invalid': f.firstname.errors }">
+
+
+      <div>
+
+        <p> Required is ok
+          <i style="color : green;" [hidden]="f.firstname.errors.required" class="fas fa-check"></i>
+          <i style="color : red;" [hidden]="!f.firstname.errors.required" class="fas fa-times"></i>
+        </p>
+
+        <p> Min Length is ok
+          <i style="color : green;" [hidden]="!f.firstname.errors?.minlength" class="fas fa-check"></i>
+          <i style="color : red;" [hidden]="f.firstname.errors?.minlength" class="fas fa-times"></i>
+        </p>
+
+        <p> Max Length is ok
+          <i style="color : green;" [hidden]="f.firstname.errors.maxlength" class="fas fa-check"></i>
+          <i style="color : red;" [hidden]="!f.firstname.errors.maxlength" class="fas fa-times"></i>
+        </p>
+
+        <p> Pattern is ok
+          <i style="color : green;" [hidden]="f.firstname.errors.pattern" class="fas fa-check"></i>
+          <i style="color : red;" [hidden]="!f.firstname.errors.pattern" class="fas fa-times"></i>
+        </p>
+
+        <p> Everything is ok
+          <i style="color : green;" [hidden]="f.firstname.errors" class="fas fa-check"></i>
+          <i style="color : red;" [hidden]="!f.firstname.errors" class="fas fa-times"></i>
+        </p>
+
       </div>
     </div>
+
+
+
+
+
 
     <div class="form-group">
       <label for="lastname">Last Name</label>
-      <input type="text" class="form-control" id="lastname" placeholder="User's LastName" required
-        [(ngModel)]="user.lastname" name="lastname" #lastname="ngModel">
-      <div [hidden]="lastname.valid || lastname.pristine" class="alert alert-danger">
-        Last Name is required
-      </div>
+      <input type="text" class="form-control" id="lastname" formControlName="lastname" placeholder="User's LastName"
+        required name="lastname">
     </div>
-
+    <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+      <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+    </div>
     <div class="form-group">
       <label for="role">Role</label>
-      <select class="form-control" id="role" required [(ngModel)]="user.role" name="role" #role="ngModel">
+      <select class="form-control" id="role" required name="role" formControlName="role">
         <option [ngValue]="undefined" selected>User's Role</option>
         <option value="Rédacteur/Propriétaire">Rédacteur/Propriétaire</option>
         <option value="Reviewer">Reviewer</option>
@@ -29,40 +134,35 @@
         <option value="QA Manager">QA Manager</option>
         <option value="Administrateur">Administrateur</option>
       </select>
-      <div [hidden]="role.valid || role.pristine" class="alert alert-danger">
-        Role is required
-      </div>
+    </div>
+
+    <div class="input-group mb-3">
+      <input type="text" id="email" class="form-control" formControlName="email" placeholder="Email"
+        style="font-size: 20px;height: 110%;">
+      <span>@instadeep.com</span>
     </div>
 
     <div class="form-group">
-      <label for="email">Email</label>
-      <input type="string" class="form-control" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-        placeholder="User's Email" required [(ngModel)]="user.email" name="email" #email="ngModel">
-      <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
-        Email is required/invalid
-      </div>
+      <input style="font-size: 20px;height: 110%;" type="password" id="password" class="form-control"
+        placeholder="**********" formControlName="password">
     </div>
 
     <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" class="form-control" id="password" pattern="[0-9a-zA-Z]{6,}" placeholder="User's Password"
-        required [(ngModel)]="user.password" name="password" #password="ngModel">
-      <div [hidden]="password.valid || password.pristine" class="alert alert-danger">
-        Password is invalid. Minimum 6 characters.
-      </div>
+      <input style="font-size: 20px;height: 110%;" type="password" id="confirmpassword" class="form-control"
+        placeholder="Confirm password" formControlName="confirmpassword">
     </div>
 
-    <div class="btn-group btn-group-sm">
-      <button type="button" class="btn btn-dark" (click)="goBack()">Back</button>
-      <button type="button" class="btn btn-dark" (click)="addUser()" [disabled]="!addUserForm.form.valid">Add</button>
+    <div [hidden]="!iserror" class="alert alert-danger">{{error}}</div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="signUpForm.invalid"> Submit </button>
+    </div> <!-- form-group// -->
+    <div [hidden]="!submitted">
+      <p>Submitted Successfully! -> <span class="badge badge-light">{{user.firstname}} {{user.lastname}}</span></p>
+      <div class="btn-group btn-group-sm">
+        <button type="button" class="btn btn-dark" (click)="goBack()">Users</button>
+        <button type="button" class="btn btn-dark" (click)="newUser(); signUpForm.reset()">Add again</button>
+      </div>
     </div>
   </form>
-</div>
-
-<div [hidden]="!submitted">
-  <p>Submitted Successfully! -> <span class="badge badge-light">{{user.firstname}} {{user.lastname}}</span></p>
-  <div class="btn-group btn-group-sm">
-    <button type="button" class="btn btn-dark" (click)="goBack()">Users</button>
-    <button type="button" class="btn btn-dark" (click)="newUser(); addUserForm.reset()">Add again</button>
-  </div>
 </div>

@@ -5,14 +5,16 @@
         <a href="" class="float-right btn btn-outline-primary">Sign up</a>
         <h4 class="card-title mb-4 mt-1">Sign in</h4>
         <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+          <div class="input-group mb-3">
+            <input autofocus type="text" id="email" class="form-control" formControlName="email" placeholder="Email"
+              style="font-size: 20px;height: 110%;">
+            <span>@instadeep.com</span>
+          </div>
           <div class="form-group">
-            <label>Your email</label>
-            <input type="email" id="email" class="form-control" placeholder="Email" formControlName="email">
+            <input style="font-size: 20px;height: 110%;" type="password" id="password" class="form-control"
+              placeholder="**********" formControlName="password">
           </div> <!-- form-group// -->
-          <div class="form-group">
-            <label>Your password</label>
-            <input type="password" id="password" class="form-control" placeholder="******" formControlName="password">
-          </div> <!-- form-group// -->
+          <div [hidden]="!iserror" class="alert alert-danger">{{error}}</div>
           <div class="form-group">
             <div class="checkbox">
               <label> <input type="checkbox"> Save password </label>
@@ -21,7 +23,6 @@
           <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block" [disabled]="signInForm.invalid"> Login </button>
           </div> <!-- form-group// -->
-          <p class="text-danger">{{ errorMessage }}</p>
           <a class="float-right" href="#">Forgot?</a>
         </form>
       </article>

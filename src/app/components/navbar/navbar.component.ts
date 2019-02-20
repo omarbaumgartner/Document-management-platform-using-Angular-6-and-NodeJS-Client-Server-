@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
-
+import * as jwt_decode from "jwt-decode";
+import { UsersService } from 'src/app/services/users/users.service';
 
 
 @Component({
@@ -14,9 +15,15 @@ export class NavbarComponent implements OnInit {
   isConnected: boolean;
   currentstatus = this.authService.currentstatus;
   session: any;
+  userToken: any;
+  testing: any;
+  test: any;
+  user: import("/home/omar/Bureau/WebClient/src/app/models/User.model").User;
+
 
 
   constructor(private authService: AuthService,
+    private userSerivce: UsersService,
     private router: Router) {
     this.currentstatus.subscribe((val) => {
       this.isConnected = val;
@@ -26,7 +33,8 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
 
     if (JSON.parse(localStorage.getItem('currentUser'))) {
-      this.authService.session = JSON.parse(localStorage.getItem('currentUser'));
+      this.authService.session = this.authService.getPayload();
+      console.log(this.authService.session)
       if (this.authService.session = ! null) {
         this.connect();
       }
@@ -42,16 +50,26 @@ export class NavbarComponent implements OnInit {
 
 
   logout() {
-    this.authService.deconnexion(this.currentstatus);
+    this.authService.logout(this.currentstatus);
     localStorage.removeItem('currentUser');
     this.router.navigate(['/auth/signin']);
   }
 
   myProfile() {
-    this.session = JSON.parse(localStorage.getItem('currentUser'));
-    this.router.navigate(['/users/' + this.session.user.id]);
+    this.session = this.authService.getPayload();
+    console.log(this.session);
+    this.router.navigate(['/users/' + this.session.id]);
 
   }
 
+  testbutton() {
+    if (localStorage.getItem('currentUser')) {
+      this.userToken = this.authService.getToken();
+      this.userSerivce.getUserByToken(this.userToken)
+        .subscribe(user => this.user = user);
+      console.log(this.user);
+    }
+  }
 }
+
 
