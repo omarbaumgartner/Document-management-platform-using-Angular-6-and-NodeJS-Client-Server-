@@ -71,59 +71,22 @@
   </div>
 </div>
 <br>-->
-<div class="card">
-  <h1>Add User</h1>
-  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" style="width: 60%;">
+<div class="alert alert-dark">
+  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" style="width: 60%; margin: auto;"
+    class="alert alert-light text-dark font-weight-bold h5">
 
-    <div class="form-group">
+    <div class="form-group ">
       <label for="firstname">First Name </label>
       <input type="text" class="form-control" id="firstname" formControlName="firstname" placeholder="User's FirstName"
-        name="firstname" required [ngClass]="{ 'is-invalid': f.firstname.errors }">
-
-
-      <div>
-
-        <p> Required is ok
-          <i style="color : green;" [hidden]="f.firstname.errors.required" class="fas fa-check"></i>
-          <i style="color : red;" [hidden]="!f.firstname.errors.required" class="fas fa-times"></i>
-        </p>
-
-        <p> Min Length is ok
-          <i style="color : green;" [hidden]="!f.firstname.errors?.minlength" class="fas fa-check"></i>
-          <i style="color : red;" [hidden]="f.firstname.errors?.minlength" class="fas fa-times"></i>
-        </p>
-
-        <p> Max Length is ok
-          <i style="color : green;" [hidden]="f.firstname.errors.maxlength" class="fas fa-check"></i>
-          <i style="color : red;" [hidden]="!f.firstname.errors.maxlength" class="fas fa-times"></i>
-        </p>
-
-        <p> Pattern is ok
-          <i style="color : green;" [hidden]="f.firstname.errors.pattern" class="fas fa-check"></i>
-          <i style="color : red;" [hidden]="!f.firstname.errors.pattern" class="fas fa-times"></i>
-        </p>
-
-        <p> Everything is ok
-          <i style="color : green;" [hidden]="f.firstname.errors" class="fas fa-check"></i>
-          <i style="color : red;" [hidden]="!f.firstname.errors" class="fas fa-times"></i>
-        </p>
-
-      </div>
+        name="firstname" required [ngClass]="{ 'is-invalid': f.firstname.errors && f.firstname.touched}">
     </div>
-
-
-
-
-
 
     <div class="form-group">
       <label for="lastname">Last Name</label>
       <input type="text" class="form-control" id="lastname" formControlName="lastname" placeholder="User's LastName"
-        required name="lastname">
+        required name="lastname" [ngClass]="{ 'is-invalid': f.lastname.errors && f.lastname.touched}">
     </div>
-    <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
-      <div *ngIf="f.lastName.errors.required">Last Name is required</div>
-    </div>
+
     <div class="form-group">
       <label for="role">Role</label>
       <select class="form-control" id="role" required name="role" formControlName="role">
@@ -136,18 +99,22 @@
       </select>
     </div>
 
+    <label for="email">Email</label><br>
     <div class="input-group mb-3">
       <input type="text" id="email" class="form-control" formControlName="email" placeholder="Email"
         style="font-size: 20px;height: 110%;">
-      <span>@instadeep.com</span>
+      <span class="text-dark h2 font-weight-bold ">@instadeep.com</span>
     </div>
 
     <div class="form-group">
-      <input style="font-size: 20px;height: 110%;" type="password" id="password" class="form-control"
-        placeholder="**********" formControlName="password">
+      <label for="password">Password</label>
+      <input (click)="clearpassword()" style="font-size: 20px;height: 110%;" type="password" id="password"
+        class="form-control" placeholder="**********" formControlName="password">
     </div>
 
+
     <div class="form-group">
+      <label for="confirmpassword">Confirm your password</label>
       <input style="font-size: 20px;height: 110%;" type="password" id="confirmpassword" class="form-control"
         placeholder="Confirm password" formControlName="confirmpassword">
     </div>

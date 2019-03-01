@@ -52,7 +52,7 @@ export class SingleuserComponent implements OnInit {
     this.submitted = true;
     this.adminModify = true;
     this.userService.deleteUser(this.user.id)
-      .subscribe(result => this.message = "User Deleted Successfully!");
+      .subscribe(result => this.router.navigate(['/users']));
   }
 
   goBack(): void {

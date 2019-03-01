@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
-import { nodeChildrenAsMap } from '@angular/router/src/utils/tree';
 import { DomSanitizer } from '@angular/platform-browser';
+import { DocsService } from 'src/app/services/docs/docs.service';
 
 
 interface FoodNode {
@@ -13,7 +13,7 @@ interface FoodNode {
 
 const TREE_DATA: FoodNode[] = [
   {
-    name: 'My Folder',
+    name: 'Root',
     fileurl: 'folder',
 
     children: [
@@ -79,7 +79,6 @@ interface ExampleFlatNode {
 })
 export class DocsComponent {
 
-
   private transformer = (node: FoodNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
@@ -98,9 +97,11 @@ export class DocsComponent {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   controllerSrc: any;
   srcfile: string;
+  mytree: string[];
 
 
-  constructor(private sanitizer: DomSanitizer) {
+
+  constructor(private sanitizer: DomSanitizer, private docsService: DocsService) {
     this.dataSource.data = TREE_DATA;
     this.controllerSrc = this.sanitizer.bypassSecurityTrustResourceUrl("");
   }
@@ -117,6 +118,9 @@ export class DocsComponent {
 
   }
 
+  testbutton() {
+    //this.docsService.organize();
+  }
 
 }
 

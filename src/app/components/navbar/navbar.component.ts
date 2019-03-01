@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
 import * as jwt_decode from "jwt-decode";
 import { UsersService } from 'src/app/services/users/users.service';
+import { User } from 'src/app/models/User.model';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class NavbarComponent implements OnInit {
   userToken: any;
   testing: any;
   test: any;
-  user: import("/home/omar/Bureau/WebClient/src/app/models/User.model").User;
+  user: User;
 
 
 

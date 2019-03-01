@@ -22,16 +22,13 @@ export class AuthGuardService {
     })
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    this.userToken = this.authService.getToken();
-    if (this.isConnected == true && this.userToken != undefined)
-      return true;
-    else {
-      this.authService.logout(this.currentstatus);
-      this.router.navigate(['auth/signin']);
+  canActivate(): boolean {
+    if (this.isConnected == false) {
+      this.router.navigate(['/auth', 'signin']);
       return false;
     }
-
+    else
+      return true;
   }
-}
 
+}

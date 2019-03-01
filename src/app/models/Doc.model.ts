@@ -1,6 +1,12 @@
 export class Doc {
     id: number;
-    title: string;
-    description: string;
-    author: string;
+    filename: string;
+    relativename: string;
+    encoding: string;
+    extension: string;
+    path: string;
+    sizeinko: number;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
 }

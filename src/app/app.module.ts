@@ -7,14 +7,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTreeModule, MatIconModule } from '@angular/material';
-import { FileSelectDirective } from 'ng2-file-upload';
+import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { JwtModule } from '@auth0/angular-jwt';
-
+import { PasswordStrengthBarModule } from 'ng2-password-strength-bar';
 // Services
 import { AuthService } from './services/auth/auth.service';
 import { AuthGuardService } from './services/auth/auth-guard.service';
 import { UsersService } from './services/users/users.service';
+import { DocsService } from './services/docs/docs.service';
 
 //Components
 import { DocsComponent } from './components/docs/docs.component';
@@ -24,8 +25,9 @@ import { AdduserComponent } from './components/users/adduser/adduser.component';
 import { SingleuserComponent } from './components/users/singleuser/singleuser.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { FileuploaderComponent } from './components/docs/fileuploader/fileuploader.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UploadersComponent } from './components/docs/uploaders/uploaders.component';
+import { FilemanagerComponent } from './components/docs/filemanager/filemanager.component';
 
 
 
@@ -40,6 +42,8 @@ const appRoutes: Routes = [
     path: 'users/:id',
     component: SingleuserComponent, canActivate: [AuthGuardService]
   },
+  { path: 'filemanager', component: FilemanagerComponent },
+
   //Empty link
   {
     path: '',
@@ -54,14 +58,15 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     NavbarComponent,
-    FileSelectDirective,
     PageNotFoundComponent,
     SigninComponent,
     UsersComponent,
     AdduserComponent,
     SingleuserComponent,
     DocsComponent,
-    FileuploaderComponent
+    UploadersComponent,
+    FilemanagerComponent,
+
 
   ],
   imports: [
@@ -73,6 +78,8 @@ const appRoutes: Routes = [
     MatTreeModule,
     MatIconModule,
     FlexLayoutModule,
+    FileUploadModule,
+    PasswordStrengthBarModule,
     RouterModule.forRoot(
       appRoutes,
     ),
@@ -91,6 +98,8 @@ const appRoutes: Routes = [
     AuthService,
     AuthGuardService,
     UsersService,
+    DocsService,
+
 
   ],
   bootstrap: [AppComponent]

@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/User.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { Location } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5/dist/md5';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,20 +20,25 @@ export class AdduserComponent {
   errorMessage: string;
   signUpForm: FormGroup;
   emailpattern = "@instadeep.com";
-
+  constante: number = 3;
+  passwordvalue: string;
 
 
   constructor(private formBuilder: FormBuilder,
     private userService: UsersService,
-    private location: Location) { }
+    private location: Location,
+    private router: Router, ) {
 
+  }
+
+  get f() { return this.signUpForm.controls; }
 
   ngOnInit() {
     this.signUpForm = this.formBuilder.group({
-      firstname: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern('[a-z]')]],
-      lastname: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{2,15}/)]],
+      firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
+      lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
       role: ['Reviewer',],
-      email: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20), Validators.pattern(/[0-9a-zA-Z]{2,15}/)]],
+      email: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmpassword: ['', Validators.required]
     }, {
@@ -42,7 +48,6 @@ export class AdduserComponent {
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.signUpForm.controls; }
 
   onSubmit() {
     this.submitted = true;
@@ -51,8 +56,7 @@ export class AdduserComponent {
     this.user.role = this.signUpForm.get('role').value;
     this.user.email = this.signUpForm.get('email').value + this.emailpattern;
     this.user.password = this.signUpForm.get('password').value;
-    this.save();
-    this.goBack();
+    this.save()
   }
 
 
@@ -74,7 +78,7 @@ export class AdduserComponent {
     const md5 = new Md5();
     this.user.password = md5.appendStr(this.user.password).end();
     this.userService.addUser(this.user)
-      .subscribe();
+      .subscribe(result => this.router.navigate(['/users']));
   }
 
   MustMatch(controlName: string, matchingControlName: string) {
@@ -95,6 +99,7 @@ export class AdduserComponent {
       }
     }
   }
+
 
 
 

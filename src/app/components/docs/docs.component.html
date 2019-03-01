@@ -1,4 +1,4 @@
-<app-fileuploader></app-fileuploader>
+<app-uploaders></app-uploaders>
 <div class="row">
   <div class="col-3" style="background-color: rgba(255, 255, 255, 0.6);">
     <br>
@@ -33,8 +33,11 @@
     <br>
     <h4>Prévisualisation</h4>
     <br>
+    <button class="btn btn-danger" (click)="testbutton()">Organize</button>
+    <p class="alert alert-dark">{{mytree}}</p>
     <div style="float: none; margin: 0 auto;">
       <iframe class="controls" frameborder="0" style="min-height: 150vh; width: 100%" [src]="controllerSrc"> </iframe>
+
     </div>
   </div>
 </div>
