@@ -1,0 +1,33 @@
+{ "fieldname": "file",
+  "originalname": "Cahier encadrement PFE.pdf",
+  "encoding": "7bit",
+  "mimetype": "application/pdf",
+  "destination": "./uploads",
+  "filename": "file-1550844056325..pdf",
+  "path": "uploads/file-1550844056325..pdf",
+  "size": "1122124" }
+
+  CREATE TABLE docs(
+ id SERIAL PRIMARY KEY,
+ filename VARCHAR (250) NOT NULL,
+ relativename VARCHAR (250) NOT NULL,
+ encoding VARCHAR (20) NOT NULL,
+ extension VARCHAR (20) NOT NULL,
+ path text NOT NULL,
+ size int,
+ content text,
+ "createdAt" TIMESTAMP,
+ "updatedAt" TIMESTAMP,
+);
+
+
+
+
+        "filename": "req.originalname",
+        "relativename": "req.filename",
+        "encoding": "req.encoding",
+        "path": "req.destination + req.originalname",
+        "size": "req.size",
+        "creationDate": "year + ",//:" + month + ":" + day + ":" + hour + ":" + min + ":" + sec",
+        "lastModificationDate": "",
+        "lastAccessedDate": ""

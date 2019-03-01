@@ -7,8 +7,8 @@
 6 silly lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~prestart: no script for prestart, continuing
 7 info lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: nodejs-express-sequelizejs-postgresql@1.0.0
 8 verbose lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: PATH: /usr/share/npm/bin/node-gyp-bin:/home/omar/Bureau/API 0.2/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-10 verbose lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: CWD: /home/omar/Bureau/API 0.2
+9 verbose lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: PATH: /usr/share/npm/bin/node-gyp-bin:/home/omar/Desktop/API/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+10 verbose lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: CWD: /home/omar/Desktop/API
 11 silly lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: Args: [ '-c', 'node server.js' ]
 12 silly lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: Returned: code: 1  signal: null
 13 info lifecycle nodejs-express-sequelizejs-postgresql@1.0.0~start: Failed to exec start script
@@ -23,7 +23,7 @@
 14 verbose stack     at maybeClose (internal/child_process.js:925:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
 15 verbose pkgid nodejs-express-sequelizejs-postgresql@1.0.0
-16 verbose cwd /home/omar/Bureau/API 0.2
+16 verbose cwd /home/omar/Desktop/API
 17 error Linux 4.15.0-45-generic
 18 error argv "/usr/bin/node" "/usr/bin/npm" "start"
 19 error node v8.10.0

@@ -1,18 +1,22 @@
-module.exports = function(app) {
+module.exports = function (app) {
     const users = require('../controller/user.controller.js');
- 
+
     // Create a new User
-    app.post('/api/users', users.create);
- 
+    app.post('/api/users', users.createUser);
+
     // Retrieve all Users
     app.get('/api/users', users.findAll);
- 
+
     // Retrieve a single User by Id
-    app.get('/api/users/:id', users.findByPk);
- 
+    app.get('/api/users/id/:id', users.findByPk);
+
+    // Retrieve a single User by Token
+    app.get('/api/users/token/:token', users.findByToken);
+
     // Update a User with Id
     app.put('/api/users', users.update);
- 
+
     // Delete a User with Id
     app.delete('/api/users/:id', users.delete);
+
 }

@@ -1,8 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-const path = require('path');
-const multer = require('multer');
+
 
 
 const cors = require('cors')
@@ -23,8 +22,8 @@ db.sequelize.sync({ force: false }).then(() => {
 });
 
 // ---- Routes Imports ----
-require('./app/route/user.route.js')(app);
 require('./app/route/doc.route.js')(app);
+require('./app/route/user.route.js')(app);
 require('./app/route/auth.route.js')(app);
 
 
@@ -47,18 +46,6 @@ function initial() {
     Doc.create(docs[i]);
   }
 
-  // ---- Upload ----
-  const DIR = './uploads';
-  let storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, DIR);
-    },
-    filename: (req, file, cb) => {
-      cb(null, file.fieldname + '-' + Date.now() + '.' + path.extname(file.originalname));
-    }
-  });
-  let upload = multer({ storage: storage });
-
 
   app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -67,24 +54,12 @@ function initial() {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
   });
-  app.get('/api', function (req, res) {
-    res.end('file catcher example');
-  });
-  app.post('/api/upload', upload.single('photo'), function (req, res) {
-    if (!req.file) {
-      console.log("No file received");
-      return res.send({
-        success: false
-      });
-    } else {
-      console.log('file received');
-      return res.send({
-        success: true
-      })
-    }
-  });
+
+
+
 
 }
+
 // ---- Authentication ----
 require('rootpath')();
 
@@ -92,9 +67,10 @@ const jwt = require('./app/helpers/jwt');
 const errorHandler = require('./app/helpers/error-handler');
 
 // use JWT auth to secure the api
-app.use(jwt());
+//app.use(jwt());
+
 // api routes
-app.use('/auths', require('./app/controller/auth.controller'));
+//app.use('/auths', require('./app/controller/auth.controller'));
 // global error handler
 app.use(errorHandler);
 
@@ -106,5 +82,7 @@ var server = app.listen(8080, function () {
   let port = server.address().port
 
   console.log("App listening at http://%s:%s", host, port);
+
+
 })
 
