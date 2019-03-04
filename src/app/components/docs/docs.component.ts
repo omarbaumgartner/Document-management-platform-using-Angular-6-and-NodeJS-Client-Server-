@@ -119,7 +119,7 @@ export class DocsComponent {
   }
 
   testbutton() {
-    //this.docsService.organize();
+    this.docsService.organize();
   }
 
 }

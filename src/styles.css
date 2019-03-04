@@ -24,7 +24,7 @@ cursor: pointer;
     text-align: center;
 }
 body {
-    background-image: url("assets/wallpaper1.jpg");
+    background-color: black;
     background-size:cover;
     background-repeat:repeat;
     height: 100%;
