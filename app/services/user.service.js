@@ -48,5 +48,6 @@ async function remove(id) {
     // Save to PostgreSQL database
     User.destroy({ where: { id: id } });
 }
+    // Return to front if the User token has expired or not yet
 
 

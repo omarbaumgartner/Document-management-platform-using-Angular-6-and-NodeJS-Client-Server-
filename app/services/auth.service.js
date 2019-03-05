@@ -1,6 +1,7 @@
 const config = require('../../JWTconfig.json');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db.config');
+var jwtDecode = require('jwt-decode');
 const User = db.users;
 
 
@@ -30,4 +31,11 @@ async function getAll() {
         const { password, ...userWithoutPassword } = u;
         return userWithoutPassword;
     });
+}
+
+// Return to front if the User token has expired or not yet
+async function checkToken(token) {
+    var decoded = jwt_decode(token);
+    console.log(User.find({ where: { token: token } }))
+
 }

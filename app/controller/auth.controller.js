@@ -11,3 +11,8 @@ exports.getAll = (req, res, next) => {
         .then(users => res.json(users))
         .catch(err => next(err));
 }
+
+// Return to front if the User token has expired or not yet
+exports.checkToken = (req, res) => {
+
+}
