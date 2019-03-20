@@ -31,6 +31,26 @@ body {
     min-height: 80vh;
 
 }
+li {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+.dropdown-menu::before, 
+.dropdown-menu::after {
+    border: none;
+    content: none;
+}
+
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-tree-node {
+    color: white;
+}
+.mat-tree {
+    background: transparent;
+}

@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Router } from '@angular/router';
+import { UsersComponent } from '../users.component';
 
 
 @Component({
@@ -20,7 +21,6 @@ export class AdduserComponent {
   errorMessage: string;
   signUpForm: FormGroup;
   emailpattern = "@instadeep.com";
-  constante: number = 3;
   passwordvalue: string;
 
 
@@ -78,7 +78,11 @@ export class AdduserComponent {
     const md5 = new Md5();
     this.user.password = md5.appendStr(this.user.password).end();
     this.userService.addUser(this.user)
-      .subscribe(result => this.router.navigate(['/users']));
+      .subscribe(result => {
+        this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/users"]));
+
+
+      });
   }
 
   MustMatch(controlName: string, matchingControlName: string) {

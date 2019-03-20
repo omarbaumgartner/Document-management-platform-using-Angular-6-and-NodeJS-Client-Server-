@@ -1,70 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DocsService } from 'src/app/services/docs/docs.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { Doc } from 'src/app/models/Doc.model';
+import { ContextMenuComponent } from 'ngx-contextmenu';
+import { Router } from '@angular/router';
+import { ManagerService } from 'src/app/services/manager/manager.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 
 interface FoodNode {
   name: string;
-  fileurl: string;
   children?: FoodNode[];
 }
-
-const TREE_DATA: FoodNode[] = [
-  {
-    name: 'Root',
-    fileurl: 'folder',
-
-    children: [
-      {
-        name: 'Directive.pdf',
-        fileurl: 'http://www.africau.edu/images/default/sample.pdf'
-      },
-      {
-        name: 'MyWork.pdf',
-        fileurl: 'http://www.pdfpdf.com/samples/Sample1.PDF'
-      },
-
-      {
-        name: 'Agency infos.pdf',
-        fileurl: 'http://www.pdfpdf.com/samples/Sample2.PDF'
-      },
-    ]
-  }, {
-    name: 'Bigger Folder',
-    fileurl: 'folder',
-    children: [
-      {
-        name: 'Folder',
-        fileurl: 'folder',
-        children: [
-          {
-            name: 'Dock Corp.pdf',
-            fileurl: 'http://www.pdfpdf.com/samples/Sample4.PDF'
-          },
-          {
-            name: 'Contracts.pdf',
-            fileurl: 'http://www.pdfpdf.com/samples/Sample3.PDF'
-          },
-        ]
-      }, {
-        name: 'Folder',
-        fileurl: ' folder',
-        children: [
-          {
-            name: 'Property Infos.pdf',
-            fileurl: 'http://www.pdfpdf.com/samples/Sample5.PDF'
-          },
-          {
-            name: 'Fiscality.pdf',
-            fileurl: 'http://www.pdfpdf.com/samples/xlsdemo1.pdf'
-          },
-        ]
-      },
-    ]
-  },
-];
 
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
@@ -72,22 +22,40 @@ interface ExampleFlatNode {
   name: string;
   level: number;
 }
+
+
 @Component({
   selector: 'app-docs',
   templateUrl: './docs.component.html',
   styleUrls: ['./docs.component.css']
 })
-export class DocsComponent {
 
+
+export class DocsComponent implements OnInit {
+
+  @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+
+  @ViewChild(ContextMenuComponent) public globalMenu: ContextMenuComponent;
+
+
+  ngOnInit(): void {
+    this.getDocs();
+    this.getMyProjects();
+  }
+
+  isopened: boolean;
+  docs: Doc[];
+  session: any;
+  myprojects: any;
+
+  TREE_DATA: FoodNode[] = [];
   private transformer = (node: FoodNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
       name: node.name,
-      fileurl: node.fileurl,
       level: level,
     };
   }
-  isopened: boolean;
   treeControl = new FlatTreeControl<ExampleFlatNode>(
     node => node.level, node => node.expandable);
 
@@ -95,33 +63,105 @@ export class DocsComponent {
     this.transformer, node => node.level, node => node.expandable, node => node.children);
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-  controllerSrc: any;
-  srcfile: string;
-  mytree: string[];
 
 
 
-  constructor(private sanitizer: DomSanitizer, private docsService: DocsService) {
-    this.dataSource.data = TREE_DATA;
-    this.controllerSrc = this.sanitizer.bypassSecurityTrustResourceUrl("");
+  constructor(private docsService: DocsService,
+    private authService: AuthService,
+    private managerService: ManagerService,
+    public loadingService: LoadingService,
+    private router: Router) {
+    this.TREE_DATA = [{
+      name: 'Root',
+
+      children: [
+        {
+          "name": 'Directive.pdf',
+        },
+        {
+          name: 'MyWork.pdf',
+        },
+
+        {
+          name: 'Agency infos.pdf',
+        },
+      ]
+    }, {
+      name: 'Bigger Folder',
+      children: [
+        {
+          name: 'Folder',
+          children: [
+            {
+              name: 'Dock Corp.pdf',
+            },
+            {
+              name: 'Contracts.pdf',
+            },
+          ]
+        }, {
+          name: 'Folder',
+          children: [
+            {
+              name: 'Property Infos.pdf',
+            },
+            {
+              name: 'Fiscality.pdf',
+            },
+          ]
+        },
+      ]
+    },
+    ];
+    this.dataSource.data = this.TREE_DATA;
+
+    this.loadingService.isLoading();
+
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
-  fileclick(url: string) {
-    this.srcfile = 'https://docs.google.com/viewer?url=' + url + '&embedded=true';
-    this.controllerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.srcfile);
+
+  getDocs() {
+    return this.docsService.getDocs()
+      .subscribe(
+        docs => {
+          this.docs = docs;
+          this.loadingService.isFinished();
+        }
+      );
   }
 
-  ngOnit() {
+  onRightClick(event) {
+    console.log("yes");
+  }
 
+  showMessage(message: any) {
+    console.log(message);
+  }
+
+  getMyProjects() {
+    this.session = this.authService.getPayload();
+    this.managerService.getUserProjects(this.session).subscribe(
+      (val) => {
+        this.myprojects = val;
+        this.loadingService.isFinished();
+      }
+    )
+  }
+
+  singleProject(id) {
+    this.router.navigate(['/myprojects/' + id]);
 
   }
+
 
   testbutton() {
-    this.docsService.organize();
+    console.log(this.myprojects);
+    //this.docsService.organize();
+    //this.tree = this.docsService.obj;
+    //console.log("tree", this.tree);
   }
-
 }
 
 

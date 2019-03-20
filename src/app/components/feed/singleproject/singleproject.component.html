@@ -1,0 +1,111 @@
+<!-- If Not Modify -->
+<div class="container">
+  <div class="row">
+    <div *ngIf=!editing class="col-6 text-dark">
+      <p class="h5">{{project.name}}</p>
+      <label>Creator : <p>{{translatemeArray(project.creatorId)}}</p> </label><br>
+      <label>Members : <p>{{translatemeArray(project.members)}}</p></label><br>
+      <label>Description : <p>{{project.description}}</p></label><br>
+      <label>Created at : <p>{{project.createdAt}}</p></label>
+
+      <p *ngIf="project.finished!=true" class="h5 text-danger">Ongoing</p>
+      <p *ngIf="project.finished==true" class="h5 text-success">Finished</p>
+    </div>
+    <!-- If Modify -->
+    <div *ngIf="editing" class="w-75 p-3">
+      <form #detailProjectForm="ngForm" class="list-group-item">
+        <!-- Project Name -->
+        <div class="form-group">
+          <label for="name" style="font-weight: bold;">Project Name :</label>
+          <input type="text" class="form-control" id="name" required [(ngModel)]="project.name" name="name"
+            #name="ngModel">
+          <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+            Creator is required
+          </div>
+        </div>
+        <!-- Creator -->
+        <!--         <div class="form-group">
+          <label for="creatorId" style="font-weight: bold;">Creator</label>
+          <input type="text" class="form-control" id="creatorId" required [(ngModel)]="project.creatorId"
+            name="creatorId" #creatorId="ngModel">
+          <div [hidden]="creatorId.valid || creatorId.pristine" class="alert alert-danger">
+            Creator is required
+          </div>
+        </div> -->
+        <div class="form-group">
+          <label for="members" class="font-weight-bold">Members</label>
+          <div class="row">
+            <div class="col">
+              <p>Selected members :</p>
+            </div>
+            <div class="row col">
+              <input class="form-control form-control-sm ml-3 w-75 search" type="text" placeholder="Search"
+                aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div *ngFor="let selectedmember of selectedmembers; let i = index "
+                (click)="deselectUser(selectedmembers[i])" class="list-group-item" style="cursor:pointer">
+                <span class="badge badge-dark">{{translatemeArray(selectedmembers[i])}}</span> &nbsp;
+              </div>
+            </div>
+            <div class="col">
+
+              <ng-container *ngFor="let user of users; let i = index ">
+                <div style="cursor:pointer"
+                  *ngIf="status[user.id]!=true && session.id!==user.id && user.status==true && user.id != selectedmembers[i] "
+                  class="list-group-item" (click)="selectUser(user)" [ngClass]="status[user.id] ? 'bg-success' : ''">
+                  <div class="row">
+                    <span class="badge badge-dark">{{ user.firstname }}
+                      &nbsp; {{ user.lastname }}</span>
+                    &nbsp;
+                    <span class="badge badge-secondary">{{ user.role }}</span>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <!-- Description -->
+        <div class="form-group">
+          <label style="font-weight: bold;" for="description">Description :</label> &nbsp;
+          <textarea type="text" class="form-control" id="description" required [(ngModel)]="project.description"
+            name="description" #description="ngModel"></textarea>
+          <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
+            Description is required
+          </div>
+        </div>
+        <div class="btn-group btn-group-sm">
+          <button type="button" *ngIf="editing" class="btn btn-dark" (click)="edit()">Cancel</button>
+
+          <button type="button" class="btn btn-success" (click)="update()"
+            [disabled]="!detailProjectForm.form.valid">Update</button>
+        </div>
+      </form>
+    </div>
+
+    <div [hidden]="!submitted">
+      <p>{{message}}</p>
+      <div class="btn-group btn-group-sm">
+      </div>
+    </div>
+    <!-- ---------------------------------------- -->
+    <div *ngIf=!editing class="col-4">
+      <div class="row">
+        <p class="col h5">Files</p><i class="float-right fas fa-plus-circle" style="font-size: 130%;cursor:pointer"
+          title="Add files"></i>
+      </div>
+    </div>
+    <div *ngIf="role=='Administrateur' || session.id==project.creatorId" class="col-2">
+      <!-- User Finish Button-->
+      <button *ngIf="!editing && project.finished == true" (click)="finish()" class="col btn btn-info">Continue</button>
+      <button *ngIf="!editing && project.finished == false" (click)="finish()"
+        class="col btn btn-success">Finish</button>
+      <!-- User Edit Button-->
+      <button *ngIf=!editing (click)="edit()" class="col btn btn-warning">Edit</button>
+      <!-- User Delete Button-->
+      <button *ngIf="!editing" class="col btn btn-danger text-dark" (click)="delete()">Remove</button>
+    </div>
+  </div>
+</div>

@@ -1,43 +1,95 @@
-<app-uploaders></app-uploaders>
 <div class="row">
-  <div class="col-3" style="background-color: rgba(255, 255, 255, 0.6);">
-    <br>
-    <h4>Répertoire général</h4>
-    <br>
+  <div [ngClass]="role=='Administrateur' ? 'bg-success' : 'bg-info'">
     <div class="container">
-    </div>
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <!-- This is the tree node template for leaf nodes -->
-      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-        <!-- use a disabled button to provide padding for tree leaf -->
-        <div (click)="fileclick(node.fileurl)" class="files"><i class="fas fa-file"></i>&nbsp;<span>{{node.name}}</span>
-        </div>
-      </mat-tree-node>
+      <br>
+      <h4>Répertoire général</h4>
+      <br>
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <div (click)="fileclick(node.fileurl)" class="files"><i
+              class="fas fa-file"></i>&nbsp;<span>{{node.name}}</span>
+          </div>
+        </mat-tree-node>
 
-      <!-- This is the tree node template for expandable nodes -->
-      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
-          <mat-icon class="mat-icon-rtl-mirror">
-            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-          </mat-icon>
-        </button>
-        <div class="files"><i *ngIf=!treeControl.isExpanded(node) class="fas fa-folder"></i>
-          <i *ngIf=treeControl.isExpanded(node) class="fas fa-folder-open"></i>
-          &nbsp;{{node.name}}
-        </div>
-      </mat-tree-node>
-    </mat-tree>
-    <br>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          <div class="files"><i *ngIf=!treeControl.isExpanded(node) class="fas fa-folder"></i>
+            <i *ngIf=treeControl.isExpanded(node) class="fas fa-folder-open"></i>
+            &nbsp;{{node.name}}
+          </div>
+        </mat-tree-node>
+      </mat-tree>
+      <br>
+    </div>
   </div>
-  <div class="col-9 " style="background-color: rgba(66, 139, 202, 0.6)">
+  <div class="col bg-light" style="float: none; margin: 0 auto;min-height: 150vh; width: 100%">
     <br>
-    <h4>Prévisualisation</h4>
+    <h4 class="h3">Projects</h4>
     <br>
-    <button class="btn btn-danger" (click)="testbutton()">Organize</button>
-    <p class="alert alert-dark">{{mytree}}</p>
-    <div style="float: none; margin: 0 auto;">
-      <iframe class="controls" frameborder="0" style="min-height: 150vh; width: 100%" [src]="controllerSrc"> </iframe>
-
+    <br>
+    <div class="container-fluid">
+      <div class="row">
+        <div *ngFor="let myproject of myprojects " [contextMenu]="basicMenu" [contextMenuSubject]="doc" class="col"
+          style="text-align: left;">
+          <span style="cursor: pointer;">
+            <i style="font-size:2rem; " class="far fa-file-word"></i>
+          </span>
+          <p>{{myproject.name}}</p>
+        </div>
+      </div>
     </div>
+    <br>
+    <h4 class="h3">Files</h4>
+    <br>
+    <div class="container-fluid">
+      <div class="row">
+        <div *ngFor="let doc of docs " [contextMenu]="basicMenu" [contextMenuSubject]="doc" class="col"
+          style="text-align: left;">
+          <span style="cursor: pointer;">
+            <i style="font-size:2rem; " class="far fa-file-word"></i>
+          </span>
+          <p>{{myprojects.name}}</p>
+        </div>
+      </div>
+    </div>
+
+
+    <button class="btn btn-danger" (click)="testbutton()">Organize</button>
+
+
+
   </div>
 </div>
+<context-menu>
+  <ng-template contextMenuItem (execute)="showMessage('File : ' + $event.doc.filename)">
+    Download
+  </ng-template>
+  <ng-template contextMenuItem [visible]="globalMenu">
+    Rename
+  </ng-template>
+  <ng-template contextMenuItem [visible]="globalMenu">
+    Move
+  </ng-template>
+  <ng-template contextMenuItem>
+    Permissions
+  </ng-template>
+  <ng-template contextMenuItem>
+    Delete
+  </ng-template>
+  <ng-template contextMenuItem>
+    Create Folder
+  </ng-template>
+  <ng-template>
+    Sort By
+  </ng-template>
+  <ng-template>
+    Upload Files
+  </ng-template>
+</context-menu>

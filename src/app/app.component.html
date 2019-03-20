@@ -1,12 +1,27 @@
-<div class="bg">
-  <br>
-  <app-navbar></app-navbar>
-  <div class="row space"></div>
-</div>
-<div class="row sign">
-  <div class="container">
+<ngx-loading [show]="load"
+  [config]="{animationType: ngxLoadingAnimationTypes.cubeGrid, primaryColour: primaryColour, backdropBorderRadius: '3px',backdropBackgroundColour : 'rgba(0, 0, 0, 0.5)'}">
+</ngx-loading>
+<app-navbar></app-navbar>
+<!-- <button (click)="test()">Vérifier le rôle</button>
+ -->
+<mat-sidenav-container>
+  <mat-sidenav-content>
+    <span (click)="snav.toggle()" style="color:dark; float:right; font-size: 2rem; cursor:pointer;" title="Sidebar"><i
+        class="fas fa-arrow-circle-left"></i></span>
     <br>
     <router-outlet></router-outlet>
     <br>
-  </div>
-</div>
+  </mat-sidenav-content>
+
+  <mat-sidenav #snav position="end" mode="side" [ngClass]="role=='Administrateur' ? 'bg-success' : 'bg-info'"
+    class="mb-0 navbar navbar-expand-lg navbar-dark  h6">
+    <div class="col">
+      <div *ngIf="role=='Administrateur' || role=='Project Manager'" class="row"><button class="btn btn-warning  w-100"
+          routerLink="/addproject">Créer un projet
+        </button></div>
+      <div class="row"><button class="btn btn-secondary  w-100" routerLink="/myprojects">Mes projets</button></div>
+    </div>
+  </mat-sidenav>
+
+
+</mat-sidenav-container>

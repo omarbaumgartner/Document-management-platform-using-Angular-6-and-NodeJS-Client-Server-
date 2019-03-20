@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from 'src/app/services/users/users.service';
 import { Location } from '@angular/common';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 
 @Component({
@@ -27,16 +28,21 @@ export class SingleuserComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location) {
-
+    private location: Location,
+    private loadingService: LoadingService) {
+    this.loadingService.isLoading();
   }
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id');
     this.userService.getUserById(id)
-      .subscribe(user => this.user = user);
+      .subscribe(user => {
+        this.user = user
+        this.loadingService.isFinished();
+      });
     if (JSON.parse(localStorage.getItem('currentUser'))) { this.authService.session = JSON.parse(localStorage.getItem('currentUser')); }
     this.onCheckAccount();
+
 
   }
 
@@ -44,7 +50,13 @@ export class SingleuserComponent implements OnInit {
     this.submitted = true;
     this.userService.updateUser(this.user)
       .subscribe(result => {
-        this.message = "User Updated Successfully!";
+        this.submitted = false;
+        if (this.adminModify == true) {
+          this.adminModify = false;
+        }
+        else if (this.userModify == true)
+          this.userModify = false;
+        // this.message = "User Updated Successfully!";
       });
   }
 
@@ -52,7 +64,9 @@ export class SingleuserComponent implements OnInit {
     this.submitted = true;
     this.adminModify = true;
     this.userService.deleteUser(this.user.id)
-      .subscribe(result => this.router.navigate(['/users']));
+      .subscribe(result => {
+        this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/users"]));
+      });
   }
 
   goBack(): void {
@@ -93,4 +107,5 @@ export class SingleuserComponent implements OnInit {
       }
     }
   }
+
 }

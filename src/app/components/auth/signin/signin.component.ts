@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { first } from 'rxjs/operators';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { LoadingService } from 'src/app/services/loading.service';
+import { AuthGuardService } from 'src/app/services/auth/auth-guard.service';
+
+
 
 @Component({
   selector: 'app-signin',
@@ -11,6 +16,7 @@ import { first } from 'rxjs/operators';
 })
 export class SigninComponent implements OnInit {
 
+  public loading: boolean = false;
   signInForm: FormGroup;
   returnUrl: string;
   emailpattern = "@instadeep.com";
@@ -18,10 +24,15 @@ export class SigninComponent implements OnInit {
   error: any;
   iserror: boolean;
 
+
   constructor(private formBuilder: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private loadingService: LoadingService,
+    private authGuard: AuthGuardService,
+    public dialog: MatDialog) {
 
   }
 
@@ -40,20 +51,32 @@ export class SigninComponent implements OnInit {
 
 
   onSubmit() {
+    this.loadingService.isLoading();
     const email = this.signInForm.get('email').value + this.emailpattern;
     const password = this.signInForm.get('password').value;
     this.authService.onlogin(email, password)
       .pipe(first())
       .subscribe(
         data => {
-          this.router.navigate([this.returnUrl]);
+          this.loadingService.isFinished();
+          this.snackBar.open("Connected", "", {
+            duration: 3000,
+            verticalPosition: "top",
+          });
+          this.authGuard.updateToken();
+          this.authGuard.noToken = false;
+          //  this.router.navigate([this.returnUrl]);
+          this.router.navigate(['/home']);
           this.authService.connexion(this.authService.currentstatus);
+          this.dialog.closeAll();
         },
         error => {
+          this.loadingService.isFinished();
           this.iserror = true;
           this.error = error.error.message;
         });
   }
+
 
 
 } 

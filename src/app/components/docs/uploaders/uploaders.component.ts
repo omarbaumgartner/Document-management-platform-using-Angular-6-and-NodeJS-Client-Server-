@@ -3,6 +3,7 @@ import { FileUploader, FileItem } from 'ng2-file-upload';
 
 
 const URL = 'http://localhost:8080/api/upload';
+//const URL = 'http://52.58.225.205:8080/api/upload';
 
 @Component({
   selector: 'app-uploaders',

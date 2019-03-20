@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Doc } from 'src/app/models/Doc.model';
 import { DocsService } from 'src/app/services/docs/docs.service';
 import { Router } from '@angular/router';
+import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
+import { LoadingService } from 'src/app/services/loading.service';
 
 
 
@@ -15,7 +17,11 @@ export class FilemanagerComponent implements OnInit {
   docs: Doc[];
 
   constructor(private docsService: DocsService,
-    private router: Router) { }
+    private router: Router,
+    private loadingService: LoadingService,
+  ) {
+    this.loadingService.isLoading();
+  }
 
   ngOnInit() {
     this.getDocs();
@@ -25,7 +31,8 @@ export class FilemanagerComponent implements OnInit {
     return this.docsService.getDocs()
       .subscribe(
         docs => {
-          this.docs = docs
+          this.docs = docs;
+          this.loadingService.isFinished();
         }
       );
   }

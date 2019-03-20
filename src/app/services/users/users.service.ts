@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from 'src/app/models/User.model';
+import * as jwt_decode from "jwt-decode";
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -11,9 +12,27 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UsersService {
+  //private usersUrl = 'http://52.29.87.21:8080/api/users';  // URL to web api
   private usersUrl = 'http://localhost:8080/api/users';  // URL to web api
+
+  user = new BehaviorSubject<User>(null);
+  userToken: any;
+  users: User[];
+
+
+
   constructor(
-    private http: HttpClient) { }
+    private http: HttpClient) {
+    this.getUsers()
+      .subscribe(
+        users => {
+          this.users = users;
+          console.log(this.users)
+
+        }
+      );
+
+  }
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.usersUrl)
@@ -45,4 +64,42 @@ export class UsersService {
     return this.http.put(this.usersUrl, user, httpOptions);
 
   }
+  getPayload() {
+    this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
+    console.log("User Token : " + this.userToken);
+    return jwt_decode(this.userToken);
+
+  }
+
+  fromIdToUsername(ids, users: User[]) {
+    // console.log(ids);
+    var i = 0;
+    // console.log(ids);
+    if (ids.length == undefined) {
+
+      //console.log(this.users[i].id)
+      while (ids != users[i].id) {
+        i++;
+      }
+      return users[i].firstname + " " + users[i].lastname;
+
+    }
+    else {
+      var usernames = [];
+      //console.log(this.users[0]);
+      var j;
+      for (i = 0; i < ids.length; i++) {
+        j = 0;
+        while (ids[i] != users[j].id) {
+          j++;
+        }
+        usernames.push(users[j].firstname + " " + users[j].lastname)
+      }
+      return usernames;
+    }
+
+
+  }
+
+
 }

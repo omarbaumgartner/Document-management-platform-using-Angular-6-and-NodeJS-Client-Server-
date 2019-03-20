@@ -1,14 +1,16 @@
-<h5 style="font-weight: bold; color: white;">All Users</h5>
-<br>
 <div class="w-75 p-3">
-  <div *ngFor="let user of users " class="list-group-item" style="width: 120%; font-size:larger;">
+  <h5 style="font-weight: bold; color: black;">All Users</h5>
+
+  <div *ngFor="let user of users " [ngClass]="{'bg-secondary' : !user.status}" class="list-group-item"
+    style="width: 120%; font-size:larger;" title="{{ user.email }}">
     <div (click)="viewProfile(user.id)" style="color:black; cursor:pointer;">
 
       <span class="badge badge-dark">{{user.id}}</span> &nbsp;
 
       <span><i class="fas fa-user-tie"></i></span> &nbsp;
 
-      <span class="badge badge-info">{{ user.firstname }}
+      <span [ngClass]="role=='Administrateur' ? 'badge badge-warning' : 'badge badge-info'"
+        class="badge badge-info">{{ user.firstname }}
         &nbsp; {{ user.lastname }}</span>
       &nbsp;&nbsp;
       <span class="badge badge-warning">{{ user.role }}</span>
@@ -17,10 +19,7 @@
       <br>
     </div>
   </div>
+  <br>
+  <a routerLink="user/add" class="btn btn-dark btn-xl" role="button" routerLinkActive="active">Add
+    user</a>
 </div>
-<br>
-<ul class="nav justify-content-center">
-  <li class="nav-item">
-    <a routerLink="user/add" class="btn btn-light btn-sm" role="button" routerLinkActive="active">Add user</a>
-  </li>
-</ul>
