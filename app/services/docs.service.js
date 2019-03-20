@@ -57,7 +57,6 @@ async function createDoc(req, chemin) {
             // print the error details
             console.log(err, req.content);
         });
-    console.log("Added to DataBase");
 }
 
 //Uploader un fichier

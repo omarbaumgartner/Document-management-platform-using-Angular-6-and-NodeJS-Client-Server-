@@ -30,9 +30,9 @@ module.exports = function (app) {
         }
     });
     let upload = multer({ storage: storage });
+
     // Upload a file 
     app.post('/api/upload', upload.array('file'), docs.uploadFile);
-
 
     //Optionnel-------------------------
     // get content from single file 

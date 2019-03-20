@@ -1,23 +1,22 @@
 const config = require('../../JWTconfig.json');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db.config');
-var jwtDecode = require('jwt-decode');
 const User = db.users;
 
 
 module.exports = {
     authenticate,
-    getAll
+    getAll,
+    checkToken
 };
 
 async function authenticate({ email, password }) {
     const user = await User.findOne({ where: { 'email': email } });
     //  const user = User.find({ where: { 'email': email }, where: { 'password': password } });
-    if (user && user.password == password) {
+    if (user && user.password == password && user.status == true) {
         //insertion BDD du token
-        const token = jwt.sign({ id: user.id, role: user.role, exp: Math.floor(Date.now() / 1000) + (60 * 5) }, config.secret);
+        const token = jwt.sign({ id: user.id, role: user.role, exp: Math.floor(Date.now() / 1000) + (60 * 60 * 5) }, config.secret);
         user.token = token;
-        console.log("This is the secret key : " + config.secret);
         User.update({ "token": token },
             { where: { 'id': user.id } });
         return {
@@ -34,8 +33,7 @@ async function getAll() {
 }
 
 // Return to front if the User token has expired or not yet
-async function checkToken(token) {
-    var decoded = jwt_decode(token);
-    console.log(User.find({ where: { token: token } }))
+async function checkToken(req) {
+    return User.findOne({ where: { token: req.params.token } })
 
 }

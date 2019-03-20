@@ -71,15 +71,11 @@ exports.update = (req, res) => {
 // Delete a User by Id
 exports.delete = (req, res) => {
 	const id = req.params.id;
-	console.log("Ceci est l'req" + req);
-
-	console.log("Ceci est l'ID" + id);
 	userService.remove(id)
 		.then(() => {
 			res.status(200).json({ msg: 'Deleted Successfully -> User Id = ' + id });
 		})
 		.catch(err => {
-			console.log(err);
 			res.status(500).json({ msg: "error", details: err });
 		});
 };

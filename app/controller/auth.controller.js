@@ -1,4 +1,6 @@
 const authService = require('../services/auth.service');
+var jwt_decode = require('jwt-decode');
+
 
 exports.authenticate = (req, res) => {
     authService.authenticate(req.body)
@@ -14,5 +16,16 @@ exports.getAll = (req, res, next) => {
 
 // Return to front if the User token has expired or not yet
 exports.checkToken = (req, res) => {
+    var decodedtoken = jwt_decode(req.params.token);
+    var actualDate = Math.round(new Date().getTime() / 1000);
+    authService.checkToken(req)
+        .then(result => {
+            if (result.dataValues != null && decodedtoken.exp > actualDate) {
+                res.send(true);
+            }
+            else
+                res.send(false);
 
+        })
+        .catch(err => next(err));
 }

@@ -22,9 +22,13 @@ db.sequelize.sync({ force: false }).then(() => {
 });
 
 // ---- Routes Imports ----
-require('./app/route/doc.route.js')(app);
 require('./app/route/user.route.js')(app);
 require('./app/route/auth.route.js')(app);
+require('./app/route/project.route.js')(app);
+require('./app/route/doc.route.js')(app);
+
+
+
 
 
 function initial() {
@@ -71,6 +75,7 @@ const errorHandler = require('./app/helpers/error-handler');
 
 // api routes
 //app.use('/auths', require('./app/controller/auth.controller'));
+
 // global error handler
 app.use(errorHandler);
 

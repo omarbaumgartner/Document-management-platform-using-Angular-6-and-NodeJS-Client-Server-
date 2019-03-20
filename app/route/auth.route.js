@@ -8,6 +8,6 @@ module.exports = function (app) {
     app.get('/auths', auth.getAll);
 
     // Return to front if the User token has expired or not yet
-    app.post('/authguard', auth.checkToken)
+    app.get('/authguard/:token', auth.checkToken);
 
 }

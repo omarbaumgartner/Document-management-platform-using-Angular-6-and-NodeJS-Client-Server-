@@ -1,25 +1,25 @@
 module.exports = (sequelize, Sequelize) => {
 	const Doc = sequelize.define('doc', {
+		projectid: {
+			type: Sequelize.INTEGER
+		},
+		authorId: {
+			type: Sequelize.INTEGER
+		},
 		filename: {
-			type: Sequelize.STRING
-		},
-		relativename: {
-			type: Sequelize.STRING
-		},
-		encoding: {
-			type: Sequelize.STRING
-		},
-		extension: {
 			type: Sequelize.STRING
 		},
 		path: {
 			type: Sequelize.STRING
 		},
-		sizeinko: {
-			type: Sequelize.STRING
+		versions: {
+			type: Sequelize.ARRAY(Sequelize.INTEGER)
 		},
-		content: {
-			type: Sequelize.STRING
+		validated: {
+			type: Sequelize.BOOLEAN
+		},
+		published: {
+			type: Sequelize.BOOLEAN
 		}
 	});
 

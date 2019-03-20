@@ -17,6 +17,9 @@ module.exports = (sequelize, Sequelize) => {
 		},
 		token: {
 			type: Sequelize.STRING
+		},
+		status: {
+			type: Sequelize.BOOLEAN
 		}
 	});
 
