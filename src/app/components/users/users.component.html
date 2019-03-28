@@ -1,4 +1,4 @@
-<div class="w-75 p-3">
+<div class="w-75 p-3 basic">
   <h5 style="font-weight: bold; color: black;">All Users</h5>
 
   <div *ngFor="let user of users " [ngClass]="{'bg-secondary' : !user.status}" class="list-group-item"
@@ -20,6 +20,7 @@
     </div>
   </div>
   <br>
-  <a routerLink="user/add" class="btn btn-dark btn-xl" role="button" routerLinkActive="active">Add
+  <a *ngIf="role=='Administrateur'" routerLink="user/add" class="btn btn-dark btn-xl" role="button"
+    routerLinkActive="active">Add
     user</a>
 </div>

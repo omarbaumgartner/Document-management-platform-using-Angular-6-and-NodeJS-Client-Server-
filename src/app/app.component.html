@@ -1,26 +1,64 @@
 <ngx-loading [show]="load"
   [config]="{animationType: ngxLoadingAnimationTypes.cubeGrid, primaryColour: primaryColour, backdropBorderRadius: '3px',backdropBackgroundColour : 'rgba(0, 0, 0, 0.5)'}">
 </ngx-loading>
-<app-navbar></app-navbar>
 <!-- <button (click)="test()">Vérifier le rôle</button>
  -->
-<mat-sidenav-container>
+<mat-sidenav-container class="fullscreen">
+
   <mat-sidenav-content>
-    <span (click)="snav.toggle()" style="color:dark; float:right; font-size: 2rem; cursor:pointer;" title="Sidebar"><i
-        class="fas fa-arrow-circle-left"></i></span>
+    <div class="container-fluid row">
+      <span *ngIf=!toggled style="color:dark; font-size: 2rem; cursor:pointer;margin-top: 0.3rem;" title="Sidebar"> <i
+          (click)="toggle(snav)" class="col fas fa-bars"></i>
+      </span>
+      <app-navbar class="col"></app-navbar>
+
+    </div>
     <br>
     <router-outlet></router-outlet>
     <br>
   </mat-sidenav-content>
 
-  <mat-sidenav #snav position="end" mode="side" [ngClass]="role=='Administrateur' ? 'bg-success' : 'bg-info'"
-    class="mb-0 navbar navbar-expand-lg navbar-dark  h6">
-    <div class="col">
-      <div *ngIf="role=='Administrateur' || role=='Project Manager'" class="row"><button class="btn btn-warning  w-100"
-          routerLink="/addproject">Créer un projet
-        </button></div>
-      <div class="row"><button class="btn btn-secondary  w-100" routerLink="/myprojects">Mes projets</button></div>
+  <mat-sidenav #snav position="start" mode="side" [ngClass]="role=='Administrateur' ? 'bg-success' : 'bg-info'"
+    class="navbar bg-dark " style="width:15rem;">
+    <div style="margin-top: 0.3rem;">
+      <div class="col">
+        <div class="row"><img src="../assets/instadeeplogo.png" class="col img-fluid" style="cursor: pointer;"
+            alt="Responsive image">
+          <i (click)="toggle(snav)" style="color:white;cursor: pointer;font-size: 2rem" class="col-3 fas fa-bars"></i>
+        </div>
+
+        <div class="row"><button class="btn btn-dark w-100 text-left" routerLink="/home"> <i
+              class="fas fa-home"></i>Accueil</button>
+        </div>
+        <div class="row"><button class="btn btn-dark w-100 text-left" routerLink="/myprojects"><i
+              class="fas fa-project-diagram"></i>Mes projets</button>
+        </div>
+        <div class="row"><button class="btn btn-dark w-100 text-left" routerLink="/myprojects"><i
+              class="far fa-bell"></i>Boîte de réception</button>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="row"><button class="btn btn-dark w-100 text-left" routerLink="/myprojects">Projets</button>
+        </div>
+        <div class="row" *ngIf="role=='Administrateur' || role=='Project Manager'"><button
+            class="btn btn-dark w-100 text-left" routerLink="/addproject">Créer un projet
+          </button></div>
+        <div class="row">
+          <button class="btn btn-dark w-100 text-left" routerLink="/users">Users</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-dark w-100 text-left" routerLink="/adminpannel">Admin</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-dark w-100 text-left disabled" routerLink="/docs">Docs</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-dark w-100 text-left disabled" routerLink="/filemanager">FileManager</button>
+        </div>
+
+
+      </div>
     </div>
+
   </mat-sidenav>
 
 

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
 
+
 //import { SigninComponent } from 'src/app/components/auth/signin/signin.component';
 
 
@@ -24,8 +25,12 @@ export class AuthGuardService {
     private http: HttpClient,
     private snackBar: MatSnackBar,
     public dialog: MatDialog) {
+
+
+
     this.updateToken();
     setInterval(() => this.updateToken(), 1000 * 60);
+
   }
 
   onCheckToken() {
@@ -92,12 +97,14 @@ export class AuthGuardService {
 
 
 
+
   //Optionnal : Login animation
   /*   openDialog(): void {
       const dialogRef = this.dialog.open(SigninComponent, {
         autoFocus: true,
       });
     } */
+
 
   logout() {
     console.log("Logged out");

@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from 'src/app/models/User.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { ManagerService } from 'src/app/services/manager/manager.service';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -27,7 +28,8 @@ export class AddprojectComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private userService: UsersService,
     private managerService: ManagerService,
-    private router: Router, ) {
+    private router: Router,
+    private location: Location) {
 
   }
 
@@ -42,7 +44,6 @@ export class AddprojectComponent implements OnInit {
       description: ['', [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9_.]{1,15}')]],
       creatorId: [this.session.id, [Validators.required]],
       members: [this.members, Validators.minLength(2)],
-      documents: [],
     });
 
   }
@@ -71,7 +72,6 @@ export class AddprojectComponent implements OnInit {
     this.project.description = this.projectForm.get('description').value;
     this.project.creatorId = this.projectForm.get('creatorId').value;
     this.project.members = this.projectForm.get('members').value;
-    this.project.documents = this.projectForm.get('documents').value;
     this.managerService.addProject(this.project)
       .subscribe(result => this.router.navigate(['/users']));
   }
@@ -103,7 +103,6 @@ export class AddprojectComponent implements OnInit {
 
   deselectUser(userId) {
     if (userId == this.session.id) {
-
     }
     else {
       var y = 0;
@@ -125,12 +124,8 @@ export class AddprojectComponent implements OnInit {
     }
   }
 
-  test() {
-    console.log(this.session.id)
-    console.log(this.users)
-    console.log(this.creatoruser)
-    console.log(this.members)
-    console.log(this.selectedmembers)
+  goBack() {
+    this.location.back();
   }
 
 }

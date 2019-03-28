@@ -6,6 +6,10 @@ import { ManagerService } from 'src/app/services/manager/manager.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { UsersService } from 'src/app/services/users/users.service';
 import { User } from 'src/app/models/User.model';
+import { Doc } from 'src/app/models/Doc.model';
+import { MatDialog } from '@angular/material';
+import { Location } from '@angular/common';
+import { AdddocComponent } from '../../docs/adddoc/adddoc.component';
 
 @Component({
   selector: 'app-singleproject',
@@ -15,14 +19,18 @@ import { User } from 'src/app/models/User.model';
 export class SingleprojectComponent implements OnInit {
 
   project = new Project();
+  document = new Doc();
   session: any;
   editing: boolean = false;
+  isRenaming: Array<boolean> = [false];
   message: string;
+  documents: Doc;
   users: User[];
   members: Array<number> = [];
   selectedmembers: Array<number> = [];
   status: Array<boolean> = [false];
   role: any;
+  projectId: number;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -30,15 +38,17 @@ export class SingleprojectComponent implements OnInit {
     private authService: AuthService,
     private managerService: ManagerService,
     private userService: UsersService,
+    public dialog: MatDialog,
+    private location: Location,
   ) {
     this.loadingService.isLoading();
   }
 
   ngOnInit() {
-    const id = +this.route.snapshot.paramMap.get('id');
-    this.managerService.getProjectById(id)
+    this.projectId = +this.route.snapshot.paramMap.get('id');
+    this.managerService.getProjectById(this.projectId)
       .subscribe(project => {
-        this.project = project
+        this.project = project;
         this.members = this.project.members;
         var i;
 
@@ -46,13 +56,32 @@ export class SingleprojectComponent implements OnInit {
         for (i = 0; i < this.project.members.length; i++) {
           this.status[this.project.members[i]] = true;
         }
+        this.managerService.getDocuments(this.projectId)
+          .subscribe(document => {
+            this.documents = document;
+            //console.log(this.document);
+            this.loadingService.isFinished();
 
-        this.loadingService.isFinished();
+          })
       });
     this.getUsers();
     this.role = this.authService.currentrole.value;
     this.session = this.userService.getPayload();
 
+
+
+  }
+
+  viewDocument(document: any) {
+    var i;
+    var recentId = document.versions[0];
+    for (i = 0; i < document.versions.length; i++) {
+      if (recentId < document.versions[i]) {
+        recentId = document.versions[i];
+      }
+    }
+    console.log(recentId);
+    this.router.navigate(['/docs/' + recentId]);
 
   }
 
@@ -65,6 +94,35 @@ export class SingleprojectComponent implements OnInit {
       );
   }
 
+  addFile(): void {
+    const dialogRef = this.dialog.open(AdddocComponent, {
+      autoFocus: true,
+      data: {
+        projectId: this.projectId,
+        authorId: this.session.id,
+      }
+    }).afterClosed().subscribe((val) => {
+      this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.projectId]));
+    });
+  }
+
+  updateFile(document): void {
+    //this.submitted = true;
+    this.managerService.updateDocument(document)
+      .subscribe(result => {
+        this.isRenaming[document.id] = false;
+        //this.message = "Projec Updated Successfully!";
+      });
+  }
+
+  deleteFile(id): void {
+    this.managerService.deleteDocument(id)
+      .subscribe(result => {
+        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.projectId]));
+
+      });
+  }
+
   edit() {
     if (this.editing == false) {
       this.editing = true;
@@ -73,7 +131,11 @@ export class SingleprojectComponent implements OnInit {
       this.editing = false;
   }
 
-  update(): void {
+  rename(id) {
+    this.isRenaming[id] = true;
+  }
+
+  updateProject(): void {
     //this.submitted = true;
     this.managerService.updateProject(this.project)
       .subscribe(result => {
@@ -85,7 +147,7 @@ export class SingleprojectComponent implements OnInit {
   delete(): void {
     this.managerService.deleteProject(this.project.id)
       .subscribe(result => {
-        this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/myprojects"]));
+        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects"]));
       });
   }
 
@@ -151,5 +213,10 @@ export class SingleprojectComponent implements OnInit {
     }
     this.project.members = this.members;
     // console.log(this.project.members);
+  }
+
+  goBack(): void {
+    this.router.navigate(['/myprojects']);
+
   }
 }

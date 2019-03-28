@@ -6,7 +6,7 @@
       <label>Creator : <p>{{translatemeArray(project.creatorId)}}</p> </label><br>
       <label>Members : <p>{{translatemeArray(project.members)}}</p></label><br>
       <label>Description : <p>{{project.description}}</p></label><br>
-      <label>Created at : <p>{{project.createdAt}}</p></label>
+      <label>Created at : <p>{{project.createdAt|slice:0:10}}</p></label>
 
       <p *ngIf="project.finished!=true" class="h5 text-danger">Ongoing</p>
       <p *ngIf="project.finished==true" class="h5 text-success">Finished</p>
@@ -70,8 +70,8 @@
         <!-- Description -->
         <div class="form-group">
           <label style="font-weight: bold;" for="description">Description :</label> &nbsp;
-          <textarea type="text" class="form-control" id="description" required [(ngModel)]="project.description"
-            name="description" #description="ngModel"></textarea>
+          <textarea autosize type="text" class="form-control" id="description" required
+            [(ngModel)]="project.description" name="description" #description="ngModel"></textarea>
           <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
             Description is required
           </div>
@@ -79,7 +79,7 @@
         <div class="btn-group btn-group-sm">
           <button type="button" *ngIf="editing" class="btn btn-dark" (click)="edit()">Cancel</button>
 
-          <button type="button" class="btn btn-success" (click)="update()"
+          <button type="button" class="btn btn-success" (click)="updateProject()"
             [disabled]="!detailProjectForm.form.valid">Update</button>
         </div>
       </form>
@@ -91,21 +91,51 @@
       </div>
     </div>
     <!-- ---------------------------------------- -->
-    <div *ngIf=!editing class="col-4">
+    <div class="container" *ngIf=!editing class="col-4">
+      <div *ngIf="role=='Administrateur'||role=='Project Manager'" class="row">
+        <p class="col h5">Files</p>
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            Add File
+          </button>
+          <div class="dropdown-menu">
+            <a style="cursor:pointer" class="dropdown-item" (click)="addFile()">New File</a>
+            <a style="cursor:pointer" class="dropdown-item">Import File</a>
+          </div>
+        </div>
+      </div>
+
+      <br>
       <div class="row">
-        <p class="col h5">Files</p><i class="float-right fas fa-plus-circle" style="font-size: 130%;cursor:pointer"
-          title="Add files"></i>
+        <div style="text-align: center;" class="col-4" *ngFor="let document of documents;">
+          <i (click)="viewDocument(document)" style="font-size: 3rem; cursor:pointer;" class="fas fa-file"></i><br>
+          <label>{{document.filename}}</label>
+          <form *ngIf="isRenaming[document.id]" #detailDocumentForm="ngForm">
+            <input a type="text" class="form-control" id="filename" [(ngModel)]="document.filename" name="filename"
+              #filename="ngModel" required>
+            <button type="button" class="btn btn-success" (click)="updateFile(document)"
+              [disabled]="!detailDocumentForm.form.valid">Update</button>
+          </form><br>
+          <div *ngIf="role=='Administrateur'||role=='Project Manager'">
+            <button *ngIf="!isRenaming[document.id]" (click)="rename(document.id)">Rename</button>
+            <button *ngIf="!isRenaming[document.id]" (click)="deleteFile(document.id)">Delete</button>
+          </div>
+
+        </div>
       </div>
     </div>
     <div *ngIf="role=='Administrateur' || session.id==project.creatorId" class="col-2">
       <!-- User Finish Button-->
-      <button *ngIf="!editing && project.finished == true" (click)="finish()" class="col btn btn-info">Continue</button>
-      <button *ngIf="!editing && project.finished == false" (click)="finish()"
-        class="col btn btn-success">Finish</button>
+      <button *ngIf="!editing && project.finished == true" (click)="finish()" class="col btn btn-info">Continue
+        Project</button>
+      <button *ngIf="!editing && project.finished == false" (click)="finish()" class="col btn btn-success">Finish
+        Project</button>
       <!-- User Edit Button-->
-      <button *ngIf=!editing (click)="edit()" class="col btn btn-warning">Edit</button>
+      <button *ngIf=!editing (click)="edit()" class="col btn btn-warning">Edit Project</button>
       <!-- User Delete Button-->
-      <button *ngIf="!editing" class="col btn btn-danger text-dark" (click)="delete()">Remove</button>
+      <button *ngIf="!editing" class="col btn btn-danger text-dark" (click)="delete()">Remove Project</button>
     </div>
   </div>
+  <button *ngIf=!editing class="btn btn-dark" (click)="goBack()">Back</button>
 </div>

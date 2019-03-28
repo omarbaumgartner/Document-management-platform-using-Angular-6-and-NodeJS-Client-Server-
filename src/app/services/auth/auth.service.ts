@@ -70,12 +70,12 @@ export class AuthService {
   }
 
   tokenDecoder(term) {
-    term = jwt_decode(term);
+    return jwt_decode(term);
   }
 
   getPayload() {
     if (localStorage.getItem('currentUser') != null) {
-    this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
+      this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
       console.log("User Token : " + this.userToken);
       return jwt_decode(this.userToken);
     }

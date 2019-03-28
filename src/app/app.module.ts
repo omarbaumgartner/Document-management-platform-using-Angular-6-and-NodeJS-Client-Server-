@@ -13,10 +13,12 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { PasswordStrengthBarModule } from 'ng2-password-strength-bar';
 import { NgxLoadingModule } from 'ngx-loading';
 import { ContextMenuModule } from 'ngx-contextmenu';
+import { AutosizeModule } from 'ngx-autosize';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
 import { AuthGuardService } from './services/auth/auth-guard.service';
+import { RoleGuardService } from './services/auth/role-guard.service';
 import { UsersService } from './services/users/users.service';
 import { DocsService } from './services/docs/docs.service';
 import { LoadingService } from './services/loading.service';
@@ -39,25 +41,88 @@ import { SidenavComponent } from './components/navbar/sidenav/sidenav.component'
 import { AddprojectComponent } from './components/feed/addproject/addproject.component';
 import { MyprojectsComponent } from './components/feed/myprojects/myprojects.component';
 import { SingleprojectComponent } from './components/feed/singleproject/singleproject.component';
+import { HomeComponent } from './components/home/home/home.component';
+import { AdddocComponent } from './components/docs/adddoc/adddoc.component';
+import { SingledocComponent } from './components/docs/singledoc/singledoc.component';
 
 
 
 
 const appRoutes: Routes = [
   //Example : 
-  { path: 'home', component: FeedComponent, canActivate: [AuthGuardService] },
-  { path: 'docs', component: DocsComponent, canActivate: [AuthGuardService] },
-  { path: 'auth/signin', component: SigninComponent },
-  { path: 'users', canActivate: [AuthGuardService], component: UsersComponent },
-  { path: 'users/user/add', component: AdduserComponent, canActivate: [AuthGuardService] },
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [AuthGuardService],
+    data: {
+      name: 'Accueil'
+    }
+  },
+  {
+    path: 'adminpannel',
+    component: FeedComponent,
+    canActivate: [AuthGuardService, RoleGuardService],
+    data: {
+      name: 'AdminPannel'
+    }
+  },
+  {
+    path: 'docs',
+    component: DocsComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'docs/:id',
+    component: SingledocComponent,
+    canActivate: [AuthGuardService]
+  },
+
+  {
+    path: 'auth/signin',
+    component: SigninComponent
+  },
+  {
+    path: 'users',
+    canActivate: [AuthGuardService],
+    component: UsersComponent,
+    data: {
+      name: 'Users'
+    }
+  },
+  {
+    path: 'users/user/add',
+    component: AdduserComponent,
+    canActivate: [AuthGuardService, RoleGuardService]
+  },
   {
     path: 'users/:id',
-    component: SingleuserComponent, canActivate: [AuthGuardService]
+    component: SingleuserComponent,
+    canActivate: [AuthGuardService]
   },
-  { path: 'filemanager', component: FilemanagerComponent, canActivate: [AuthGuardService] },
-  { path: 'addproject', component: AddprojectComponent, canActivate: [AuthGuardService] },
-  { path: 'myprojects', component: MyprojectsComponent, canActivate: [AuthGuardService] },
-  { path: 'myprojects/:id', component: SingleprojectComponent, canActivate: [AuthGuardService] },
+  {
+    path: 'filemanager',
+    component: FilemanagerComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'addproject',
+    component: AddprojectComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'myprojects',
+    component: MyprojectsComponent,
+    canActivate: [AuthGuardService],
+    data: {
+      name: 'Mes projets'
+    }
+  },
+  {
+    path: 'myprojects/:id',
+    component: SingleprojectComponent,
+    canActivate: [AuthGuardService]
+  },
+
 
 
   //Empty link
@@ -88,10 +153,13 @@ const appRoutes: Routes = [
     AddprojectComponent,
     MyprojectsComponent,
     SingleprojectComponent,
+    HomeComponent,
+    AdddocComponent,
+    SingledocComponent,
 
 
   ],
-  entryComponents: [UploadersComponent],
+  entryComponents: [AdddocComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -103,6 +171,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     MatTreeModule,
     MatIconModule,
+    AutosizeModule,
     FlexLayoutModule,
     ContextMenuModule.forRoot(),
     FileUploadModule,
@@ -125,6 +194,7 @@ const appRoutes: Routes = [
   providers: [
     AuthService,
     AuthGuardService,
+    RoleGuardService,
     LoadingService,
     UsersService,
     DocsService,

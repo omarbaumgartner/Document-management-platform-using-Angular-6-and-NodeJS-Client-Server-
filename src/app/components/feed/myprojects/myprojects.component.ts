@@ -15,9 +15,8 @@ import { User } from 'src/app/models/User.model';
 export class MyprojectsComponent implements OnInit {
   session: any;
   myprojects: Project;
-  expanded: boolean = false;
-  sliced: number = 100;
-  points: string = "...";
+  expanded: Array<boolean> = [false];
+  sliced: Array<number> = [100];
 
   constructor(private authService: AuthService,
     private userService: UsersService,
@@ -28,18 +27,16 @@ export class MyprojectsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getMyProjects()
+    this.getMyProjects();
   }
 
   getMyProjects() {
     this.session = this.authService.getPayload();
-    console.log(this.session)
     this.managerService.getUserProjects(this.session.id)
       .subscribe(
         projects => {
           this.myprojects = projects;
           this.loadingService.isFinished();
-          console.log(this.myprojects);
         }
       )
   }
@@ -53,9 +50,27 @@ export class MyprojectsComponent implements OnInit {
     return this.userService.fromIdToUsername(ids, this.userService.users);
 
   }
-  seeMore() {
-    this.expanded = true;
-    this.sliced = 1000;
-    this.points = "";
+  slice(i) {
+    if (!this.sliced[i]) {
+      this.sliced[i] = 100;
+      return this.sliced[i].valueOf();
+    }
+    else {
+      this.sliced[i] == 1000
+      return this.sliced[i].valueOf();
+    }
+
+  }
+
+  seeMore(i) {
+    if (this.sliced[i] == 100) {
+      this.expanded[i] = true;
+      this.sliced[i] = 10000;
+    }
+    else {
+      this.expanded[i] = false;
+      this.sliced[i] = 100;
+    }
+
   }
 }

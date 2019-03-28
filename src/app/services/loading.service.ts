@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class LoadingService {
 
   isloading = new BehaviorSubject<boolean>(false)
+  activePage: any;
 
   constructor() { }
 
@@ -19,5 +20,8 @@ export class LoadingService {
 
   }
 
+  toggle(term) {
+    term.toggle();
+  }
 
 }

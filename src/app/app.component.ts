@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 
 export class AppComponent {
 
+  toggled: boolean;
   load: boolean;
   isloading = this.loadingService.isloading;
   isConnected: boolean;
@@ -26,6 +27,8 @@ export class AppComponent {
   public primaryColour = '#dd0031';
   session: any;
   role: any;
+  activePage: any;
+
 
   constructor(public loadingService: LoadingService,
     private authService: AuthService,
@@ -49,12 +52,14 @@ export class AppComponent {
     if (localStorage.getItem('currentUser')) {
       this.authService.setRole();
     }
-
   }
+
 
   test() {
     console.log(this.role);
+
   }
+
 
   /*   openUploader(): void {
       const dialogRef = this.dialog.open(UploadersComponent, {
@@ -62,6 +67,12 @@ export class AppComponent {
       });
     } */
 
-
+  toggle(term) {
+    this.loadingService.toggle(term);
+    if (this.toggled == true)
+      this.toggled = false;
+    else
+      this.toggled = true;
+  }
 
 }

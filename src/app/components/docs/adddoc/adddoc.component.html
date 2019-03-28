@@ -1,0 +1,11 @@
+<div class="container">
+  <form [formGroup]="documentForm" (ngSubmit)="onSubmit()">
+    <div class="form-group ">
+      <label for="filename">File Name </label>
+      <input type="text" class="form-control" id="filename" formControlName="filename" name="filename" required>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-success" [disabled]="documentForm.invalid">Create</button>
+    </div>
+  </form>
+</div>

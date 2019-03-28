@@ -27,7 +27,7 @@ body {
     background-color: black;
     background-size:cover;
     background-repeat:repeat;
-    height: 100%;
+   
     min-height: 80vh;
 
 }
@@ -53,4 +53,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 .mat-tree {
     background: transparent;
+}
+.fullscreen {
+    height: 100vh;
 }

@@ -2,11 +2,12 @@
   <div class="row">
     <div class="col">
       <p class="h2">My projects</p>
-      <div *ngFor="let myprojects of myprojects">
+      <div *ngFor="let myprojects of myprojects; let i = index ">
         <div class="alert alert-secondary card" *ngIf="myprojects.finished==false">
           <p style="cursor:pointer" (click)="singleProject(myprojects.id)" class="h4">{{myprojects.name}}</p>
-          <p>Description : {{myprojects.description | slice:0:sliced}}{{points}} <a (click)="seeMore()" *ngIf=!expanded
-              style="color:blue;cursor:pointer;">Voir plus</a></p>
+          <p>Description : {{myprojects.description | slice:0:slice(i)}}<a (click)="seeMore(i)" *ngIf=!expanded[i]
+              style="color:blue;cursor:pointer;">Voir plus</a>
+            <a (click)="seeMore(i)" *ngIf=expanded[i] style="color:blue;cursor:pointer;">Voir moins</a></p>
 
           <p class="h6 text-danger">Ongoing</p>
         </div>
@@ -17,7 +18,7 @@
       <div *ngFor="let myprojects of myprojects">
         <div style="cursor:pointer" *ngIf="myprojects.finished==true" class="alert alert-success card">
           <p style="cursor:pointer" (click)="singleProject(myprojects.id)" class="h4">{{myprojects.name}}</p>
-          <p>Description : {{myprojects.description | slice:0:sliced}}{{points}}</p>
+          <p>Description : {{myprojects.description | slice:0:sliced}}</p>
           <p class="h6 text-success">Finished</p>
         </div>
       </div>

@@ -34,6 +34,7 @@
     "jwt-decode": "^2.2.0",
     "ng2-file-upload": "^1.3.0",
     "ng2-password-strength-bar": "^1.2.3",
+    "ngx-autosize": "^1.5.1",
     "ngx-contextmenu": "^5.1.1",
     "ngx-loading": "^3.0.1",
     "npm-install-missing": "^0.1.4",

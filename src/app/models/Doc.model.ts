@@ -1,13 +1,13 @@
 export class Doc {
     id: number;
-    projectId: number;
-    authorId: number;
+    projectid: number;
+    authorid: number;
     filename: string;
     // encoding: string;
     // extension: string;
     path: string;
     // sizeinko: number;
-    version: Array<number>;
+    versions: Array<number>;
     validated: boolean;
     published: boolean;
     createdAt: string;
