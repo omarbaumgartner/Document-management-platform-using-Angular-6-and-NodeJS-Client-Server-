@@ -14,6 +14,9 @@ import { PasswordStrengthBarModule } from 'ng2-password-strength-bar';
 import { NgxLoadingModule } from 'ngx-loading';
 import { ContextMenuModule } from 'ngx-contextmenu';
 import { AutosizeModule } from 'ngx-autosize';
+import { AvatarModule } from 'ngx-avatar';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+
 
 // Services
 import { AuthService } from './services/auth/auth.service';
@@ -44,6 +47,7 @@ import { SingleprojectComponent } from './components/feed/singleproject/singlepr
 import { HomeComponent } from './components/home/home/home.component';
 import { AdddocComponent } from './components/docs/adddoc/adddoc.component';
 import { SingledocComponent } from './components/docs/singledoc/singledoc.component';
+import { ProjectlistComponent } from './components/navbar/sidenav/projectlist/projectlist.component';
 
 
 
@@ -156,6 +160,7 @@ const appRoutes: Routes = [
     HomeComponent,
     AdddocComponent,
     SingledocComponent,
+    ProjectlistComponent,
 
 
   ],
@@ -169,10 +174,12 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    AvatarModule,
     MatTreeModule,
     MatIconModule,
     AutosizeModule,
     FlexLayoutModule,
+    CKEditorModule,
     ContextMenuModule.forRoot(),
     FileUploadModule,
     NgxLoadingModule.forRoot({}),

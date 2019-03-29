@@ -1,24 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { ManagerService } from 'src/app/services/manager/manager.service';
-import { AuthService } from 'src/app/services/auth/auth.service';
 import { Project } from 'src/app/models/Project.model';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { ManagerService } from 'src/app/services/manager/manager.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-projectlist',
+  templateUrl: './projectlist.component.html',
+  styleUrls: ['./projectlist.component.css']
 })
-export class HomeComponent implements OnInit {
-  session: any;
+export class ProjectlistComponent implements OnInit {
   myprojects: Project;
+  session: any;
 
-  constructor(public managerService: ManagerService,
-    private authService: AuthService,
+  constructor(public authService: AuthService,
+    public managerService: ManagerService,
     public router: Router) { }
 
   ngOnInit() {
     this.getMyProjects();
+
   }
 
 
@@ -32,8 +33,13 @@ export class HomeComponent implements OnInit {
       )
   }
 
+  checkProjects() {
+    this.getMyProjects();
+  }
 
   viewProject(id) {
+
     this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/myprojects/" + id]));
   }
+
 }

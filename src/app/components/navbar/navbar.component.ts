@@ -8,6 +8,7 @@ import { SigninComponent } from '../auth/signin/signin.component';
 import { AuthGuardService } from 'src/app/services/auth/auth-guard.service';
 import { AppComponent } from 'src/app/app.component';
 import { LoadingService } from 'src/app/services/loading.service';
+import { BehaviorSubject, Observable, interval } from 'rxjs';
 
 
 @Component({
@@ -26,12 +27,13 @@ export class NavbarComponent implements OnInit {
   currentrole = this.authService.currentrole;
   role: any;
   activePage: any;
-
+  userProfile: any;
+  searchBarSize: number = 10;
 
   constructor(private authService: AuthService,
     private authGuardService: AuthGuardService,
     private route: ActivatedRoute,
-    private userSerivce: UsersService,
+    private userService: UsersService,
     private router: Router,
     public loadingService: LoadingService,
     public dialog: MatDialog) {
@@ -41,6 +43,13 @@ export class NavbarComponent implements OnInit {
     this.authService.currentrole.subscribe((val) => {
       this.role = val;
     })
+
+    this.userService.userProfile.subscribe((val) => {
+      this.userProfile = val;
+    })
+
+
+
   }
 
   ngOnInit() {
@@ -59,8 +68,9 @@ export class NavbarComponent implements OnInit {
     if (JSON.parse(localStorage.getItem('currentUser'))) {
       this.session = this.authService.getPayload();
       console.log(this.session);
-      this.userSerivce.getUserById(this.session.id)
+      this.userService.getUserById(this.session.id)
         .subscribe((user) => {
+          this.user = user;
           this.userRole = user.role;
         })
       if (this.session = ! null) {
@@ -108,6 +118,9 @@ export class NavbarComponent implements OnInit {
   toggle(term) {
     this.loadingService.toggle(term)
   }
+
+
+
 }
 
 

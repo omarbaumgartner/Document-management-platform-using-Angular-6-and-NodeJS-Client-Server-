@@ -20,37 +20,71 @@
 
   <mat-sidenav #snav position="start" mode="side" [ngClass]="role=='Administrateur' ? 'bg-success' : 'bg-info'"
     class="navbar bg-dark " style="width:15rem;">
+
     <div style="margin-top: 0.3rem;">
-      <div class="col">
+      <div class="container">
+
         <div class="row"><img src="../assets/instadeeplogo.png" class="col img-fluid" style="cursor: pointer;"
             alt="Responsive image">
           <i (click)="toggle(snav)" style="color:white;cursor: pointer;font-size: 2rem" class="col-3 fas fa-bars"></i>
         </div>
 
-        <div class="row"><button class="btn btn-dark w-100 text-left" routerLink="/home"> <i
-              class="fas fa-home"></i>Accueil</button>
+        <div class="row">
+          <button class="col btn btn-dark w-100 text-left" routerLink="/home">
+            <i class="col-3 fas fa-home"></i>Accueil</button>
         </div>
-        <div class="row"><button class="btn btn-dark w-100 text-left" routerLink="/myprojects"><i
-              class="fas fa-project-diagram"></i>Mes projets</button>
+
+        <div class="row">
+          <button class="col btn btn-dark w-100 text-left" routerLink="/myprojects">
+            <i class="col-3 fas fa-project-diagram"></i>Mes projets</button>
         </div>
-        <div class="row"><button class="btn btn-dark w-100 text-left" routerLink="/myprojects"><i
-              class="far fa-bell"></i>Boîte de réception</button>
+
+        <div class="row">
+          <button class="col btn btn-dark w-100 text-left" routerLink="/myprojects">
+            <i class="col-3 far fa-bell"></i>Boîte de réception</button>
         </div>
+
         <div class="dropdown-divider"></div>
-        <div class="row"><button class="btn btn-dark w-100 text-left" routerLink="/myprojects">Projets</button>
-        </div>
+        <app-projectlist></app-projectlist>
+        <!--         <div class="dropdown row">
+          <ul class="navbar-nav">
+            <div clas="" aria-expanded="false" data-toggle="dropdown">
+              <div class="dropdown-toggle" id="navbarDropdownMenuLink-55" style="cursor: pointer;">
+                <a class="btn text-left text-light">
+                  Projets
+                </a>
+              </div>
+            </div>
+
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink-55">
+              <div *ngFor="let myprojects of myprojects">
+                <button class="btn btn-dark w-100 text-left " (click)="myProfile()" style="cursor:pointer;"><i
+                    class="fas fa-square"></i>&nbsp;{{myprojects.name}}</button>
+              </div>
+            </div>
+
+          </ul>
+        </div> -->
+
+        <div class="dropdown-divider"></div>
+
+
         <div class="row" *ngIf="role=='Administrateur' || role=='Project Manager'"><button
-            class="btn btn-dark w-100 text-left" routerLink="/addproject">Créer un projet
+            class="col btn btn-dark w-100 text-left" routerLink="/addproject">Créer un projet
           </button></div>
+
         <div class="row">
           <button class="btn btn-dark w-100 text-left" routerLink="/users">Users</button>
         </div>
+
         <div class="row">
           <button class="btn btn-dark w-100 text-left" routerLink="/adminpannel">Admin</button>
         </div>
+
         <div class="row">
           <button class="btn btn-dark w-100 text-left disabled" routerLink="/docs">Docs</button>
         </div>
+
         <div class="row">
           <button class="btn btn-dark w-100 text-left disabled" routerLink="/filemanager">FileManager</button>
         </div>

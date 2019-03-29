@@ -15,9 +15,12 @@ export class UsersService {
   //private usersUrl = 'http://52.29.87.21:8080/api/users';  // URL to web api
   private usersUrl = 'http://localhost:8080/api/users';  // URL to web api
 
-  user = new BehaviorSubject<User>(null);
+  user: User;
   userToken: any;
   users: User[];
+  userProfile = new BehaviorSubject<string>("");
+  payload: any;
+
 
 
 
@@ -31,6 +34,11 @@ export class UsersService {
 
         }
       );
+    if (localStorage.getItem('currentUser')) { this.getUserProfile(); }
+    else
+      console.log("non")
+
+
 
   }
 
@@ -65,10 +73,11 @@ export class UsersService {
 
   }
   getPayload() {
-    this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
-    console.log("User Token : " + this.userToken);
-    return jwt_decode(this.userToken);
-
+    if (localStorage.getItem('currentUser')) {
+      this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
+      console.log("User Token : " + this.userToken);
+      return jwt_decode(this.userToken);
+    }
   }
 
   fromIdToUsername(ids, users: User[]) {
@@ -99,6 +108,15 @@ export class UsersService {
     }
 
 
+  }
+
+  getUserProfile() {
+    this.payload = this.getPayload();
+    //console.log("payload", this.payload);
+    this.getUserById(this.payload.id)
+      .subscribe(user => {
+        this.userProfile.next(user.firstname[0] + user.lastname[0]);
+      })
   }
 
 

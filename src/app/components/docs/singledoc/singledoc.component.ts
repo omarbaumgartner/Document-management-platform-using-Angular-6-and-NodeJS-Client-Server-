@@ -6,6 +6,7 @@ import { ManagerService } from 'src/app/services/manager/manager.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Doc } from 'src/app/models/Doc.model';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-singledoc',
@@ -13,7 +14,7 @@ import { Doc } from 'src/app/models/Doc.model';
   styleUrls: ['./singledoc.component.css']
 })
 export class SingledocComponent implements OnInit {
-
+  public Editor = ClassicEditor;
   cont = new Cont();
   document = new Doc();
   isEditing: boolean = false;

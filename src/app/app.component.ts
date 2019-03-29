@@ -5,6 +5,8 @@ import { MatDialog } from '@angular/material';
 import { UploadersComponent } from './components/docs/uploaders/uploaders.component';
 import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
+import { ManagerService } from './services/manager/manager.service';
+import { Project } from './models/Project.model';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +34,7 @@ export class AppComponent {
 
   constructor(public loadingService: LoadingService,
     private authService: AuthService,
+    private managerService: ManagerService,
     private router: Router,
     public dialog: MatDialog) {
 
@@ -52,12 +55,6 @@ export class AppComponent {
     if (localStorage.getItem('currentUser')) {
       this.authService.setRole();
     }
-  }
-
-
-  test() {
-    console.log(this.role);
-
   }
 
 

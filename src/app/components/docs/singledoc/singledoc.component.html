@@ -35,17 +35,21 @@
       <br>
       <div class="row">
         <div class="col">
-          <p *ngIf="!isEditing">{{cont.content}}</p>
+          <!--           <p *ngIf="!isEditing">{{cont.content}}</p>
+ -->
+          <div *ngIf="!isEditing" [innerHTML]="cont.content">
+          </div>
           <form *ngIf=isEditing #detailContentForm="ngForm" class="list-group-item">
             <div class="form-group">
-              <textarea autofocus autosize type="text" class="form-control" id="content" required
-                [(ngModel)]="cont.content" name="content" #content="ngModel">{{cont.content}}</textarea>
-            </div>
+              <!--               <textarea autofocus autosize type="text" class="form-control" id="content" required
+                [(ngModel)]="cont.content" name="content" #content="ngModel">{{cont.content}}</textarea> -->
 
+              <ckeditor id="content" [(ngModel)]="cont.content" name="content" #content="ngModel" [editor]="Editor"
+                data="{{cont.content}}"></ckeditor>
+
+            </div>
             <button type="button" class="btn btn-dark" (click)="edit()">Cancel</button>
             <button type="button" class="btn btn-success" (click)="updateContent()">Save</button>
-
-
           </form>
           <button class="btn btn-dark" *ngIf="!isEditing" (click)="back()">Back</button>
           <div *ngIf="role=='Administrateur'||role=='Project Manager'"><button *ngIf=!isEditing

@@ -6,6 +6,7 @@ import { UsersService } from 'src/app/services/users/users.service';
 import { ManagerService } from 'src/app/services/manager/manager.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { ProjectlistComponent } from '../../navbar/sidenav/projectlist/projectlist.component';
 
 @Component({
   selector: 'app-addproject',
@@ -25,11 +26,11 @@ export class AddprojectComponent implements OnInit {
   session: any;
 
 
-  constructor(private formBuilder: FormBuilder,
-    private userService: UsersService,
-    private managerService: ManagerService,
-    private router: Router,
-    private location: Location) {
+  constructor(public formBuilder: FormBuilder,
+    public userService: UsersService,
+    public managerService: ManagerService,
+    public router: Router,
+    public location: Location) {
 
   }
 
@@ -73,7 +74,10 @@ export class AddprojectComponent implements OnInit {
     this.project.creatorId = this.projectForm.get('creatorId').value;
     this.project.members = this.projectForm.get('members').value;
     this.managerService.addProject(this.project)
-      .subscribe(result => this.router.navigate(['/users']));
+      .subscribe(result => {
+        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + result.id]));
+
+      });
   }
 
   selectUser(user) {

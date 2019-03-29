@@ -22,6 +22,8 @@ export class SingleuserComponent implements OnInit {
   canEdit: boolean = false;
   canDelete: boolean = false;
   isAdmin: boolean = false;
+  userProfile: any;
+
 
   constructor(
     private userService: UsersService,
@@ -31,6 +33,7 @@ export class SingleuserComponent implements OnInit {
     private location: Location,
     private loadingService: LoadingService) {
     this.loadingService.isLoading();
+
   }
 
   ngOnInit(): void {
@@ -39,6 +42,7 @@ export class SingleuserComponent implements OnInit {
       .subscribe(user => {
         this.user = user
         this.loadingService.isFinished();
+        this.userProfile = user.firstname[0] + user.lastname[0];
       });
     if (JSON.parse(localStorage.getItem('currentUser'))) { this.authService.session = JSON.parse(localStorage.getItem('currentUser')); }
     this.onCheckAccount();

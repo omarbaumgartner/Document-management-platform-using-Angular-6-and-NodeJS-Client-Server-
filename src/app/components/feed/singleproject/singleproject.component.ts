@@ -147,7 +147,7 @@ export class SingleprojectComponent implements OnInit {
   delete(): void {
     this.managerService.deleteProject(this.project.id)
       .subscribe(result => {
-        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects"]));
+        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/home"]));
       });
   }
 
@@ -216,7 +216,8 @@ export class SingleprojectComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/myprojects']);
+    //this.router.navigate(['/myprojects']);
+    this.location.back();
 
   }
 }

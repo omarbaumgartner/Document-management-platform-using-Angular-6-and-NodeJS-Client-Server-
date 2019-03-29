@@ -16,8 +16,6 @@ export class AuthService {
   //apiUrl = "http://52.29.87.21:8080";
   currentstatus = new BehaviorSubject<boolean>(false);
   currentrole = new BehaviorSubject<any>("Reviewer");
-
-  //session: any;
   canEdit: boolean;
   canDelete: boolean;
   userToken: any;

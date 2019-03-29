@@ -6,6 +6,7 @@ import { first } from 'rxjs/operators';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthGuardService } from 'src/app/services/auth/auth-guard.service';
+import { UsersService } from 'src/app/services/users/users.service';
 
 
 
@@ -32,6 +33,7 @@ export class SigninComponent implements OnInit {
     private snackBar: MatSnackBar,
     private loadingService: LoadingService,
     private authGuard: AuthGuardService,
+    private userService: UsersService,
     public dialog: MatDialog) {
 
   }
@@ -64,6 +66,7 @@ export class SigninComponent implements OnInit {
             verticalPosition: "top",
           });
           this.authGuard.updateToken();
+          this.userService.getUserProfile();
           this.authGuard.noToken = false;
           //  this.router.navigate([this.returnUrl]);
           this.router.navigate(['/home']);
