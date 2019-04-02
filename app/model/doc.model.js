@@ -1,9 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
-	const Doc = sequelize.define('doc', {
+	const Doc = sequelize.define('document', {
 		projectid: {
 			type: Sequelize.INTEGER
 		},
-		authorId: {
+		authorid: {
 			type: Sequelize.INTEGER
 		},
 		filename: {

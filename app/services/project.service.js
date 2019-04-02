@@ -1,7 +1,5 @@
 const db = require('../config/db.config');
 const Project = db.projects;
-const User = db.users;
-const Doc = db.docs;
 const sequelize = db.sequelize;
 
 module.exports = {
@@ -15,8 +13,7 @@ module.exports = {
 
 // Create a project
 async function createProject(req, res) {
-    console.log(req.body);
-    Project.create({
+    return Project.create({
         "name": req.body.name,
         "description": req.body.description,
         "creatorId": req.body.creatorId,

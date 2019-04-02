@@ -20,12 +20,20 @@ exports.checkToken = (req, res) => {
     var actualDate = Math.round(new Date().getTime() / 1000);
     authService.checkToken(req)
         .then(result => {
-            if (result.dataValues != null && decodedtoken.exp > actualDate) {
-                res.send(true);
+            if (result) {
+                if (result.dataValues != null && decodedtoken.exp > actualDate) {
+                    res.send(true);
+                }
+                else
+                    res.send(false);
+
             }
             else
                 res.send(false);
 
         })
-        .catch(err => next(err));
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ msg: "Error :", details: err });
+        });
 }

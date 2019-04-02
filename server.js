@@ -43,11 +43,11 @@ function initial() {
   }
 
   // ---- Docs ----
-  let docs = []
+  let documents = []
   // Init data -> save to MySQL
-  const Doc = db.docs;
-  for (let i = 0; i < docs.length; i++) {
-    Doc.create(docs[i]);
+  const Doc = db.documents;
+  for (let i = 0; i < documents.length; i++) {
+    Doc.create(documents[i]);
   }
 
 

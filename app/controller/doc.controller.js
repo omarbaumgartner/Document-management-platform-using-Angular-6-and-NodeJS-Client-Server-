@@ -3,7 +3,7 @@ const docsService = require('../services/docs.service');
 // Post a Document
 exports.createDoc = (req, res) => {
 	// Save to PostgreSQL database
-	docsService.createDoc(req, res)
+	docsService.createDoc(req.body, res)
 		.then(doc => {
 			// Send created user to client
 			res.json(doc);
@@ -13,6 +13,54 @@ exports.createDoc = (req, res) => {
 			res.status(500).json({ msg: "error", details: err });
 		});
 };
+
+// Create new version of same doc
+exports.newDocVersion = (req, res) => {
+	docsService.newDocVersion(req.body, res)
+		.then(val => {
+			res.json(val);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ msg: "error", details: err });
+		});
+}
+
+// Get documents from Project ID 
+exports.getDocs = (req, res) => {
+	docsService.getDocs(req, res)
+		.then(doc => {
+			res.json(doc);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ msg: "error", details: err });
+		});
+}
+
+// Get single document informations
+exports.getSingleDoc = (req, res) => {
+	docsService.getSingleDoc(req, res)
+		.then(doc => {
+			res.json(doc);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ msg: "error", details: err });
+		});
+}
+
+exports.getContByPk = (req, res) => {
+	docsService.getContByPk(req, res)
+		.then(doc => {
+			res.json(doc);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ msg: "error", details: err });
+		});
+}
+
 
 // FETCH All Docs
 exports.findAll = (req, res) => {
@@ -39,6 +87,7 @@ exports.findByPk = (req, res) => {
 
 // Update a Doc
 exports.update = (req, res) => {
+	console.log(req.body);
 	const id = req.body.id;
 	docsService.update(req, id)
 		.then(() => {
@@ -50,7 +99,21 @@ exports.update = (req, res) => {
 		});
 };
 
-// Delete a User by Id
+// Update Doc Content
+exports.updateCont = (req, res) => {
+	console.log(req.body)
+	const id = req.body.id;
+	docsService.updateCont(req, id)
+		.then(() => {
+			res.status(200).json({ mgs: "Updated Successfully -> Doc Id = " + id });
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ msg: "error", details: err });
+		});
+}
+
+// Delete a Doc by Id
 exports.delete = (req, res) => {
 	const id = req.params.id;
 	docsService.remove(id)
@@ -62,6 +125,15 @@ exports.delete = (req, res) => {
 			res.status(500).json({ msg: "error", details: err });
 		});
 };
+
+// Search for a Doc by Keyword
+exports.searchFor = (req, res) => {
+	const keyword = req.params.keyword;
+	docsService.searchFor(keyword)
+		.then((result) => {
+			res.status(200).json(result[0]);
+		})
+}
 
 
 

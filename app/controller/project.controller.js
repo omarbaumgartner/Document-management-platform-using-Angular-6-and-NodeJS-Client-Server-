@@ -5,7 +5,8 @@ exports.createProject = (req, res) => {
 
     projectService.createProject(req, res)
         .then(project => {
-            res.json(project);
+            console.log(project);
+            res.json(project.dataValues);
         })
         .catch(err => {
             console.log(err);

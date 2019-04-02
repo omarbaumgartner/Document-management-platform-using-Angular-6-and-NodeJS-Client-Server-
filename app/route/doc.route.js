@@ -4,17 +4,40 @@ module.exports = function (app) {
     // Create a new Doc
     app.post('/api/db/docs', docs.createDoc);
 
-    // Retrieve all Docs
-    app.get('/api/db/docs', docs.findAll);
+    // Create new version of same Doc
+    app.post('/api/db/docs/newversion', docs.newDocVersion);
 
-    //Retrieve a Doc By Id
-    app.get('/api/db/docs/:id', docs.findByPk);
+    // Retrieve Project Docs
+    app.get('/api/db/projdocs/:id', docs.getDocs);
+
+    // Retrieve Single Doc informations
+    app.get('/api/db/singledoc/:id', docs.getSingleDoc);
 
     // Update a Doc with Id
     app.put('/api/db/docs', docs.update);
 
     // Delete a Doc with Id
     app.delete('/api/db/docs/:id', docs.delete);
+
+    //Retrieve Content BY Id
+    app.get('/api/db/cont/:id', docs.getContByPk);
+
+    // Update Content by Id
+    app.put('/api/db/cont', docs.updateCont);
+
+    // Search Engine
+    app.get('/api/db/search/:keyword', docs.searchFor);
+
+
+
+
+
+
+    //Retrieve a Doc By Id
+    app.get('/api/db/docs/:id', docs.findByPk);
+
+    // Retrieve all Docs
+    app.get('/api/db/docs', docs.findAll);
 
 
     // ---- Upload ----

@@ -12,9 +12,6 @@ module.exports = (sequelize, Sequelize) => {
         members: {
             type: Sequelize.ARRAY(Sequelize.INTEGER)
         },
-        documents: {
-            type: Sequelize.ARRAY(Sequelize.INTEGER)
-        },
         finished: {
             type: Sequelize.BOOLEAN
         }

@@ -22,7 +22,7 @@ db.sequelize = sequelize;
 //Models/tables
 db.users = require('../model/user.model.js')(sequelize, Sequelize);
 db.projects = require('../model/project.model')(sequelize, Sequelize);
-db.docs = require('../model/doc.model.js')(sequelize, Sequelize);
+db.documents = require('../model/doc.model.js')(sequelize, Sequelize);
 db.contents = require('../model/content.model')(sequelize, Sequelize);
 db.sugs = require('../model/sug.model')(sequelize, Sequelize);
 db.coms = require('../model/com.model')(sequelize, Sequelize);

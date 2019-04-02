@@ -1,44 +1,145 @@
 const DIR = '../uploads';
 var fs = require('fs');
-const path = require('path');
+//const path = require('path');
 const db = require('../config/db.config.js');
-const Doc = db.docs;
+const Doc = db.documents;
+const Content = db.contents;
+const sequelize = db.sequelize;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
+Doc.hasMany(Content);
+Content.belongsTo(Doc);
+
 
 module.exports = {
     getFiles,
     getFileContent,
     uploadFile,
     createDoc,
+    newDocVersion,
+    getDocs,
+    getSingleDoc,
     findAll,
     findByPk,
+    getContByPk,
+    updateCont,
+    searchFor,
     update,
     remove,
 };
 
 
-//Retrieve documents from db
-async function findAll() {
-    return Doc.findAll();
-}
+
+
 //Retrieve a document from db by Id
 async function findByPk(req) {
     // Save to PostgreSQL database
     return Doc.findByPk(req.params.id);
 }
+
+async function getContByPk(req) {
+    console.log(req.params.id)
+    // return Content.findByPk(req.params.id)
+}
+
+//Create Doc, Create content and Initialize Doc Version
+async function createDoc(req, res) {
+    console.log(req);
+    Doc.create({
+        "projectid": req.projectid,
+        "authorid": req.authorid,
+        "filename": req.filename,
+        "path": req.path,
+    })
+        .then((DocVal) => {
+            // you can now access the newly created task via the variable task
+            Content.create({
+                "content": "",
+                "documentid": DocVal.id,
+
+            }).then((ContentVal) => {
+                //console.log("Val.id " + ContentVal.id);
+                Doc.update({ versions: sequelize.fn('array_append', sequelize.col('versions'), ContentVal.id) }, { where: { id: DocVal.id } })
+            }).catch(function (err) {
+                // print the error details
+                console.log(err, req.content);
+            });
+            // console.log('success');
+        })
+        .catch(function (err) {
+            // print the error details
+            console.log(err, req.content);
+        });
+}
+
+// Create new version of same doc
+async function newDocVersion(req) {
+    return Content.create({
+        "content": req.path,
+        "documentid": req.id,
+
+    }).then((ContentVal) => {
+        //console.log("Val.id " + ContentVal.id);
+        Doc.update({ versions: sequelize.fn('array_append', sequelize.col('versions'), ContentVal.id) }, { where: { id: req.id } })
+        return ContentVal.id
+    }).catch(function (err) {
+        // print the error details
+        console.log(err, req.content);
+    });
+
+}
+
+//Get single Doc informations
+async function getSingleDoc(req) {
+    return Doc.findOne({ where: { id: req.params.id } })
+}
+
+async function getDocs(req) {
+    return Doc.findAll({ where: { projectid: req.params.id } })
+}
+
 //Update a document by Id
 async function update(req, id) {
     // Save to PostgreSQL database
     Doc.update(req.body,
         { where: { id: id } });
 }
+
+async function updateCont(req, id) {
+    Content.update(req.body, { where: { id: id } });
+}
+
 async function remove(id) {
     // Save to PostgreSQL database
-    Doc.destroy({ where: { id: id } });
+    Doc.destroy({ where: { id: id } })
+        .then((val) => {
+            //console.log("Val.id " + ContentVal.id);
+            Content.destroy({ where: { documentid: id } });
+        }).catch(function (err) {
+            // print the error details
+            console.log(err, req.content);
+        });
+}
+
+//Retrieve all documents from db
+async function findAll() {
+    return Doc.findAll();
+}
+
+// Search for a Doc by Keyword
+async function searchFor(keyword, res) {
+
+    return sequelize.query("SELECT * from documents FULL OUTER JOIN contents ON documents.id = contents." + 'documentid' + " WHERE documents.filename ILIKE '%" + keyword + "%' OR contents.content ILIKE '%" + keyword + "%'");
+
+
 }
 
 
 
-//Envoie des métadatas + contenu du fichier dans la BDD
+
+
+/* //Envoie des métadatas + contenu du fichier dans la BDD
 async function createDoc(req, chemin) {
 
     Doc.create({
@@ -57,7 +158,7 @@ async function createDoc(req, chemin) {
             // print the error details
             console.log(err, req.content);
         });
-}
+} */
 
 //Uploader un fichier
 function uploadFile(req, res) {
