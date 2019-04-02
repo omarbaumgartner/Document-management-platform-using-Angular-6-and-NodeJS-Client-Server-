@@ -6,7 +6,7 @@
             *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'" style="cursor:pointer" (click)="newVersion()"
             title="New version" class="fas fa-plus"></i></p>
         <div class="col" *ngFor="let version of versions;let i = index">
-          <button [ngClass]="contentId == versions[i] ? 'btn btn-info' : 'btn btn-dark'"
+          <button [ngClass]="contentId == versions[i] ? 'btn active' : 'btn btn-dark'"
             (click)="viewVersion(versions[i])" class="btn btn-info">Version {{i+1}}</button>
         </div>
       </div>
@@ -21,7 +21,11 @@
     <div class="col">
       <div class="row">
         <div class="col">
-          <p class="h3">Document Editor : {{document.filename}}</p>
+          <p class="h5">Document Editor : </p><br>
+          <p class="h4">{{document.filename}}</p>
+          <div class="col" *ngFor="let version of versions;let i = index">
+            <p class="h6" *ngIf='contentId == versions[i]'>Version {{i+1}}</p>
+          </div>
         </div>
         <div class="col-2 float-right" *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'">
           <div class="row"><button class="col btn btn-info" *ngIf="!isEditing" (click)="edit()">Edit

@@ -18,7 +18,14 @@ export class ManagerService {
   private apiURL = 'http://localhost:8080/api/';  // URL to web api
 
   projects: Project[];
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.getProjects()
+      .subscribe(
+        projects => {
+          this.projects = projects;
+        }
+      );
+  }
 
   // Projects Methods
   getProjects(): Observable<Project[]> {
@@ -83,5 +90,20 @@ export class ManagerService {
     return this.http.put(this.apiURL + "db/cont", content, httpOptions);
   }
 
+  // Search Methods
+  searchFor(keyword: string): Observable<any> {
+    return this.http.get<Doc>(this.apiURL + "db/search/" + keyword);
+  }
+
+  fromIdToProjectnames(id, projects: Project[]) {
+    // console.log(ids);
+    var i = 0;
+    // console.log(ids);
+    while (id != projects[i].id) {
+      i++;
+    }
+    return projects[i].name;
+
+  }
 
 }

@@ -48,6 +48,8 @@ import { HomeComponent } from './components/home/home/home.component';
 import { AdddocComponent } from './components/docs/adddoc/adddoc.component';
 import { SingledocComponent } from './components/docs/singledoc/singledoc.component';
 import { ProjectlistComponent } from './components/navbar/sidenav/projectlist/projectlist.component';
+import { WikiComponent } from './components/wiki/wiki.component';
+import { SearchPipePipe } from './pipes/search-pipe.pipe';
 
 
 
@@ -83,7 +85,10 @@ const appRoutes: Routes = [
 
   {
     path: 'auth/signin',
-    component: SigninComponent
+    component: SigninComponent,
+    data: {
+      name: 'Sign-In'
+    }
   },
   {
     path: 'users',
@@ -94,14 +99,25 @@ const appRoutes: Routes = [
     }
   },
   {
+    path: 'wiki',
+    canActivate: [AuthGuardService],
+    component: WikiComponent,
+    data: {
+      name: 'Wiki'
+    }
+  },
+  {
     path: 'users/user/add',
     component: AdduserComponent,
-    canActivate: [AuthGuardService, RoleGuardService]
+    //canActivate: [AuthGuardService, RoleGuardService]
   },
   {
     path: 'users/:id',
     component: SingleuserComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService],
+    data: {
+      name: 'User'
+    }
   },
   {
     path: 'filemanager',
@@ -111,7 +127,10 @@ const appRoutes: Routes = [
   {
     path: 'addproject',
     component: AddprojectComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService],
+    data: {
+      name: 'Create a project'
+    }
   },
   {
     path: 'myprojects',
@@ -161,6 +180,8 @@ const appRoutes: Routes = [
     AdddocComponent,
     SingledocComponent,
     ProjectlistComponent,
+    WikiComponent,
+    SearchPipePipe,
 
 
   ],

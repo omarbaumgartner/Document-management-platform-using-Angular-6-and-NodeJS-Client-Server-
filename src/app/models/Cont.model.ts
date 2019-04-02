@@ -1,7 +1,7 @@
 export class Cont {
     id: number;
     content: string;
-    documentId: number;
+    documentid: number;
     createdAt: string;
     updatedAt: string;
 }

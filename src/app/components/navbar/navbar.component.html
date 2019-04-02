@@ -1,19 +1,22 @@
 <!--Navbar -->
 <nav class="row mb-0 navbar navbar-light navbar-expand-lg" style="height: 3.5rem;">
 
-  <div class="navbar-collapse text-dark d-flex justify-content-around mr-auto">
+  <div class="collapse navbar-collapse text-dark d-flex justify-content-around mr-auto">
 
     <!-- Active Page Name -->
-    <ul class="col navbar-nav">
-      <a class="font-weight-bold text-dark">{{activePage}}</a>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="navbar-brand">{{activePage}}</a>
+      </li>
+      <!-- Search Bar -->
+      <li class="nav-item">
+        <form *ngIf=isConnected class="form-inline ml-auto">
+          <div class="md-form my-0">
+            <input class="searchbar" [value]="SearchWord" type="text" placeholder="Search" aria-label="Search">
+          </div>
+        </form>
+      </li>
     </ul>
-    <!-- Search Bar -->
-    <form class="col form-inline ml-auto">
-      <div class="md-form my-0">
-        <input class="searchbar" type="text" placeholder="Search" aria-label="Search">
-      </div>
-    </form>
-
     <div *ngIf=isConnected class="container-fluid">
       <div class="d-flex justify-content-around float-right">
         <!-- User Account -->
@@ -37,5 +40,4 @@
       </div>
     </div>
   </div>
-
 </nav>

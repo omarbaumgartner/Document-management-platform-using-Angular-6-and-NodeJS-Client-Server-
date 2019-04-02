@@ -38,7 +38,7 @@ export class SingledocComponent implements OnInit {
     this.managerService.getDocumentById(this.contentId)
       .subscribe(content => {
         this.cont = content;
-        this.managerService.getSingleDocument(this.cont.documentId)
+        this.managerService.getSingleDocument(this.cont.documentid)
           .subscribe(document => {
             this.document = document;
             this.versions = document.versions;

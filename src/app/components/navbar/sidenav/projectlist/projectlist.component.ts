@@ -25,16 +25,23 @@ export class ProjectlistComponent implements OnInit {
 
   getMyProjects() {
     this.session = this.authService.getPayload();
-    this.managerService.getUserProjects(this.session.id)
-      .subscribe(
-        projects => {
-          this.myprojects = projects;
-        }
-      )
+    if (this.session != false) {
+      this.managerService.getUserProjects(this.session.id)
+        .subscribe(
+          projects => {
+            //console.log(projects);
+            this.myprojects = projects;
+          }
+        )
+    }
+    else
+      this.myprojects = null;
+
   }
 
   checkProjects() {
     this.getMyProjects();
+    console.log(this.myprojects);
   }
 
   viewProject(id) {

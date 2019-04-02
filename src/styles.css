@@ -2,10 +2,14 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+mark{
+    color : red;
+}
 .files:hover {
 text-decoration-line: underline;
 cursor: pointer;
 }
+
 
 .sign{
     background-color: rgba(255, 255, 255, 0.1);

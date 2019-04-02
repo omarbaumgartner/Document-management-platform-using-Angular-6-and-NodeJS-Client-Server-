@@ -6,11 +6,15 @@
 <mat-sidenav-container class="fullscreen">
 
   <mat-sidenav-content>
-    <div class="container-fluid row">
-      <span *ngIf=!toggled style="color:dark; font-size: 2rem; cursor:pointer;margin-top: 0.3rem;" title="Sidebar"> <i
-          (click)="toggle(snav)" class="col fas fa-bars"></i>
-      </span>
-      <app-navbar class="col"></app-navbar>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-1"><span *ngIf=!toggled style="color:dark; font-size: 2rem; cursor:pointer;margin-top: 0.3rem;"
+            title="Sidebar"> <i (click)="toggle(snav)" class="fas fa-bars"></i>
+          </span></div>
+        <div class="col">
+          <app-navbar></app-navbar>
+        </div>
+      </div>
 
     </div>
     <br>
@@ -24,9 +28,11 @@
     <div style="margin-top: 0.3rem;">
       <div class="container">
 
-        <div class="row"><img src="../assets/instadeeplogo.png" class="col img-fluid" style="cursor: pointer;"
-            alt="Responsive image">
-          <i (click)="toggle(snav)" style="color:white;cursor: pointer;font-size: 2rem" class="col-3 fas fa-bars"></i>
+        <div class="row">
+          <div class="col"><img src="../assets/instadeeplogo.png" routerLink="/home" class="img-fluid"
+              style="cursor: pointer;" alt="Responsive image"></div>
+          <div class="col-3"><i (click)="toggle(snav)" style="color:white;cursor: pointer;font-size: 2rem"
+              class="fas fa-bars"></i></div>
         </div>
 
         <div class="row">
@@ -75,6 +81,10 @@
 
         <div class="row">
           <button class="btn btn-dark w-100 text-left" routerLink="/users">Users</button>
+        </div>
+
+        <div class="row">
+          <button class="btn btn-dark w-100 text-left" routerLink="/wiki">Wiki</button>
         </div>
 
         <div class="row">
