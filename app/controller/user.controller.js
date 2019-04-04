@@ -5,13 +5,10 @@ const userService = require('../services/user.service');
 exports.createUser = (req, res) => {
 	// Save to PostgreSQL database
 	userService.createUser(req, res)
-		.then(user => {
-			// Send created user to client
-			res.json(user);
-		})
+		.then(user => user ? res.json({ user }) : res.status(200).json({ email: 'Taken' }))
 		.catch(err => {
-			console.log(err);
-			res.status(500).json({ msg: "error", details: err });
+			next(err);
+			res.status(500).json({ message: 'Email is already taken' })
 		});
 };
 
@@ -31,6 +28,18 @@ exports.findAll = (req, res) => {
 // Find a User by Id
 exports.findByPk = (req, res) => {
 	userService.findByPk(req)
+		.then(user => {
+			res.json(user);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ msg: "error", details: err });
+		});
+};
+
+// Find a User by Id
+exports.checkEmail = (req, res) => {
+	userService.checkEmail(req)
 		.then(user => {
 			res.json(user);
 		})

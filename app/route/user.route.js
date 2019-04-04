@@ -10,6 +10,9 @@ module.exports = function (app) {
     // Retrieve a single User by Id
     app.get('/api/users/id/:id', users.findByPk);
 
+    // Check if an email is already existing
+    app.get('/api/users/email/:email', users.checkEmail);
+
     // Retrieve a single User by Token
     app.get('/api/users/token/:token', users.findByToken);
 

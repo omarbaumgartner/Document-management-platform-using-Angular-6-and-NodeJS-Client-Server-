@@ -8,6 +8,7 @@ module.exports = {
     update,
     remove,
     findByToken,
+    checkEmail,
 
 };
 // Create User
@@ -33,6 +34,13 @@ async function findByPk(req) {
     // Save to PostgreSQL database
     return User.findByPk(req.params.id);
 }
+
+//Check email validity
+async function checkEmail(req) {
+    // Save to PostgreSQL database
+    return User.findOne({ where: { email: req.params.email } });
+}
+
 //Find User by Token
 async function findByToken(req) {
     // Save to PostgreSQL database
