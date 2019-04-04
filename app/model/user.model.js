@@ -18,6 +18,9 @@ module.exports = (sequelize, Sequelize) => {
 		token: {
 			type: Sequelize.STRING
 		},
+		resetcode: {
+			type: Sequelize.STRING
+		},
 		status: {
 			type: Sequelize.BOOLEAN
 		}

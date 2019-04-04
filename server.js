@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 
 
 
@@ -26,7 +27,7 @@ require('./app/route/user.route.js')(app);
 require('./app/route/auth.route.js')(app);
 require('./app/route/project.route.js')(app);
 require('./app/route/doc.route.js')(app);
-
+require('./app/route/email.route.js')(app);
 
 
 
