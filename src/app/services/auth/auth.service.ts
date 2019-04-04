@@ -29,7 +29,7 @@ export class AuthService {
       this.session = this.getPayload();
   }
 
-  onlogin(email: string, password: any) {
+  onLogin(email: string, password: any) {
     password = Md5.hashStr(password);
     console.log("Hashed password : " + password);
     return this.http.post<any>(`${this.apiUrl}/authenticate`, { email, password })
@@ -51,6 +51,16 @@ export class AuthService {
       }));
   }
 
+  onReset(email: string) {
+    return this.http.get<any>(this.apiUrl + "/api/password/" + email);
+  }
+
+  onChangePassword(token: string, password: any) {
+    password = Md5.hashStr(password);
+    return this.http.post<any>(`${this.apiUrl}/api/password/reset`, { token, password })
+
+  }
+
   logout(term) {
     console.log("Logged out");
     // remove user from local storage to log user out
@@ -59,10 +69,14 @@ export class AuthService {
     this.deconnexion(term);
   }
 
+
+
+
+
+
   connexion(term) {
     term.next(true);
   }
-
   deconnexion(term) {
     term.next(false);
   }

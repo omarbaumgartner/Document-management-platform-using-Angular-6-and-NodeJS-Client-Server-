@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div *ngIf="!isResetting" class="row justify-content-center">
   <div class="card">
     <article class="card-body">
       <h4 class="card-title mb-4 mt-1">Sign in</h4>
@@ -14,14 +14,31 @@
         </div> <!-- form-group// -->
         <div [hidden]="!iserror" class="alert alert-danger">{{error}}</div>
         <div class="form-group">
-          <div class="checkbox">
-            <label> <input type="checkbox"> Save password </label>
-          </div> <!-- checkbox .// -->
-        </div> <!-- form-group// -->
-        <div class="form-group">
           <button type="submit" class="btn btn-primary btn-block" [disabled]="signInForm.invalid"> Login </button>
         </div> <!-- form-group// -->
-        <a class="float-right" href="#">Forgot?</a>
+        <a class="float-right" style="cursor:pointer" (click)="isResetting = true">Forgot?</a>
+      </form>
+    </article>
+  </div> <!-- card.// -->
+</div>
+
+<!-- Reset your password  -->
+<div *ngIf="isResetting" class="row justify-content-center">
+  <div class="card">
+    <article class="card-body">
+      <h4 class="card-title mb-4 mt-1">Reset your password</h4>
+      <form [formGroup]="resetForm" (ngSubmit)="onReset()">
+        <div class="input-group mb-3">
+          <input type="text" id="email" class="form-control" formControlName="email" placeholder="Email"
+            style="font-size: 20px;height: 110%;">
+          <span class="text-dark h2 font-weight-bold ">@instadeep.com</span>
+        </div>
+        <div [hidden]="!isreseterror" class="alert alert-danger">{{reseterror}}</div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-block" [disabled]="resetForm.invalid"> Reset </button>
+        </div> <!-- form-group// -->
+        <a class="float-right" style="cursor:pointer" (click)="isResetting = false">Cancel</a>
+
       </form>
     </article>
   </div> <!-- card.// -->

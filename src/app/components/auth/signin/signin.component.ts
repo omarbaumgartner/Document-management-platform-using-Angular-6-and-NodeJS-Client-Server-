@@ -19,11 +19,15 @@ export class SigninComponent implements OnInit {
 
   public loading: boolean = false;
   signInForm: FormGroup;
+  resetForm: FormGroup;
   returnUrl: string;
   emailpattern = "@instadeep.com";
   email: string;
   error: any;
   iserror: boolean;
+  reseterror: any;
+  isResetting: boolean;
+  isreseterror: boolean;
 
 
   constructor(private formBuilder: FormBuilder,
@@ -44,9 +48,12 @@ export class SigninComponent implements OnInit {
       password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
     });
 
+    this.resetForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{2,15}/)]],
+
+    })
     //reset login status
     this.authService.logout(this.authService.currentstatus);
-
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
@@ -56,7 +63,7 @@ export class SigninComponent implements OnInit {
     this.loadingService.isLoading();
     const email = this.signInForm.get('email').value + this.emailpattern;
     const password = this.signInForm.get('password').value;
-    this.authService.onlogin(email, password)
+    this.authService.onLogin(email, password)
       .pipe(first())
       .subscribe(
         data => {
@@ -77,6 +84,28 @@ export class SigninComponent implements OnInit {
           this.loadingService.isFinished();
           this.iserror = true;
           this.error = error.error.message;
+        });
+  }
+
+  onReset() {
+    const email = this.resetForm.get('email').value + this.emailpattern;
+    this.authService.onReset(email)
+      .subscribe(
+        data => {
+          if (data == true) {
+            this.isResetting = false;
+            this.isreseterror = false;
+            this.snackBar.open("An email has been sent !", "Close", {
+              duration: 3000,
+              verticalPosition: "top",
+            });
+          }
+          else {
+            this.isreseterror = true;
+            this.reseterror = "No email found";
+          }
+
+
         });
   }
 

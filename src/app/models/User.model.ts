@@ -6,6 +6,7 @@ export class User {
     email: string;
     password: any;
     token: string;
+    resetcode: string;
     status: boolean;
     createdAt: string;
     updatedAt: string;

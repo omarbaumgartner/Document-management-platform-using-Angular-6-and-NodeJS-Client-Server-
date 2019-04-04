@@ -51,6 +51,7 @@ import { ProjectlistComponent } from './components/navbar/sidenav/projectlist/pr
 import { WikiComponent } from './components/wiki/wiki.component';
 import { SearchPipePipe } from './pipes/search-pipe.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
+import { ResetComponent } from './components/auth/reset/reset.component';
 
 
 
@@ -85,12 +86,18 @@ const appRoutes: Routes = [
       name: 'Document Viewer'
     }
   },
-
   {
     path: 'auth/signin',
     component: SigninComponent,
     data: {
       name: 'Sign-In'
+    }
+  },
+  {
+    path: 'auth/reset/:token',
+    component: ResetComponent,
+    data: {
+      name: 'Reset your password'
     }
   },
   {
@@ -192,6 +199,7 @@ const appRoutes: Routes = [
     WikiComponent,
     SearchPipePipe,
     FilterPipe,
+    ResetComponent,
 
 
   ],
