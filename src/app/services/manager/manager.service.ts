@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from 'src/app/models/User.model';
 import { Doc } from 'src/app/models/Doc.model';
 import { Cont } from 'src/app/models/Cont.model';
+import { Router } from '@angular/router';
 
 
 const httpOptions = {
@@ -18,7 +19,13 @@ export class ManagerService {
   private apiURL = 'http://localhost:8080/api/';  // URL to web api
 
   projects: Project[];
-  constructor(private http: HttpClient) {
+  resultnumber: any;
+  results: any;
+  hasSearched: boolean = false;
+  searchTerm: string;
+
+  constructor(private http: HttpClient,
+    private router: Router) {
     this.getProjects()
       .subscribe(
         projects => {
@@ -103,7 +110,23 @@ export class ManagerService {
       i++;
     }
     return projects[i].name;
+  }
 
+  onResearch(term: string) {
+    if (term != "") {
+      this.searchFor(term)
+        .subscribe((val) => {
+          this.searchTerm = term;
+          this.resultnumber = val.length;
+          this.results = val;
+          this.hasSearched = true;
+          this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/wiki"]));
+        })
+    }
+    else {
+      this.results = null;
+      this.resultnumber = 0;
+    }
   }
 
 }

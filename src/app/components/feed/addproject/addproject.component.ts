@@ -6,12 +6,14 @@ import { UsersService } from 'src/app/services/users/users.service';
 import { ManagerService } from 'src/app/services/manager/manager.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { ProjectlistComponent } from '../../navbar/sidenav/projectlist/projectlist.component';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
 
 @Component({
   selector: 'app-addproject',
   templateUrl: './addproject.component.html',
-  styleUrls: ['./addproject.component.css']
+  styleUrls: ['./addproject.component.css'],
+  providers: [FilterPipe]
+
 })
 export class AddprojectComponent implements OnInit {
 
@@ -24,6 +26,7 @@ export class AddprojectComponent implements OnInit {
   status: Array<boolean> = [false];
   submitted: boolean;
   session: any;
+  termPipe: string;
 
 
   constructor(public formBuilder: FormBuilder,

@@ -2,6 +2,7 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+
 mark{
     color : red;
 }
@@ -67,15 +68,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .searchbar{
-    width: 10rem;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    height: 2.5rem;
+    width: 15rem;
     -webkit-transition: width 0.3s ease-in-out;
     transition: width 0.3s ease-in-out;
   }
   
 .searchbar:focus {
-    width: 50rem;
+    width: 35rem;
   }

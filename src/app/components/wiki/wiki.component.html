@@ -6,8 +6,8 @@
           <p class="h3">Search</p>
         </div>
         <form class="row" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-          <div class="col"><input class="input-group mb-3" type="text" placeholder="Search" formControlName="keyword"
-              aria-label="Search"></div>
+          <div class="col"><input class="input-group mb-3" type="text" placeholder="Search" [ngModel]="term"
+              formControlName="keyword" aria-label="Search"></div>
           <div class="col-2"><button type="submit" class="btn btn-primary btn-block"> Search </button></div>
         </form>
       </div>
@@ -16,7 +16,6 @@
       <div class="col">
         <br>
         <p class="h4"> {{resultnumber}} Results for "{{keywords}}"</p>
-        <div class="dropdown-divider "></div>
         <div>
           <!--           <div class="row">
             <div class="col"><a>Documents</a></div>

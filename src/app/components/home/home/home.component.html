@@ -1,15 +1,17 @@
 <div class="container">
-  <p>Projets récents</p>
+  <p class="h6">Projets récents</p>
   <div class="dropdown-divider"></div>
-  <div class="row">
-    <div class="col-3" *ngFor="let myprojects of myprojects">
-      <div class="row">
-        <div class="col-3 w-75" (click)="viewProject(myprojects.id)">
-          <div class="row btn btn-dark d-flex justify-content-center">
-            <i style="font-size: 6rem;" class="row fas fa-cubes  "></i>
-          </div>
-          <div class="row d-flex justify-content-center">
-            <p class="text-dark text-center">{{myprojects.name}}</p>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col" *ngFor="let myprojects of myprojects">
+        <div class="row">
+          <div class="col-10" (click)="viewProject(myprojects.id)">
+            <div class="row btn btn-dark d-flex justify-content-center">
+              <i style="font-size: 6rem;" class="row fas fa-cubes  "></i>
+            </div>
+            <div class="row d-flex justify-content-center">
+              <p class="text-dark text-center">{{myprojects.name}}</p>
+            </div>
           </div>
         </div>
       </div>

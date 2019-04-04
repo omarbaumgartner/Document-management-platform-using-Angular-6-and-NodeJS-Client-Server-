@@ -9,6 +9,7 @@ import { AuthGuardService } from 'src/app/services/auth/auth-guard.service';
 import { AppComponent } from 'src/app/app.component';
 import { LoadingService } from 'src/app/services/loading.service';
 import { BehaviorSubject, Observable, interval } from 'rxjs';
+import { ManagerService } from 'src/app/services/manager/manager.service';
 
 
 @Component({
@@ -28,12 +29,13 @@ export class NavbarComponent implements OnInit {
   role: any;
   activePage: any;
   userProfile: any;
-  searchBarSize: number = 10;
+  searchWord: string = "";
 
   constructor(private authService: AuthService,
     private authGuardService: AuthGuardService,
     private route: ActivatedRoute,
     private userService: UsersService,
+    private managerService: ManagerService,
     private router: Router,
     public loadingService: LoadingService,
     public dialog: MatDialog) {
@@ -119,7 +121,9 @@ export class NavbarComponent implements OnInit {
     this.loadingService.toggle(term)
   }
 
-
+  searchFor(term) {
+    this.managerService.onResearch(term);
+  }
 
 }
 

@@ -2,11 +2,9 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { LoadingService } from './services/loading.service';
 import { MatDialog } from '@angular/material';
-import { UploadersComponent } from './components/docs/uploaders/uploaders.component';
 import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
 import { ManagerService } from './services/manager/manager.service';
-import { Project } from './models/Project.model';
 
 @Component({
   selector: 'app-root',
@@ -58,12 +56,6 @@ export class AppComponent {
   }
 
 
-  /*   openUploader(): void {
-      const dialogRef = this.dialog.open(UploadersComponent, {
-        autoFocus: true,
-      });
-    } */
-
   toggle(term) {
     this.loadingService.toggle(term);
     if (this.toggled == true)
@@ -72,4 +64,10 @@ export class AppComponent {
       this.toggled = true;
   }
 
+
+  /*   openUploader(): void {
+      const dialogRef = this.dialog.open(UploadersComponent, {
+        autoFocus: true,
+      });
+    } */
 }

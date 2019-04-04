@@ -1,25 +1,64 @@
-<!--Navbar -->
-<nav class="row mb-0 navbar navbar-light navbar-expand-lg" style="height: 3.5rem;">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-2">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="navbar-brand">{{activePage}}</a>
+        </li>
+        <li class="nav-item">
+        </li>
+      </ul>
+    </div>
+    <div class="col">
+      <!-- Search Bar -->
+      <form *ngIf="isConnected && activePage != 'Wiki'" class="form-inline ml-auto" (ngSubmit)="searchFor(searchWord)">
+        <div class="md-form my-0">
+          <input class="searchbar" [(ngModel)]="searchWord" name="searchWord" type="text" placeholder="Search"
+            aria-label="Search">
+        </div>
+      </form>
+    </div>
+    <div class="col">
+      <div *ngIf=isConnected class="float-right">
+        <ul class="navbar-nav" *ngIf="isConnected">
+          <li class="nav-item dropdown">
+            <a class="dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              <ngx-avatar value="{{userProfile}}"></ngx-avatar>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-secondary"
+              aria-labelledby="navbarDropdownMenuLink-55">
+              <a class="dropdown-item" (click)="myProfile()" style="cursor:pointer;">My Account</a>
+              <a class="dropdown-item" (click)="logout()" style="cursor:pointer;">Logout</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 
+<nav class="row mb-0 navbar navbar-light navbar-expand-lg">
 
   <div class="collapse navbar-collapse text-dark d-flex justify-content-around mr-auto">
-
-    <!-- Active Page Name -->
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="navbar-brand">{{activePage}}</a>
       </li>
-      <!-- Search Bar -->
       <li class="nav-item">
-        <form *ngIf=isConnected class="form-inline ml-auto">
+        <form *ngIf="isConnected && activePage != 'Wiki'" class="form-inline ml-auto"
+          (ngSubmit)="searchFor(searchWord)">
           <div class="md-form my-0">
-            <input class="searchbar" [value]="SearchWord" type="text" placeholder="Search" aria-label="Search">
+            <input class="searchbar" [(ngModel)]="searchWord" name="searchWord" type="text" placeholder="Search"
+              aria-label="Search">
           </div>
         </form>
       </li>
     </ul>
     <div *ngIf=isConnected class="container-fluid">
       <div class="d-flex justify-content-around float-right">
-        <!-- User Account -->
         <ul class="navbar-nav ml-auto nav-flex-icons" *ngIf="isConnected">
           <li class="nav-item avatar dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
@@ -40,4 +79,4 @@
       </div>
     </div>
   </div>
-</nav>
+</nav> -->

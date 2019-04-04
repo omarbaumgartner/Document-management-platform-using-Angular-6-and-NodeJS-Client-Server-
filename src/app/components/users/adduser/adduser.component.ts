@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { User } from 'src/app/models/User.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Router } from '@angular/router';
-import { UsersComponent } from '../users.component';
 
 
 @Component({
@@ -22,6 +21,7 @@ export class AdduserComponent {
   signUpForm: FormGroup;
   emailpattern = "@instadeep.com";
   passwordvalue: string;
+  noError: boolean = false;
 
 
   constructor(private formBuilder: FormBuilder,
@@ -50,13 +50,21 @@ export class AdduserComponent {
   // convenience getter for easy access to form fields
 
   onSubmit() {
-    this.submitted = true;
     this.user.firstname = this.signUpForm.get('firstname').value;
     this.user.lastname = this.signUpForm.get('lastname').value;
     this.user.role = this.signUpForm.get('role').value;
     this.user.email = this.signUpForm.get('email').value + this.emailpattern;
     this.user.password = this.signUpForm.get('password').value;
-    this.save()
+    this.userService.checkEmail(this.user.email)
+      .subscribe((user) => {
+        if (user == null) {
+          this.save();
+        }
+        else {
+          this.errorMessage = "Email is already taken";
+          this.noError = true;
+        }
+      })
   }
 
 
@@ -79,9 +87,7 @@ export class AdduserComponent {
     this.user.password = md5.appendStr(this.user.password).end();
     this.userService.addUser(this.user)
       .subscribe(result => {
-        this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/users"]));
-
-
+        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/users"]));
       });
   }
 
@@ -103,7 +109,6 @@ export class AdduserComponent {
       }
     }
   }
-
 
 
 

@@ -23,6 +23,7 @@ export class WikiComponent implements OnInit {
   projects: Project;
   currentprojects: Array<any>;
   resultContent: string;
+  term: string;
 
   constructor(private managerService: ManagerService,
     private formBuilder: FormBuilder,
@@ -35,6 +36,11 @@ export class WikiComponent implements OnInit {
     this.searchForm = this.formBuilder.group({
       keyword: ['']
     })
+    this.term = this.managerService.searchTerm;
+    this.keywords = this.managerService.searchTerm;
+    this.hasSearched = this.managerService.hasSearched;
+    this.results = this.managerService.results;
+    this.resultnumber = this.managerService.resultnumber;
   }
 
   onSubmit() {
@@ -42,20 +48,10 @@ export class WikiComponent implements OnInit {
     if (this.keywords != "") {
       this.managerService.searchFor(this.keywords)
         .subscribe(result => {
-          console.log(result);
           this.resultnumber = result.length;
           this.results = result;
           this.hasSearched = true;
-          let i;
-          for (i = 0; i < result.length; i++) {
-            this.managerService.getProjectById(result[i].projectid).subscribe((project) => {
-              // console.log(project);
-              // console.log(project.id);
-            })
-          }
-        }
-
-        )
+        })
     }
     else {
       this.results = null;
@@ -76,4 +72,8 @@ export class WikiComponent implements OnInit {
     return this.managerService.fromIdToProjectnames(id, this.managerService.projects);
   }
 
+  testbutton() {
+    this.term = this.managerService.searchTerm;
+    console.log(this.term);
+  }
 }

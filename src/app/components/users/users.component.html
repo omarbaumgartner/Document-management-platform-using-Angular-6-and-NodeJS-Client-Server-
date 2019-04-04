@@ -1,9 +1,11 @@
 <div class="container">
   <div class="w-75 p-3 basic">
     <h5 style="font-weight: bold; color: black;">All Users</h5>
+    <input class="form-control ml-3 w-75 search" [(ngModel)]="termPipe" type="text"
+      placeholder="Filter by firstname or lastname" aria-label="Search">
 
-    <div *ngFor="let user of users " [ngClass]="{'bg-secondary' : !user.status}" class="list-group-item"
-      style="width: 120%; font-size:larger;" title="{{ user.email }}">
+    <div *ngFor="let user of ( users | filter : termPipe )" [ngClass]="{'bg-secondary' : !user.status}"
+      class="list-group-item" style="width: 120%; font-size:larger;" title="{{ user.email }}">
       <div (click)="viewProfile(user.id)" style="color:black; cursor:pointer;">
 
         <span class="badge badge-dark">{{user.id}}</span> &nbsp;

@@ -1,23 +1,23 @@
 <ngx-loading [show]="load"
   [config]="{animationType: ngxLoadingAnimationTypes.cubeGrid, primaryColour: primaryColour, backdropBorderRadius: '3px',backdropBackgroundColour : 'rgba(0, 0, 0, 0.5)'}">
 </ngx-loading>
-<!-- <button (click)="test()">Vérifier le rôle</button>
- -->
+
 <mat-sidenav-container class="fullscreen">
 
   <mat-sidenav-content>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-1"><span *ngIf=!toggled style="color:dark; font-size: 2rem; cursor:pointer;margin-top: 0.3rem;"
-            title="Sidebar"> <i (click)="toggle(snav)" class="fas fa-bars"></i>
-          </span></div>
+        <div *ngIf="!toggled" class="col-sm-1 text-center">
+          <span class="align-baseline" style="color:dark; font-size: 2rem; cursor:pointer" title="Sidebar">
+            <i (click)="toggle(snav)" class="fas fa-bars"></i>
+          </span>
+        </div>
         <div class="col">
           <app-navbar></app-navbar>
         </div>
       </div>
 
     </div>
-    <br>
     <router-outlet></router-outlet>
     <br>
   </mat-sidenav-content>
@@ -25,7 +25,7 @@
   <mat-sidenav #snav position="start" mode="side" [ngClass]="role=='Administrateur' ? 'bg-success' : 'bg-info'"
     class="navbar bg-dark " style="width:15rem;">
 
-    <div style="margin-top: 0.3rem;">
+    <div>
       <div class="container">
 
         <div class="row">
@@ -52,31 +52,13 @@
 
         <div class="dropdown-divider"></div>
         <app-projectlist></app-projectlist>
-        <!--         <div class="dropdown row">
-          <ul class="navbar-nav">
-            <div clas="" aria-expanded="false" data-toggle="dropdown">
-              <div class="dropdown-toggle" id="navbarDropdownMenuLink-55" style="cursor: pointer;">
-                <a class="btn text-left text-light">
-                  Projets
-                </a>
-              </div>
-            </div>
 
-            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink-55">
-              <div *ngFor="let myprojects of myprojects">
-                <button class="btn btn-dark w-100 text-left " (click)="myProfile()" style="cursor:pointer;"><i
-                    class="fas fa-square"></i>&nbsp;{{myprojects.name}}</button>
-              </div>
-            </div>
-
-          </ul>
-        </div> -->
 
         <div class="dropdown-divider"></div>
 
 
         <div class="row" *ngIf="role=='Administrateur' || role=='Project Manager'"><button
-            class="col btn btn-dark w-100 text-left" routerLink="/addproject">Créer un projet
+            class="col btn btn-dark w-100 text-left" routerLink="/addproject">Create a project
           </button></div>
 
         <div class="row">
@@ -92,13 +74,13 @@
         </div>
 
         <div class="row">
-          <button class="btn btn-dark w-100 text-left disabled" routerLink="/docs">Docs</button>
+          <button class="btn btn-dark w-100 text-left disabled" routerLink="/docs">All Docs</button>
         </div>
 
         <div class="row">
-          <button class="btn btn-dark w-100 text-left disabled" routerLink="/filemanager">FileManager</button>
+          <button [disabled] class="btn btn-dark w-100 text-left disabled" routerLink="/filemanager">All Files [ Admin ]
+          </button>
         </div>
-
 
       </div>
     </div>

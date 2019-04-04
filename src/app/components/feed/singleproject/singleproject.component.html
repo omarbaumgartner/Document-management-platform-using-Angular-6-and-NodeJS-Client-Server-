@@ -39,8 +39,9 @@
               <p>Selected members :</p>
             </div>
             <div class="row col">
-              <input class="form-control form-control-sm ml-3 w-75 search" type="text" placeholder="Search"
-                aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i>
+              <input class="form-control-sm ml-3 w-75 search" [(ngModel)]="termPipe"
+                [ngModelOptions]="{standalone: true}" type="text" placeholder="Search" aria-label="Search"><i
+                class="fas fa-search" aria-hidden="true"></i>
             </div>
           </div>
           <div class="row">
@@ -52,7 +53,7 @@
             </div>
             <div class="col">
 
-              <ng-container *ngFor="let user of users; let i = index ">
+              <ng-container *ngFor="let user of ( users | filter : termPipe ); let i = index ">
                 <div style="cursor:pointer"
                   *ngIf="status[user.id]!=true && session.id!==user.id && user.status==true && user.id != selectedmembers[i] "
                   class="list-group-item" (click)="selectUser(user)" [ngClass]="status[user.id] ? 'bg-success' : ''">

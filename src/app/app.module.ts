@@ -50,12 +50,12 @@ import { SingledocComponent } from './components/docs/singledoc/singledoc.compon
 import { ProjectlistComponent } from './components/navbar/sidenav/projectlist/projectlist.component';
 import { WikiComponent } from './components/wiki/wiki.component';
 import { SearchPipePipe } from './pipes/search-pipe.pipe';
+import { FilterPipe } from './pipes/filter.pipe';
 
 
 
 
 const appRoutes: Routes = [
-  //Example : 
   {
     path: 'home',
     component: HomeComponent,
@@ -80,7 +80,10 @@ const appRoutes: Routes = [
   {
     path: 'docs/:id',
     component: SingledocComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService],
+    data: {
+      name: 'Document Viewer'
+    }
   },
 
   {
@@ -109,6 +112,9 @@ const appRoutes: Routes = [
   {
     path: 'users/user/add',
     component: AdduserComponent,
+    data: {
+      name: 'Add a User'
+    }
     //canActivate: [AuthGuardService, RoleGuardService]
   },
   {
@@ -143,7 +149,10 @@ const appRoutes: Routes = [
   {
     path: 'myprojects/:id',
     component: SingleprojectComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService],
+    data: {
+      name: 'Project Viewer'
+    }
   },
 
 
@@ -182,6 +191,7 @@ const appRoutes: Routes = [
     ProjectlistComponent,
     WikiComponent,
     SearchPipePipe,
+    FilterPipe,
 
 
   ],

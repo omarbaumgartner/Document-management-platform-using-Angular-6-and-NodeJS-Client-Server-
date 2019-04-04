@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
 
 const URL = 'http://localhost:8080/api/upload';
 const httpOptions = {
@@ -14,7 +15,9 @@ const httpOptions = {
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+  styleUrls: ['./users.component.css'],
+  providers: [FilterPipe]
+
 })
 export class UsersComponent implements OnInit {
 

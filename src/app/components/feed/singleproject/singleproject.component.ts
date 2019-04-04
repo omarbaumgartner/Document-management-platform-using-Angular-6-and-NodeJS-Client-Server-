@@ -10,11 +10,14 @@ import { Doc } from 'src/app/models/Doc.model';
 import { MatDialog } from '@angular/material';
 import { Location } from '@angular/common';
 import { AdddocComponent } from '../../docs/adddoc/adddoc.component';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
 
 @Component({
   selector: 'app-singleproject',
   templateUrl: './singleproject.component.html',
-  styleUrls: ['./singleproject.component.css']
+  styleUrls: ['./singleproject.component.css'],
+  providers: [FilterPipe]
+
 })
 export class SingleprojectComponent implements OnInit {
 

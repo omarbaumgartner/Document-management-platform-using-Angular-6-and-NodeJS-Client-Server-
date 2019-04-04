@@ -30,14 +30,12 @@ export class UsersService {
       .subscribe(
         users => {
           this.users = users;
-          console.log(this.users)
-
         }
       );
     if (localStorage.getItem('currentUser')) { this.getUserProfile(); }
-    else
-      console.log("non")
-
+    else {
+      console.log("No Profile")
+    }
 
 
   }
@@ -78,6 +76,10 @@ export class UsersService {
       console.log("User Token : " + this.userToken);
       return jwt_decode(this.userToken);
     }
+  }
+
+  checkEmail(email) {
+    return this.http.get<User>(this.usersUrl + "/email/" + email);
   }
 
   fromIdToUsername(ids, users: User[]) {

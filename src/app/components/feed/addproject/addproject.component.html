@@ -21,8 +21,8 @@
             <p>Selected members :</p>
           </div>
           <div class="row col">
-            <input class="form-control form-control-sm ml-3 w-75 search" type="text" placeholder="Search"
-              aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i>
+            <input class="form-control-sm ml-3 w-75 search" [(ngModel)]="termPipe" [ngModelOptions]="{standalone: true}"
+              type="text" placeholder="Search" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i>
           </div>
         </div>
         <div class="row">
@@ -34,7 +34,7 @@
           </div>
           <div class="col">
 
-            <ng-container *ngFor="let user of users ">
+            <ng-container *ngFor="let user of ( users | filter : termPipe )">
               <div style="cursor:pointer" *ngIf="status[user.id]!=true && session.id!==user.id && user.status==true"
                 class="list-group-item" (click)="selectUser(user)" [ngClass]="status[user.id] ? 'bg-success' : ''">
                 <div class="row">
@@ -48,14 +48,6 @@
           </div>
         </div>
       </div>
-
-      <label for="documents">Documents</label><br>
-      <div class="input-group mb-3">
-        <!--       <input type="text" id="email" class="form-control" formControlName="" placeholder="Documents">
- -->
-      </div>
-
-      <p>Error messages are missing</p>
       <div [hidden]="!iserror" class="alert alert-danger">{{error}}</div>
 
       <div class="form-group">
