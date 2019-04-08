@@ -3,10 +3,10 @@ const projectService = require('../services/project.service');
 // Create a project
 exports.createProject = (req, res) => {
 
-    projectService.createProject(req, res)
+    projectService.createProject(req.body, res)
         .then(project => {
             console.log(project);
-            res.json(project.dataValues);
+            res.json(project);
         })
         .catch(err => {
             console.log(err);

@@ -1,5 +1,21 @@
 module.exports = function (app) {
+
+    // Configuration 
     const docs = require('../controller/doc.controller.js');
+    const DIR = './myuploads';
+    const multer = require('multer');
+    const path = require('path');
+    let storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, DIR);
+        },
+        filename: (req, file, cb) => {
+            cb(null, path.parse(file.originalname).name + '_' + Date.now() + path.extname(file.originalname));
+        }
+    });
+    let upload = multer({ storage: storage });
+
+    // Routes 
 
     // Create a new Doc
     app.post('/api/db/docs', docs.createDoc);
@@ -28,11 +44,20 @@ module.exports = function (app) {
     // Search Engine
     app.get('/api/db/search/:keyword', docs.searchFor);
 
+    // ---- Upload File Part  ----
+
+    // Upload a file 
+    app.post('/api/upload', upload.array('file'), docs.uploadFile);
 
 
+    //Optionnel-------------------------
+    // get content from single file 
+    app.get('/api/docs/:filecontent', docs.getFileContent);
+    // Retrieve all files
+    app.get('/api/docs', docs.getFiles);
 
 
-
+    // Optionnal 
     //Retrieve a Doc By Id
     app.get('/api/db/docs/:id', docs.findByPk);
 
@@ -40,28 +65,7 @@ module.exports = function (app) {
     app.get('/api/db/docs', docs.findAll);
 
 
-    // ---- Upload ----
-    const DIR = './myuploads';
-    const multer = require('multer');
-    const path = require('path');
-    let storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, DIR);
-        },
-        filename: (req, file, cb) => {
-            cb(null, path.parse(file.originalname).name + '_' + Date.now() + path.extname(file.originalname));
-        }
-    });
-    let upload = multer({ storage: storage });
 
-    // Upload a file 
-    app.post('/api/upload', upload.array('file'), docs.uploadFile);
-
-    //Optionnel-------------------------
-    // get content from single file 
-    app.get('/api/docs/:filecontent', docs.getFileContent);
-    // Retrieve all files
-    app.get('/api/docs', docs.getFiles);
 
 }
 

@@ -1,6 +1,10 @@
 const db = require('../config/db.config');
+const emailService = require('../services/email.service');
 const Project = db.projects;
+const Doc = db.documents;
+const Content = db.contents;
 const sequelize = db.sequelize;
+
 
 module.exports = {
     createProject,
@@ -13,13 +17,16 @@ module.exports = {
 
 // Create a project
 async function createProject(req, res) {
-    return Project.create({
-        "name": req.body.name,
-        "description": req.body.description,
-        "creatorId": req.body.creatorId,
-        "members": req.body.members,
-        "documents": req.body.documents
-    })
+    return emailService.addUserToProject(req)
+        .then((val) => {
+            return Project.create({
+                "name": req.name,
+                "description": req.description,
+                "creatorId": req.creatorId,
+                "members": req.members,
+                "documents": req.documents
+            })
+        })
 }
 
 // List all projects
@@ -52,5 +59,11 @@ async function update(req, id) {
 // Delete a project
 async function remove(id) {
     // Save to PostgreSQL database
-    Project.destroy({ where: { id: id } });
+    Project.destroy({ where: { id: id } })
+        .then((result) => {
+            Doc.destroy({ where: { projectid: result.id } })
+        })
+        .then((result) => {
+            Content.destroy({ where: { documentid: id } });
+        })
 }

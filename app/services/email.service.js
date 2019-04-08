@@ -10,8 +10,19 @@ let FrontEnd = "http://localhost:4200/"
 module.exports = {
     lostPassword,
     changePassword,
+    addUserToProject,
 
 };
+
+// Send email to Added User to project
+async function addUserToProject(req, res) {
+    for (let i = 0; i < req.members.length; i++) {
+        User.findOne({ where: { id: req.members[i] } })
+            .then((user) => {
+                sendEmail(user.email, '[DeepDocs] Vous êtes ajouté au projet ' + req.name, "Ajout au projet : " + req.name);
+            })
+    }
+}
 
 // Send email to reset password
 async function lostPassword(req, res) {
@@ -45,10 +56,7 @@ async function changePassword(req, res) {
 
 }
 
-// Added User to project
-async function addUserToProject(req, res) {
 
-}
 
 // Added document to project
 async function addDocumentToProject(req, res) {
