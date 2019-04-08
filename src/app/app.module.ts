@@ -16,6 +16,8 @@ import { ContextMenuModule } from 'ngx-contextmenu';
 import { AutosizeModule } from 'ngx-autosize';
 import { AvatarModule } from 'ngx-avatar';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { NgScrollbarModule } from 'ngx-scrollbar';
+import { AutoSizeInputModule } from 'ngx-autosize-input';
 
 
 // Services
@@ -161,7 +163,13 @@ const appRoutes: Routes = [
       name: 'Project Viewer'
     }
   },
-
+  {
+    path: 'uploader',
+    component: UploadersComponent,
+    data: {
+      name: 'Uploader'
+    }
+  },
 
 
   //Empty link
@@ -203,7 +211,7 @@ const appRoutes: Routes = [
 
 
   ],
-  entryComponents: [AdddocComponent],
+  entryComponents: [AdddocComponent, UploadersComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -217,6 +225,8 @@ const appRoutes: Routes = [
     MatTreeModule,
     MatIconModule,
     AutosizeModule,
+    AutoSizeInputModule,
+    NgScrollbarModule,
     FlexLayoutModule,
     CKEditorModule,
     ContextMenuModule.forRoot(),

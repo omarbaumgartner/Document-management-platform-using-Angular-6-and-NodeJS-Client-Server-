@@ -102,27 +102,28 @@
           </button>
           <div class="dropdown-menu">
             <a style="cursor:pointer" class="dropdown-item" (click)="addFile()">New File</a>
-            <a style="cursor:pointer" class="dropdown-item">Import File</a>
+            <a style="cursor:pointer" class="dropdown-item" (click)="openUploader()">Import File</a>
           </div>
         </div>
+
       </div>
 
       <br>
-      <div class="row">
-        <div style="text-align: center;" class="col-4" *ngFor="let document of documents;">
-          <i (click)="viewDocument(document)" style="font-size: 3rem; cursor:pointer;" class="fas fa-file"></i><br>
-          <label>{{document.filename}}</label>
-          <form *ngIf="isRenaming[document.id]" #detailDocumentForm="ngForm">
-            <input a type="text" class="form-control" id="filename" [(ngModel)]="document.filename" name="filename"
-              #filename="ngModel" required>
-            <button type="button" class="btn btn-success" (click)="updateFile(document)"
-              [disabled]="!detailDocumentForm.form.valid">Update</button>
-          </form><br>
-          <div *ngIf="role=='Administrateur'||role=='Project Manager'">
-            <button *ngIf="!isRenaming[document.id]" (click)="rename(document.id)">Rename</button>
-            <button *ngIf="!isRenaming[document.id]" (click)="deleteFile(document.id)">Delete</button>
-          </div>
 
+      <div class="">
+        <div style="text-align: center;" class="row" *ngFor="let document of documents;" [contextMenu]="basicMenu"
+          [contextMenuSubject]="document">
+          <div class="container"> <i (click)="viewDocument(document)" style="font-size: 3rem; cursor:pointer;"
+              class="fas fa-file"></i><br>
+            <label *ngIf="!isRenaming[document.id]">{{document.filename}}</label>
+            <form *ngIf="isRenaming[document.id]" #detailDocumentForm="ngForm">
+              <input AutoSizeInput type="text" class="form-control" id="filename" [(ngModel)]="document.filename"
+                name="filename" #filename="ngModel" required>
+              <button type="button" class="btn btn-success" (click)="updateFile(document)"
+                [disabled]="!detailDocumentForm.form.valid">Update</button>
+            </form>
+            <hr />
+          </div>
         </div>
       </div>
     </div>
@@ -140,3 +141,15 @@
   </div>
   <button *ngIf=!editing class="btn btn-dark" (click)="goBack()">Back</button>
 </div>
+
+<context-menu *ngIf="role=='Administrateur'||role=='Project Manager'">
+  <ng-template contextMenuItem (execute)="rename($event)">
+    Rename
+  </ng-template>
+  <ng-template contextMenuItem (execute)="deleteFile($event)">
+    Delete
+  </ng-template>
+  <ng-template contextMenuItem (execute)="showMessage('File : ' + $event.doc.filename)">
+    Download
+  </ng-template>
+</context-menu>

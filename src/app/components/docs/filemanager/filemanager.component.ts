@@ -37,8 +37,17 @@ export class FilemanagerComponent implements OnInit {
       );
   }
 
-  viewDoc(id: any) {
-    this.router.navigate(['/docs/' + id]);
+  viewDocument(document: any) {
+    var i;
+    var recentId = document.versions[0];
+    for (i = 0; i < document.versions.length; i++) {
+      if (recentId < document.versions[i]) {
+        recentId = document.versions[i];
+      }
+    }
+    console.log(recentId);
+    this.router.navigate(['/docs/' + recentId]);
+
   }
 
 }

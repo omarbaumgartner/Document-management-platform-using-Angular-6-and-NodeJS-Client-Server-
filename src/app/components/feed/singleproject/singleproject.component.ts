@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Project } from 'src/app/models/Project.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -11,6 +11,8 @@ import { MatDialog } from '@angular/material';
 import { Location } from '@angular/common';
 import { AdddocComponent } from '../../docs/adddoc/adddoc.component';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { UploadersComponent } from '../../docs/uploaders/uploaders.component';
+import { ContextMenuComponent } from 'ngx-contextmenu';
 
 @Component({
   selector: 'app-singleproject',
@@ -20,6 +22,9 @@ import { FilterPipe } from 'src/app/pipes/filter.pipe';
 
 })
 export class SingleprojectComponent implements OnInit {
+
+  @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+
 
   project = new Project();
   document = new Doc();
@@ -118,12 +123,27 @@ export class SingleprojectComponent implements OnInit {
       });
   }
 
-  deleteFile(id): void {
+  deleteFile($event): void {
+    var id = $event.item.id
     this.managerService.deleteDocument(id)
       .subscribe(result => {
         this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.projectId]));
 
       });
+  }
+
+  openUploader(): void {
+    const dialogRef = this.dialog.open(UploadersComponent, {
+      height: '70vh',
+      width: '180vh',
+      autoFocus: true,
+      data: {
+        projectId: this.projectId,
+        userId: this.session.id
+      }
+    }).afterClosed().subscribe((val) => {
+      this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.projectId]));
+    });
   }
 
   edit() {
@@ -134,7 +154,8 @@ export class SingleprojectComponent implements OnInit {
       this.editing = false;
   }
 
-  rename(id) {
+  rename($event) {
+    var id = $event.item.id
     this.isRenaming[id] = true;
   }
 
@@ -222,5 +243,13 @@ export class SingleprojectComponent implements OnInit {
     //this.router.navigate(['/myprojects']);
     this.location.back();
 
+  }
+
+  onRightClick(event) {
+    console.log("yes");
+  }
+
+  showMessage(message: any) {
+    console.log(message);
   }
 }

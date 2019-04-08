@@ -7,6 +7,9 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Doc } from 'src/app/models/Doc.model';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as jspdf from 'jspdf';
+
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-singledoc',
@@ -75,6 +78,24 @@ export class SingledocComponent implements OnInit {
       })
   }
 
+
+  updateFile(document): void {
+    //this.submitted = true;
+    this.managerService.updateDocument(document)
+      .subscribe(result => {
+        console.log(result);
+        //this.message = "Projec Updated Successfully!";
+      });
+  }
+
+  deleteFile(id): void {
+    this.managerService.deleteDocument(id)
+      .subscribe(result => {
+        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.document.projectid]));
+
+      });
+  }
+
   edit() {
     if (this.isEditing == false)
       this.isEditing = true;
@@ -87,4 +108,13 @@ export class SingledocComponent implements OnInit {
   back() {
     this.router.navigate(['/myprojects/' + this.document.projectid]);
   }
+  captureScreen() {
+    let doc = new jspdf();
+    var data = this.cont.content;
+    doc.fromHTML(data);
+    //doc.text(data, 10, 10);
+    doc.save(this.document.filename)
+
+  }
+
 }

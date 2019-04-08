@@ -76,3 +76,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .searchbar:focus {
     width: 35rem;
   }
+
+.decoration {
+    box-shadow: 0 3px 0 0 #989b9e, 0 2px 8px 0 #343a40, 0 4px 10px 0 rgba(255, 255, 255, 0.5);
+}

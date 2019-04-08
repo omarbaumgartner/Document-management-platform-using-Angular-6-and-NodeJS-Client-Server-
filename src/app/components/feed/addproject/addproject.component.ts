@@ -78,6 +78,7 @@ export class AddprojectComponent implements OnInit {
     this.project.members = this.projectForm.get('members').value;
     this.managerService.addProject(this.project)
       .subscribe(result => {
+        console.log(result)
         this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + result.id]));
 
       });

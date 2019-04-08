@@ -32,8 +32,6 @@ export class AppComponent {
 
   constructor(public loadingService: LoadingService,
     private authService: AuthService,
-    private managerService: ManagerService,
-    private router: Router,
     public dialog: MatDialog) {
 
     this.isloading.subscribe((val) => {

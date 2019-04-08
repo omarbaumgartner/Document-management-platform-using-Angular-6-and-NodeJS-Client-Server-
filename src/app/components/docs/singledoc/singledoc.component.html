@@ -1,63 +1,91 @@
 <div class="container">
   <div class="row">
-    <div class="col-2">
-      <div class="row alert alert-dark">
-        <p class="h5 col">Versions&nbsp;&nbsp;<i class="col"
-            *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'" style="cursor:pointer" (click)="newVersion()"
-            title="New version" class="fas fa-plus"></i></p>
-        <div class="col" *ngFor="let version of versions;let i = index">
-          <button [ngClass]="contentId == versions[i] ? 'btn active' : 'btn btn-dark'"
-            (click)="viewVersion(versions[i])" class="btn btn-info">Version {{i+1}}</button>
+    <div class="col-sm-" style="width: 10rem;">
+      <div class="container">
+        <div class="col">
+          <div class="container justify-content-center ">
+            <div class="row">
+              <p class="h5">Versions <i *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'"
+                  style="cursor:pointer; font-size: 1rem;" (click)="newVersion()" title="New version"
+                  class="fas fa-plus"></i></p>
+            </div>
+
+            <div class="row " *ngFor="let version of versions;let i = index">
+              <button [ngClass]="contentId == versions[i] ? 'btn active' : 'btn btn-dark'"
+                (click)="viewVersion(versions[i])" class="btn btn-info">Version {{i+1}}</button>
+            </div>
+          </div>
         </div>
       </div>
       <br>
-      <div class="row alert alert-secondary">
-        <p class="h5">Suggestions</p>
+      <div class="container alert alert-secondary">
         <div class="col">
-          <button class="btn btn-info">Not yet</button>
+          <div class="row ">
+            <p class="h5">Suggestions</p>
+            <button class="btn btn-danger" (click)="captureScreen()">Export as PDF</button>
+          </div>
+          <div class="col">
+            <button class="btn btn-info">Not yet</button>
+          </div>
         </div>
       </div>
     </div>
     <div class="col">
       <div class="row">
         <div class="col">
-          <p class="h5">Document Editor : </p><br>
-          <p class="h4">{{document.filename}}</p>
-          <div class="col" *ngFor="let version of versions;let i = index">
-            <p class="h6" *ngIf='contentId == versions[i]'>Version {{i+1}}</p>
+          <!--           <p class="h5">Document Editor : </p> -->
+          <div class="col">
+            <p class="h4">{{document.filename}}</p>
+            <!--             <div *ngFor="let version of versions;let i = index">
+              <p class="h6" *ngIf='contentId == versions[i]'>Version {{i+1}}</p>
+            </div> -->
           </div>
         </div>
-        <div class="col-2 float-right" *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'">
-          <div class="row"><button class="col btn btn-info" *ngIf="!isEditing" (click)="edit()">Edit
-              document</button></div>
-          <div class="row"><button class="col btn btn-success" *ngIf="!isEditing" (click)="emit()">Emit
-              document</button></div>
+        <div class="row float-right" *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'">
+
+          <div class="col"><button class="col btn btn-sm btn-info" *ngIf="!isEditing" (click)="edit()">Edit</button>
+          </div>
+          <div class="col"><button class="col btn btn-sm btn-success" *ngIf="!isEditing" (click)="emit()">Emit</button>
+          </div>
+          <div class="col"><button class="col btn btn-sm btn-danger" *ngIf="!isEditing"
+              (click)="deleteFile(document.id)">Delete</button></div>
         </div>
 
 
       </div>
-      <br>
+      <div class="dropdown-divider"></div>
+
       <div class="row">
         <div class="col">
           <!--           <p *ngIf="!isEditing">{{cont.content}}</p>
  -->
-          <div *ngIf="!isEditing" [innerHTML]="cont.content">
+          <div *ngIf="!isEditing">
+            <ng-scrollbar class="lazy-scrollbar" thumbClass="white-scrollbars" [disableOnBreakpoints]="false">
+              <div [innerHTML]="cont.content">
+              </div>
+            </ng-scrollbar>
           </div>
+
           <form *ngIf=isEditing #detailContentForm="ngForm" class="list-group-item">
             <div class="form-group">
               <!--               <textarea autofocus autosize type="text" class="form-control" id="content" required
                 [(ngModel)]="cont.content" name="content" #content="ngModel">{{cont.content}}</textarea> -->
-
-              <ckeditor id="content" [(ngModel)]="cont.content" name="content" #content="ngModel" [editor]="Editor"
-                data="{{cont.content}}"></ckeditor>
+              <div style="height: 65vh;">
+                <ng-scrollbar class=" lazy-scrollbar" thumbClass="white-scrollbars" [disableOnBreakpoints]="false">
+                  <ckeditor id="content" [(ngModel)]="cont.content" name="content" #content="ngModel" [editor]="Editor"
+                    data="{{cont.content}}"></ckeditor>
+                </ng-scrollbar>
+              </div>
 
             </div>
             <button type="button" class="btn btn-dark" (click)="edit()">Cancel</button>
             <button type="button" class="btn btn-success" (click)="updateContent()">Save</button>
           </form>
-          <button class="btn btn-dark" *ngIf="!isEditing" (click)="back()">Back</button>
-          <div *ngIf="role=='Administrateur'||role=='Project Manager'"><button *ngIf=!isEditing
-              class="col-1 btn btn-success float-right">Valider</button></div>
+          <div class="dropdown-divider"></div>
+          <div *ngIf="role=='Administrateur'||role=='Project Manager'">
+            <button class="btn btn-dark" *ngIf="!isEditing" (click)="back()">Back</button>
+
+            <button *ngIf=!isEditing class="col-1 btn btn-success float-right">Valider</button></div>
 
         </div>
       </div>

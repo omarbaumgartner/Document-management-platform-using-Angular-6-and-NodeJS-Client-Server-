@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FileUploader, FileItem } from 'ng2-file-upload';
+import { MAT_DIALOG_DATA } from '@angular/material';
+import { Inject } from '@angular/core';
 
 
 const URL = 'http://localhost:8080/api/upload';
@@ -13,14 +15,22 @@ const URL = 'http://localhost:8080/api/upload';
 
 export class UploadersComponent implements OnInit {
 
-  public uploader: FileUploader = new FileUploader({ url: URL });
+  /*   projectId: number = 2;
+    userId: number = 1; */
+
+  public uploader: FileUploader = new FileUploader({
+    url: URL,
+    additionalParameter: {
+      projectId: this.data.projectId,
+      userId: this.data.userId
+    }
+  });
   public hasBaseDropZoneOver: boolean = false;
   public fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
   }
 
-  constructor() {
-
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit() {
@@ -39,5 +49,12 @@ export class UploadersComponent implements OnInit {
 
   }
 
+
+  test(item: FileItem) {
+    console.log('this is the time', item)
+    console.log(item)
+    //this.uploader.uploadItem(item);
+    this.uploader.uploadAll();
+  }
 
 }

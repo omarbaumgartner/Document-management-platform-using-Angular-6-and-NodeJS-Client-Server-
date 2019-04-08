@@ -39,8 +39,7 @@ export class DocsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getDocs();
-    this.getMyProjects();
+
   }
 
   isopened: boolean;
@@ -71,6 +70,7 @@ export class DocsComponent implements OnInit {
     private managerService: ManagerService,
     public loadingService: LoadingService,
     private router: Router) {
+    this.myprojects = ["TEST", "TEST"]
     this.TREE_DATA = [{
       name: 'Root',
 
@@ -115,7 +115,6 @@ export class DocsComponent implements OnInit {
     ];
     this.dataSource.data = this.TREE_DATA;
 
-    this.loadingService.isLoading();
 
   }
 
