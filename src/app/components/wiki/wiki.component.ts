@@ -20,19 +20,26 @@ export class WikiComponent implements OnInit {
   resultnumber: number;
   searchForm: FormGroup;
   results: Doc;
-  projects: Project;
+  projects: Project[];
   currentprojects: Array<any>;
   resultContent: string;
   term: string;
+  subscription: any;
+
 
   constructor(private managerService: ManagerService,
     private formBuilder: FormBuilder,
     private router: Router,
     private search: SearchPipePipe) {
-
+    this.managerService.reloadProjects();
   }
 
   ngOnInit() {
+    this.subscription = this.managerService.observableProjects
+      .subscribe(projects => {
+        this.projects = projects;
+
+      })
     this.searchForm = this.formBuilder.group({
       keyword: ['']
     })
@@ -69,7 +76,7 @@ export class WikiComponent implements OnInit {
 
 
   translatemeArray(id) {
-    return this.managerService.fromIdToProjectnames(id, this.managerService.projects);
+    return this.managerService.fromIdToProjectnames(id, this.projects);
   }
 
   testbutton() {

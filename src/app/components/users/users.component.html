@@ -4,7 +4,7 @@
     <input class="form-control ml-3 w-75 search" [(ngModel)]="termPipe" type="text"
       placeholder="Filter by firstname or lastname" aria-label="Search">
 
-    <div *ngFor="let user of ( users | filter : termPipe )" [ngClass]="{'bg-secondary' : !user.status}"
+    <div *ngFor="let user of ( users | filter : termPipe )" [ngClass]="{'bg-dark' : !user.status}"
       class="list-group-item" style="width: 120%; font-size:larger;" title="{{ user.email }}">
       <div (click)="viewProfile(user.id)" style="color:black; cursor:pointer;">
 
@@ -19,6 +19,7 @@
         <span class="badge badge-warning">{{ user.role }}</span>
         &nbsp;&nbsp;
         <span class="badge badge-light">{{ user.email }}</span>
+        <p *ngIf="user.status == false" class="h5 text-danger float-right">Disabled</p>
         <br>
       </div>
     </div>

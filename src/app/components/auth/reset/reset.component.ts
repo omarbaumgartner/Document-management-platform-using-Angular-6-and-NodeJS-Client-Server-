@@ -25,18 +25,13 @@ export class ResetComponent implements OnInit {
     private authService: AuthService,
     private snackBar: MatSnackBar) {
 
-
-
   }
 
   ngOnInit() {
     this.token = this.route.snapshot.url[2].path;
-    console.log()
-    //this.decodedToken = jwt_decode(this.token);
     this.resetForm = this.formBuilder.group({
       password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
     })
-    // path : **
   }
 
   onSubmit() {

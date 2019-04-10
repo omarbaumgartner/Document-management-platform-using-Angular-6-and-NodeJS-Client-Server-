@@ -9,7 +9,7 @@
       <div class="row">
         <div *ngIf="!toggled" class="col-sm-1 text-center">
           <span class="align-baseline" style="color:dark; font-size: 2rem; cursor:pointer" title="Sidebar">
-            <i (click)="toggle(snav)" class="fas fa-bars"></i>
+            <i *ngIf="isConnected" (click)="toggle(snav)" class="fas fa-bars"></i>
           </span>
         </div>
         <div class="col">
@@ -22,8 +22,8 @@
     <br>
   </mat-sidenav-content>
 
-  <mat-sidenav #snav position="start" mode="side" [ngClass]="role=='Administrateur' ? 'bg-success' : 'bg-info'"
-    class="navbar bg-dark " style="width:15rem;">
+  <mat-sidenav opened="false" [disableClose]="true" #snav position="start" mode="side"
+    [ngClass]="role=='Administrateur' ? 'bg-success' : 'bg-info'" class="navbar bg-dark " style="width:15rem;">
 
     <div>
       <div class="container">
@@ -73,14 +73,7 @@
           <button class="btn btn-dark w-100 text-left" routerLink="/adminpannel">Admin</button>
         </div>
 
-        <div class="row">
-          <button class="btn btn-dark w-100 text-left disabled" routerLink="/docs">All Docs</button>
-        </div>
 
-        <div class="row">
-          <button [disabled] class="btn btn-dark w-100 text-left disabled" routerLink="/filemanager">All Files [ Admin ]
-          </button>
-        </div>
 
       </div>
     </div>

@@ -39,6 +39,7 @@ export class SingleprojectComponent implements OnInit {
   status: Array<boolean> = [false];
   role: any;
   projectId: number;
+  subscription: any;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -50,6 +51,7 @@ export class SingleprojectComponent implements OnInit {
     private location: Location,
   ) {
     this.loadingService.isLoading();
+    this.userService.reloadUsers();
   }
 
   ngOnInit() {
@@ -72,7 +74,10 @@ export class SingleprojectComponent implements OnInit {
 
           })
       });
-    this.getUsers();
+    this.subscription = this.userService.observablePeople
+      .subscribe(users => {
+        this.users = users;
+      })
     this.role = this.authService.currentrole.value;
     this.session = this.userService.getPayload();
 
@@ -91,15 +96,6 @@ export class SingleprojectComponent implements OnInit {
     console.log(recentId);
     this.router.navigate(['/docs/' + recentId]);
 
-  }
-
-  getUsers() {
-    return this.userService.getUsers()
-      .subscribe(
-        users => {
-          this.users = users
-        }
-      );
   }
 
   addFile(): void {
@@ -171,7 +167,7 @@ export class SingleprojectComponent implements OnInit {
   delete(): void {
     this.managerService.deleteProject(this.project.id)
       .subscribe(result => {
-        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/home"]));
+        this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/home"]));
       });
   }
 
@@ -196,7 +192,7 @@ export class SingleprojectComponent implements OnInit {
 
   translatemeArray(ids) {
     if (ids != undefined) {
-      return this.userService.fromIdToUsername(ids, this.userService.users);
+      return this.userService.fromIdToUsername(ids, this.users);
     }
   }
   selectUser(user) {

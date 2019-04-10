@@ -18,6 +18,7 @@ import { AvatarModule } from 'ngx-avatar';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
+import { GoogleChartsModule } from 'angular-google-charts';
 
 
 // Services
@@ -137,7 +138,10 @@ const appRoutes: Routes = [
   {
     path: 'filemanager',
     component: FilemanagerComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService],
+    data: {
+      name: 'File Manager'
+    }
   },
   {
     path: 'addproject',
@@ -226,6 +230,7 @@ const appRoutes: Routes = [
     MatIconModule,
     AutosizeModule,
     AutoSizeInputModule,
+    GoogleChartsModule.forRoot(),
     NgScrollbarModule,
     FlexLayoutModule,
     CKEditorModule,

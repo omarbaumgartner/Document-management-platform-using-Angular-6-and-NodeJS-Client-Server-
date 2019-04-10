@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar, MatDialog } from '@angular/material';
+import { BehaviorSubject } from 'rxjs';
 
 
 
@@ -18,6 +19,7 @@ export class AuthGuardService {
   isConnected: boolean;
   isValid: Object;
   noToken: boolean;
+  observableConnected = new BehaviorSubject<boolean>(false);
 
 
 
@@ -27,9 +29,21 @@ export class AuthGuardService {
     public dialog: MatDialog) {
 
 
+    if (this.noToken == false && this.isValid == true) {
+
+      this.isConnected = true;
+      this.observableConnected.next(true);
+
+    }
+    else {
+      this.isConnected = false;
+      this.observableConnected.next(false);
+
+    }
 
     this.updateToken();
     setInterval(() => this.updateToken(), 1000 * 60);
+
 
   }
 
@@ -48,6 +62,7 @@ export class AuthGuardService {
             this.isValid = tokenvalidity;
             this.noToken = false;
 
+
           }
 
         )
@@ -64,37 +79,52 @@ export class AuthGuardService {
 
 
   canActivate(): boolean {
-    // console.log("isValid : " + this.isValid)
-    // console.log("No Token : " + this.noToken);
+    console.log("isValid : " + this.isValid)
+    console.log("No Token : " + this.noToken);
     if (this.noToken == true && this.isValid == false) {
+      localStorage.removeItem('currentUser');
       this.snackBar.open("You need to connect", "Close", {
         duration: 1500,
         verticalPosition: "top",
 
       });
-      // console.log("Nope sorry")
+      //  console.log("Nope sorry")
+      this.isConnected = false;
+      this.observableConnected.next(false);
       this.router.navigate(['/auth/signin']);
-
+      console.log(this.isConnected)
       return false;
     }
     else if (this.isValid == false) {
+      localStorage.removeItem('currentUser');
       this.snackBar.open("Disconnected, please reconnect", "Close", {
         duration: 1500,
         verticalPosition: "top",
 
       });
-      //console.log("Nope sorry")
+      // console.log("Nope sorry")
+      this.isConnected = false;
+      this.observableConnected.next(false);
+
+      console.log(this.isConnected)
+
       this.router.navigate(['/auth/signin']);
       return false;
 
     }
     else {
-      //console.log("You can enter")
+      // console.log("You can enter")
+      this.isConnected = true;
+      this.observableConnected.next(true);
+
+      console.log(this.isConnected)
       return true;
     }
   }
 
-
+  testing() {
+    console.log(this.isConnected);
+  }
 
 
 

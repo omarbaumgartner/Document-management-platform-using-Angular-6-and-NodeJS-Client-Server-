@@ -27,6 +27,7 @@ export class AddprojectComponent implements OnInit {
   submitted: boolean;
   session: any;
   termPipe: string;
+  subscription: any;
 
 
   constructor(public formBuilder: FormBuilder,
@@ -34,15 +35,19 @@ export class AddprojectComponent implements OnInit {
     public managerService: ManagerService,
     public router: Router,
     public location: Location) {
+    this.userService.reloadUsers();
 
   }
 
   ngOnInit() {
     this.session = this.userService.getPayload();
     this.getCreatorUser();
-    this.getUsers();
+    this.subscription = this.userService.observablePeople
+      .subscribe(users => {
+        this.users = users;
+      })
+
     this.members.push(this.session.id);
-    //  this.selectedmembers.push(this.creatoruser.firstname + this.creatoruser.lastname)
     this.projectForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]],
       description: ['', [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9_.]{1,15}')]],
@@ -52,14 +57,6 @@ export class AddprojectComponent implements OnInit {
 
   }
 
-  getUsers() {
-    return this.userService.getUsers()
-      .subscribe(
-        users => {
-          this.users = users
-        }
-      );
-  }
   getCreatorUser() {
     return this.userService.getUserById(this.session.id)
       .subscribe(
@@ -78,7 +75,6 @@ export class AddprojectComponent implements OnInit {
     this.project.members = this.projectForm.get('members').value;
     this.managerService.addProject(this.project)
       .subscribe(result => {
-        console.log(result)
         this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + result.id]));
 
       });
@@ -123,12 +119,8 @@ export class AddprojectComponent implements OnInit {
           y++;
         }
       }
-      /*     this.projectForm = this.formBuilder.group({
-            members: [this.members, [Validators.required]],
-          }); */
-      this.projectForm.controls['members'].setValue(this.members);
 
-      console.log("Id members :" + this.members);
+      this.projectForm.controls['members'].setValue(this.members);
     }
   }
 

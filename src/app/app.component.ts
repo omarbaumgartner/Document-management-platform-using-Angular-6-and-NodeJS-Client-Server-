@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material';
 import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
 import { ManagerService } from './services/manager/manager.service';
+import { AuthGuardService } from './services/auth/auth-guard.service';
 
 @Component({
   selector: 'app-root',
@@ -28,17 +29,16 @@ export class AppComponent {
   session: any;
   role: any;
   activePage: any;
+  subscription: any;
 
 
   constructor(public loadingService: LoadingService,
     private authService: AuthService,
+    private authGuardService: AuthGuardService,
     public dialog: MatDialog) {
 
     this.isloading.subscribe((val) => {
       this.load = val;
-    })
-    this.currentstatus.subscribe((val) => {
-      this.isConnected = val;
     })
 
     this.authService.currentrole.subscribe((val) => {
@@ -51,6 +51,10 @@ export class AppComponent {
     if (localStorage.getItem('currentUser')) {
       this.authService.setRole();
     }
+    this.subscription = this.authGuardService.observableConnected
+      .subscribe((val) => {
+        this.isConnected = val;
+      })
   }
 
 

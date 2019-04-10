@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" style="margin-top: 5px;">
   <div class="row">
     <div class="col-2">
       <ul class="navbar-nav mr-auto">
@@ -14,7 +14,7 @@
       <form *ngIf="isConnected && activePage != 'Wiki'" class="form-inline ml-auto" (ngSubmit)="searchFor(searchWord)">
         <div class="md-form my-0">
           <input class="searchbar" [(ngModel)]="searchWord" name="searchWord" type="text" placeholder="Search"
-            aria-label="Search">
+            aria-label="Search" style="margin-top: 4px;">
         </div>
       </form>
     </div>

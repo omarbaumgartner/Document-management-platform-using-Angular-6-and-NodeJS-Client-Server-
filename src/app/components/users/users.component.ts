@@ -23,35 +23,30 @@ export class UsersComponent implements OnInit {
 
   users: User[];
   role: any;
+  subscription: any;
 
   constructor(private userService: UsersService,
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient,
     private loadingService: LoadingService) {
-    this.loadingService.isLoading();
+    // this.loadingService.isLoading();
+    this.userService.reloadUsers();
     this.authService.currentrole.subscribe((val) => {
       this.role = val;
     })
   }
 
   ngOnInit(): void {
-    this.getUsers();
-  }
-
-  getUsers() {
-    return this.userService.getUsers()
-      .subscribe(
-        users => {
-          this.users = users
-          this.loadingService.isFinished();
-
-        }
-      );
+    this.subscription = this.userService.observablePeople
+      .subscribe(users => {
+        this.users = users;
+        //this.loadingService.isFinished();
+      })
   }
 
   viewProfile(id: any) {
     this.router.navigate(['/users/' + id]);
   }
+
 
 }

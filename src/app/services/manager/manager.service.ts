@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Project } from 'src/app/models/Project.model';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from 'src/app/models/User.model';
 import { Doc } from 'src/app/models/Doc.model';
 import { Cont } from 'src/app/models/Cont.model';
@@ -23,13 +23,14 @@ export class ManagerService {
   results: any;
   hasSearched: boolean = false;
   searchTerm: string;
+  observableProjects = new BehaviorSubject<Project[]>(null);
 
   constructor(private http: HttpClient,
     private router: Router) {
     this.getProjects()
       .subscribe(
         projects => {
-          this.projects = projects;
+          this.observableProjects.next(projects);
         }
       );
   }
@@ -127,6 +128,15 @@ export class ManagerService {
       this.results = null;
       this.resultnumber = 0;
     }
+  }
+
+  reloadProjects() {
+    this.getProjects()
+      .subscribe(
+        projects => {
+          this.observableProjects.next(projects);
+        }
+      )
   }
 
 }

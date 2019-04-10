@@ -69,6 +69,7 @@ export class SingleuserComponent implements OnInit {
     this.adminModify = true;
     this.userService.deleteUser(this.user.id)
       .subscribe(result => {
+        this.userService.reloadUsers();
         this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/users"]));
       });
   }

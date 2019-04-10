@@ -4,6 +4,8 @@ import { DocsService } from 'src/app/services/docs/docs.service';
 import { Router } from '@angular/router';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { LoadingService } from 'src/app/services/loading.service';
+import { UsersService } from 'src/app/services/users/users.service';
+import { User } from 'src/app/models/User.model';
 
 
 
@@ -15,16 +17,25 @@ import { LoadingService } from 'src/app/services/loading.service';
 export class FilemanagerComponent implements OnInit {
 
   docs: Doc[];
+  users: User[];
+  subscription: any;
+
 
   constructor(private docsService: DocsService,
     private router: Router,
     private loadingService: LoadingService,
+    private userService: UsersService,
   ) {
+    this.userService.reloadUsers();
     this.loadingService.isLoading();
   }
 
   ngOnInit() {
     this.getDocs();
+    this.subscription = this.userService.observablePeople
+      .subscribe(users => {
+        this.users = users;
+      })
   }
 
   getDocs() {
@@ -45,9 +56,14 @@ export class FilemanagerComponent implements OnInit {
         recentId = document.versions[i];
       }
     }
-    console.log(recentId);
     this.router.navigate(['/docs/' + recentId]);
 
+  }
+
+  translatemeArray(ids) {
+    if (ids != undefined) {
+      return this.userService.fromIdToUsername(ids, this.users);
+    }
   }
 
 }

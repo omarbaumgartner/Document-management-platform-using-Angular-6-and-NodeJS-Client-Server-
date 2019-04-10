@@ -22,7 +22,6 @@
         <div class="col">
           <div class="row ">
             <p class="h5">Suggestions</p>
-            <button class="btn btn-danger" (click)="captureScreen()">Export as PDF</button>
           </div>
           <div class="col">
             <button class="btn btn-info">Not yet</button>
@@ -43,11 +42,11 @@
         </div>
         <div class="row float-right" *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'">
 
-          <div class="col"><button class="col btn btn-sm btn-info" *ngIf="!isEditing" (click)="edit()">Edit</button>
+          <div class=""><button class="btn btn-dark" (click)="captureScreen()">Export as PDF</button>
           </div>
-          <div class="col"><button class="col btn btn-sm btn-success" *ngIf="!isEditing" (click)="emit()">Emit</button>
+          <div class="col"><button class="btn btn btn-info" *ngIf="!isEditing" (click)="edit()">Edit</button>
           </div>
-          <div class="col"><button class="col btn btn-sm btn-danger" *ngIf="!isEditing"
+          <div class="col"><button class="btn btn btn-danger" *ngIf="!isEditing"
               (click)="deleteFile(document.id)">Delete</button></div>
         </div>
 
@@ -85,8 +84,11 @@
           <div *ngIf="role=='Administrateur'||role=='Project Manager'">
             <button class="btn btn-dark" *ngIf="!isEditing" (click)="back()">Back</button>
 
-            <button *ngIf=!isEditing class="col-1 btn btn-success float-right">Valider</button></div>
+            <button *ngIf=!isEditing class="col-1 btn btn-success float-right">Validate</button>
 
+            <button class="btn btn btn-success float-right" *ngIf="!isEditing" (click)="emit()">Emit</button>
+
+          </div>
         </div>
       </div>
     </div>

@@ -41,9 +41,9 @@ export class AdduserComponent {
       email: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmpassword: ['', Validators.required]
-    }, {
+    }/* , {
         validator: this.MustMatch('password', 'confirmpassword')
-      });
+      } */);
 
   }
 
@@ -87,6 +87,7 @@ export class AdduserComponent {
     this.user.password = md5.appendStr(this.user.password).end();
     this.userService.addUser(this.user)
       .subscribe(result => {
+        this.userService.reloadUsers();
         this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/users"]));
       });
   }

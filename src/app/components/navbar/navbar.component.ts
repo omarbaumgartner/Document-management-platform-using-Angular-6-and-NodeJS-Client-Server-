@@ -30,6 +30,8 @@ export class NavbarComponent implements OnInit {
   activePage: any;
   userProfile: any;
   searchWord: string = "";
+  subscription: any;
+  testing: boolean;
 
   constructor(private authService: AuthService,
     private authGuardService: AuthGuardService,
@@ -39,9 +41,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     public loadingService: LoadingService,
     public dialog: MatDialog) {
-    this.currentstatus.subscribe((val) => {
-      this.isConnected = val;
-    })
+
     this.authService.currentrole.subscribe((val) => {
       this.role = val;
     })
@@ -55,6 +55,11 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.subscription = this.authGuardService.observableConnected
+      .subscribe((val) => {
+        this.isConnected = val;
+      })
+
     this.router.events
       .subscribe(event => {
         let currentRoute = this.route.root;
@@ -123,6 +128,11 @@ export class NavbarComponent implements OnInit {
 
   searchFor(term) {
     this.managerService.onResearch(term);
+  }
+
+  test() {
+    console.log("isConnected navbar :" + this.isConnected);
+    console.log("isConnected authguard :" + this.authGuardService.isConnected);
   }
 
 }

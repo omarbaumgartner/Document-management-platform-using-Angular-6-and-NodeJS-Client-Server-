@@ -17,10 +17,10 @@ export class UsersService {
 
   user: User;
   userToken: any;
-  users: User[];
   userProfile = new BehaviorSubject<string>("");
   payload: any;
-
+  people: Array<User>;
+  observablePeople = new BehaviorSubject<User[]>(null);
 
 
 
@@ -29,15 +29,14 @@ export class UsersService {
     this.getUsers()
       .subscribe(
         users => {
-          this.users = users;
+          // this.users = users;
+          this.observablePeople.next(users);
         }
       );
     if (localStorage.getItem('currentUser')) { this.getUserProfile(); }
     else {
       console.log("No Profile")
     }
-
-
   }
 
   getUsers(): Observable<User[]> {
@@ -54,7 +53,6 @@ export class UsersService {
     return this.http.get<User>(url);
   }
 
-
   addUser(user: User): Observable<User> {
     return this.http.post<User>(this.usersUrl, user, httpOptions);
   }
@@ -70,6 +68,7 @@ export class UsersService {
     return this.http.put(this.usersUrl, user, httpOptions);
 
   }
+
   getPayload() {
     if (localStorage.getItem('currentUser')) {
       this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
@@ -121,5 +120,13 @@ export class UsersService {
       })
   }
 
+  reloadUsers() {
+    this.getUsers()
+      .subscribe(
+        users => {
+          this.observablePeople.next(users);
+        }
+      );
+  }
 
 }

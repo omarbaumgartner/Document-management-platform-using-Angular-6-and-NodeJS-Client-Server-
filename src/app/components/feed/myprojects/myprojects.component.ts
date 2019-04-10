@@ -17,17 +17,26 @@ export class MyprojectsComponent implements OnInit {
   myprojects: Project;
   expanded: Array<boolean> = [false];
   sliced: Array<number> = [100];
+  subscription: any;
+  users: User[];
 
   constructor(private authService: AuthService,
     private userService: UsersService,
     private managerService: ManagerService,
     public loadingService: LoadingService,
     private router: Router) {
+    this.userService.reloadUsers();
     this.loadingService.isLoading();
   }
 
   ngOnInit() {
     this.getMyProjects();
+    this.subscription = this.userService.observablePeople
+      .subscribe(users => {
+        this.users = users;
+        console.log(this.users)
+        //this.loadingService.isFinished();
+      })
   }
 
   getMyProjects() {
@@ -47,7 +56,7 @@ export class MyprojectsComponent implements OnInit {
   }
 
   translatemeArray(ids) {
-    return this.userService.fromIdToUsername(ids, this.userService.users);
+    return this.userService.fromIdToUsername(ids, this.users);
 
   }
   slice(i) {

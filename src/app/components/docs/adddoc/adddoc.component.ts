@@ -16,25 +16,17 @@ export class AdddocComponent implements OnInit {
   document = new Doc();
   documentForm: FormGroup;
   projectId: number;
-  session: any;
-  currentUrl: any;
-  previousUrl: any;
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
     private managerService: ManagerService,
-    private router: Router,
     public dialog: MatDialog) { }
 
   ngOnInit() {
-
     this.documentForm = this.formBuilder.group({
       filename: ['', [Validators.required, Validators.minLength(1), Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]]
-
     })
-    console.log(this.data);
-
   }
 
   onSubmit() {

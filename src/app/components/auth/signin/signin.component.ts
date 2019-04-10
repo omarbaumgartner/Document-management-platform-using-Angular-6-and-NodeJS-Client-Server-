@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -17,18 +17,15 @@ import { UsersService } from 'src/app/services/users/users.service';
 })
 export class SigninComponent implements OnInit {
 
-  public loading: boolean = false;
   signInForm: FormGroup;
   resetForm: FormGroup;
   returnUrl: string;
   emailpattern = "@instadeep.com";
-  email: string;
   error: any;
   iserror: boolean;
   reseterror: any;
   isResetting: boolean;
   isreseterror: boolean;
-
 
   constructor(private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -50,15 +47,10 @@ export class SigninComponent implements OnInit {
 
     this.resetForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{2,15}/)]],
-
     })
-    //reset login status
-    // this.authService.logout(this.authService.currentstatus);
 
-    // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
-
 
   onSubmit() {
     this.loadingService.isLoading();
@@ -105,8 +97,6 @@ export class SigninComponent implements OnInit {
             this.isreseterror = true;
             this.reseterror = "No email found";
           }
-
-
         });
   }
 

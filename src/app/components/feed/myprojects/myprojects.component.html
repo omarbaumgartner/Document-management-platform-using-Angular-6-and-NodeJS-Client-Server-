@@ -1,7 +1,7 @@
 <div class="container bg-light">
   <div class="row">
     <div class="col">
-      <p class="h2">My projects</p>
+      <p class="h2">Ongoing Projects</p>
       <div *ngFor="let myprojects of myprojects; let i = index ">
         <div class="alert alert-secondary card" *ngIf="myprojects.finished==false">
           <p style="cursor:pointer" (click)="singleProject(myprojects.id)" class="h4">{{myprojects.name}}</p>
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="col">
-      <p class="h2">Completed</p>
+      <p class="h2">Completed Projects</p>
       <div *ngFor="let myprojects of myprojects">
         <div style="cursor:pointer" *ngIf="myprojects.finished==true" class="alert alert-success card">
           <p style="cursor:pointer" (click)="singleProject(myprojects.id)" class="h4">{{myprojects.name}}</p>

@@ -1,5 +1,25 @@
 <br>
-<div class="container bg-light">
+<div class="container">
+  <button class="btn btn-warning" routerLink="/users">Manage Users</button>
+  <google-chart [dynamicResize]="dynamicResize" [options]="myOptions" [title]="userTitle" [type]="userType"
+    [data]="userData">
+  </google-chart>
+</div>
+<div class="container">
+  <button class="btn btn-warning" routerLink="/users">Manage Projects</button>
+  <google-chart [columnNames]="projectColumns" [dynamicResize]="dynamicResize" [options]="myOptions"
+    [title]="projectTitle" [type]="projectType" [data]="projectData">
+  </google-chart>
+</div>
+
+<div class="container">
+  <button class="btn btn-warning" routerLink="/filemanager">Manage Files</button>
+  <google-chart [columnNames]="fileColumns" [dynamicResize]="dynamicResize" [options]="myOptions" [title]="fileTitle"
+    [type]="fileType" [data]="fileData">
+  </google-chart>
+</div>
+
+<!-- <div class="container bg-light">
   <div class="row">
     <div class="col">
       <p class="h2">Ongoing projects</p>
@@ -25,19 +45,5 @@
         </div>
       </div>
     </div>
-    <div class="col">
-      <button class="btn btn-warning">Gérer les utilisateurs</button>
-      <br>
-      <br>
-      <button class="btn btn-warning">Gérer les projets</button>
-      <br>
-      <br>
-      <button class="btn btn-warning">Gérer les équipes</button>
-      <br>
-      <br>
-      <button class="btn btn-warning">Gérer les documents</button>
-    </div>
   </div>
-  <br>
-
-</div>
+</div> -->
