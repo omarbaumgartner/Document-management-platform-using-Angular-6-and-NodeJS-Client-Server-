@@ -1,19 +1,24 @@
 module.exports = (sequelize, Sequelize) => {
 	const User = sequelize.define('user', {
 		firstname: {
-			type: Sequelize.STRING
+			type: Sequelize.STRING,
+			allowNull: false,
 		},
 		lastname: {
-			type: Sequelize.STRING
+			type: Sequelize.STRING,
+			allowNull: false,
 		},
 		role: {
-			type: Sequelize.STRING
+			type: Sequelize.STRING,
+			allowNull: false,
 		},
 		email: {
-			type: Sequelize.STRING
+			type: Sequelize.STRING,
+			allowNull: false,
 		},
 		password: {
-			type: Sequelize.STRING
+			type: Sequelize.STRING,
+			allowNull: false,
 		},
 		token: {
 			type: Sequelize.STRING
@@ -22,7 +27,9 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.STRING
 		},
 		status: {
-			type: Sequelize.BOOLEAN
+			type: Sequelize.BOOLEAN,
+			allowNull: false,
+			defaultValue: true,
 		}
 	});
 

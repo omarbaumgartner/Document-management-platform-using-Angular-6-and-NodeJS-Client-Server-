@@ -39,7 +39,7 @@ async function findByPk(req) {
 //Get content of a document
 async function getContByPk(req) {
     console.log(req.params.id)
-    return Content.findByPk(req.params.id)
+    return Content.findOne({ where: { documentid: req.params.id } })
 }
 
 //Create Doc, Create content and Initialize Doc Version

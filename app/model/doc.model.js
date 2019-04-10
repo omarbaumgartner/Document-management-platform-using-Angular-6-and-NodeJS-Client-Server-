@@ -1,13 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
 	const Doc = sequelize.define('document', {
 		projectid: {
-			type: Sequelize.INTEGER
+			type: Sequelize.INTEGER,
+			allowNull: false,
 		},
 		authorid: {
-			type: Sequelize.INTEGER
+			type: Sequelize.INTEGER,
+			allowNull: false,
 		},
 		filename: {
-			type: Sequelize.STRING
+			type: Sequelize.STRING,
+			allowNull: false,
 		},
 		path: {
 			type: Sequelize.STRING
@@ -16,10 +19,14 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.ARRAY(Sequelize.INTEGER)
 		},
 		validated: {
-			type: Sequelize.BOOLEAN
+			type: Sequelize.BOOLEAN,
+			allowNull: false,
+			defaultValue: false,
 		},
 		published: {
-			type: Sequelize.BOOLEAN
+			type: Sequelize.BOOLEAN,
+			allowNull: false,
+			defaultValue: false,
 		}
 	});
 
