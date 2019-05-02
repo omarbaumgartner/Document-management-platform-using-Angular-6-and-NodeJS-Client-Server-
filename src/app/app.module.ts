@@ -19,6 +19,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AutoSizeInputModule } from 'ngx-autosize-input';
 import { GoogleChartsModule } from 'angular-google-charts';
+import { NgxHmCarouselModule } from 'ngx-hm-carousel';
 
 
 // Services
@@ -55,6 +56,8 @@ import { WikiComponent } from './components/wiki/wiki.component';
 import { SearchPipePipe } from './pipes/search-pipe.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ResetComponent } from './components/auth/reset/reset.component';
+import { NotifComponent } from './components/notifications/notif/notif.component';
+import { OngoingPipe } from './pipes/ongoing.pipe';
 
 
 
@@ -65,7 +68,7 @@ const appRoutes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuardService],
     data: {
-      name: 'Accueil'
+      name: 'Home'
     }
   },
   {
@@ -73,7 +76,7 @@ const appRoutes: Routes = [
     component: FeedComponent,
     canActivate: [AuthGuardService, RoleGuardService],
     data: {
-      name: 'AdminPannel'
+      name: 'Admin Pannel'
     }
   },
   {
@@ -156,7 +159,7 @@ const appRoutes: Routes = [
     component: MyprojectsComponent,
     canActivate: [AuthGuardService],
     data: {
-      name: 'Mes projets'
+      name: 'My projects'
     }
   },
   {
@@ -168,10 +171,11 @@ const appRoutes: Routes = [
     }
   },
   {
-    path: 'uploader',
-    component: UploadersComponent,
+    path: 'inbox',
+    component: NotifComponent,
+    canActivate: [AuthGuardService],
     data: {
-      name: 'Uploader'
+      name: 'Inbox'
     }
   },
 
@@ -212,6 +216,8 @@ const appRoutes: Routes = [
     SearchPipePipe,
     FilterPipe,
     ResetComponent,
+    NotifComponent,
+    OngoingPipe,
 
 
   ],
@@ -233,6 +239,7 @@ const appRoutes: Routes = [
     GoogleChartsModule.forRoot(),
     NgScrollbarModule,
     FlexLayoutModule,
+    NgxHmCarouselModule,
     CKEditorModule,
     ContextMenuModule.forRoot(),
     FileUploadModule,

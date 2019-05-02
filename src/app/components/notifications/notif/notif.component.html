@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="row">
+    <p class="h4">Latest notifications</p>
+  </div>
+  <div class="row">
+    <div *ngFor="let notification of sortData|slice:0:slicing" class="container">
+      <div [ngClass]="notification.opened==true ? 'row alert alert-secondary' : 'row alert alert-success'">
+        <p class="col">
+          {{notification?.message}}</p>
+        <p class="col-3 text-dark float-right">Date : {{notification?.createdAt|slice:0:19 }}</p>
+      </div>
+    </div>
+  </div>
+  <button *ngIf="showed == false" class="btn btn-dark" (click)="showAll()">Show All</button>
+</div>

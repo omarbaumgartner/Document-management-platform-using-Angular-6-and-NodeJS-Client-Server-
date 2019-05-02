@@ -22,6 +22,7 @@ export class RoleGuardService {
   }
 
   canActivate(): boolean {
+    this.session = this.getPayload();
     if (this.session.role == "Administrateur") {
       return true;
     }

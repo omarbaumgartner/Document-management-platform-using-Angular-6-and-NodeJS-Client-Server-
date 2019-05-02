@@ -8,8 +8,10 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Doc } from 'src/app/models/Doc.model';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import * as jspdf from 'jspdf';
-
-import html2canvas from 'html2canvas';
+import * as jwt_decode from "jwt-decode";
+import { Sug } from 'src/app/models/Sug.model';
+import { FormBuilder, Validators } from '@angular/forms';
+import { DocsService } from 'src/app/services/docs/docs.service';
 
 @Component({
   selector: 'app-singledoc',
@@ -24,14 +26,31 @@ export class SingledocComponent implements OnInit {
   role: any;
   versions: Array<number>;
   contentId: number;
+  autosaving: boolean = false;
+  userToken: any;
+  session: any;
+  suggestion = new Sug();
+  sugForm: any;
+  submittedSug: boolean;
+  suggestions: Sug;
 
   constructor(private route: ActivatedRoute,
+    public formBuilder: FormBuilder,
     private router: Router,
     private managerService: ManagerService,
     private authService: AuthService,
     private loadingService: LoadingService,
+    private docService: DocsService,
     private location: Location) {
     this.loadingService.isLoading();
+
+    this.session = this.getPayload();
+    setInterval(() => {
+      if (this.isEditing == true) {
+        this.autoSave();
+        console.log("Auto saving")
+      }
+    }, 1000 * 60);
 
 
   }
@@ -40,22 +59,39 @@ export class SingledocComponent implements OnInit {
     this.contentId = +this.route.snapshot.paramMap.get('id');
     this.managerService.getDocumentById(this.contentId)
       .subscribe(content => {
+        console.log(this.contentId)
         this.cont = content;
+        console.log(content);
+        console.log("yes");
         this.managerService.getSingleDocument(this.cont.documentid)
           .subscribe(document => {
             this.document = document;
             this.versions = document.versions;
             console.log(this.versions);
+            this.getSuggestions();
             this.loadingService.isFinished();
           })
 
       })
+    this.sugForm = this.formBuilder.group({
+      authorId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]],
+      documentId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9_.]{1,15}')]],
+      content: ["", [Validators.required, Validators.minLength(2), Validators.maxLength(40)]],
+    });
 
 
     this.role = this.authService.currentrole.value;
 
   }
-
+  getPayload() {
+    if (localStorage.getItem('currentUser')) {
+      this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
+      console.log("User Token : " + this.userToken);
+      return jwt_decode(this.userToken);
+    }
+    else
+      return undefined;
+  }
   newVersion() {
     this.document.path = this.cont.content;
     this.managerService.newDocVersion(this.document)
@@ -70,7 +106,7 @@ export class SingledocComponent implements OnInit {
 
   }
 
-  updateContent() {
+  updateDocumentContent() {
     this.managerService.updateContent(this.cont)
       .subscribe((val) => {
         this.isEditing = false;
@@ -78,14 +114,12 @@ export class SingledocComponent implements OnInit {
       })
   }
 
-
-  updateFile(document): void {
-    //this.submitted = true;
-    this.managerService.updateDocument(document)
-      .subscribe(result => {
-        console.log(result);
-        //this.message = "Projec Updated Successfully!";
-      });
+  autoSave() {
+    this.autosaving = true;
+    this.managerService.updateContent(this.cont)
+      .subscribe((val) => {
+        setTimeout(() => { this.autosaving = false }, 3000);
+      })
   }
 
   deleteFile(id): void {
@@ -108,6 +142,8 @@ export class SingledocComponent implements OnInit {
   back() {
     this.router.navigate(['/myprojects/' + this.document.projectid]);
   }
+
+  //Export as PDF
   captureScreen() {
     let doc = new jspdf();
     var data = this.cont.content;
@@ -116,5 +152,42 @@ export class SingledocComponent implements OnInit {
     doc.save(this.document.filename)
 
   }
+
+  //Suggestion Part
+
+  getSuggestions() {
+    this.docService.getSuggestions(this.document.id)
+      .subscribe((sugs) => {
+        this.suggestions = sugs;
+        console.log(this.suggestions)
+      })
+  }
+
+  submitSuggestion() {
+    this.submittedSug = true;
+    this.suggestion.authorId = this.session.id;
+    this.suggestion.documentId = this.document.id;
+    this.suggestion.content = this.sugForm.get('content').value;
+    console.log(this.suggestion);
+    this.docService.addSuggestion(this.suggestion)
+      .subscribe(result => {
+        this.getSuggestions();
+      });
+  }
+
+  modifySuggestion(suggestion): void {
+    this.docService.updateSuggestion(suggestion)
+      .subscribe(result => {
+
+      });
+  }
+
+  deleteSuggestion(id: number) {
+    this.docService.deleteSuggestion(id)
+      .subscribe(result => {
+
+      });
+  }
+
 
 }

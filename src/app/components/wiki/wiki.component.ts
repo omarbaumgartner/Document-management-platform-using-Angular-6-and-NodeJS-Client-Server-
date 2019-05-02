@@ -14,7 +14,6 @@ import { SearchPipePipe } from 'src/app/pipes/search-pipe.pipe';
 })
 
 export class WikiComponent implements OnInit {
-
   hasSearched: boolean;
   keywords: string;
   resultnumber: number;

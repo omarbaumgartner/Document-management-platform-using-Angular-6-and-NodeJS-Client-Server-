@@ -121,15 +121,6 @@ export class DocsComponent implements OnInit {
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
 
-  getDocs() {
-    return this.docsService.getDocs()
-      .subscribe(
-        docs => {
-          this.docs = docs;
-          this.loadingService.isFinished();
-        }
-      );
-  }
 
   onRightClick(event) {
     console.log("yes");

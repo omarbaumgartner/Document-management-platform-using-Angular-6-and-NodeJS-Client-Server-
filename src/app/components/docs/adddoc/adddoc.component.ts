@@ -16,6 +16,9 @@ export class AdddocComponent implements OnInit {
   document = new Doc();
   documentForm: FormGroup;
   projectId: number;
+  maxlength: number = 15;
+  errormessage: string = "Filename need to be between 1 and 15 characters";
+  error: boolean = false;
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
@@ -25,21 +28,28 @@ export class AdddocComponent implements OnInit {
 
   ngOnInit() {
     this.documentForm = this.formBuilder.group({
-      filename: ['', [Validators.required, Validators.minLength(1), Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]]
+      filename: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(this.maxlength), Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]]
     })
   }
 
   onSubmit() {
     this.document.filename = this.documentForm.get('filename').value;
-    this.document.projectid = this.data.projectId;
-    this.document.authorid = this.data.authorId;
-    this.document.path = "";
-    this.managerService.addDocument(this.document)
-      .subscribe(result => {
-        this.dialog.closeAll();
-        //this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.data.projectId]));
+    if (this.document.filename.length <= this.maxlength) {
+      this.document.projectid = this.data.projectId;
+      this.document.authorid = this.data.authorId;
+      this.document.path = "";
+      this.managerService.addDocument(this.document)
+        .subscribe(result => {
+          this.error = true;
+          this.dialog.closeAll();
+          //this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.data.projectId]));
 
-      });
+        });
+    }
+    else {
+      this.error = true;
+    }
+
   }
 
 }

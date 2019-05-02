@@ -91,7 +91,7 @@
       <label for="role">Role</label>
       <select class="form-control" id="role" required name="role" formControlName="role">
         <option [ngValue]="undefined" selected>User's Role</option>
-        <option value="Rédacteur/Propriétaire">Rédacteur/Propriétaire</option>
+        <option value="Redactor">Redactor</option>
         <option value="Reviewer">Reviewer</option>
         <option value="Project Manager">Project Manager</option>
         <option value="QA Manager">QA Manager</option>
@@ -108,15 +108,15 @@
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input (click)="clearpassword()" style="font-size: 20px;height: 110%;" type="password" id="password"
-        class="form-control" placeholder="**********" formControlName="password">
+      <input style="font-size: 20px;height: 110%;" type="password" id="password" class="form-control"
+        placeholder="**********" formControlName="password">
     </div>
 
 
     <div class="form-group">
       <label for="confirmpassword">Confirm your password</label>
       <input style="font-size: 20px;height: 110%;" type="password" id="confirmpassword" class="form-control"
-        placeholder="Confirm password" formControlName="confirmpassword">
+        placeholder="**********" formControlName="confirmpassword">
     </div>
 
     <div [hidden]="!iserror" class="alert alert-danger">{{error}}</div>

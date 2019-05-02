@@ -6,6 +6,7 @@ import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { LoadingService } from 'src/app/services/loading.service';
 import { UsersService } from 'src/app/services/users/users.service';
 import { User } from 'src/app/models/User.model';
+import { ManagerService } from 'src/app/services/manager/manager.service';
 
 
 
@@ -25,6 +26,7 @@ export class FilemanagerComponent implements OnInit {
     private router: Router,
     private loadingService: LoadingService,
     private userService: UsersService,
+    private managerService: ManagerService,
   ) {
     this.userService.reloadUsers();
     this.loadingService.isLoading();
@@ -39,7 +41,7 @@ export class FilemanagerComponent implements OnInit {
   }
 
   getDocs() {
-    return this.docsService.getDocs()
+    return this.managerService.getDocs()
       .subscribe(
         docs => {
           this.docs = docs;

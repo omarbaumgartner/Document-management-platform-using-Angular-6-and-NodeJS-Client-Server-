@@ -37,17 +37,18 @@
 
         <div class="row">
           <button class="col btn btn-dark w-100 text-left" routerLink="/home">
-            <i class="col-3 fas fa-home"></i>Accueil</button>
+            <i class="col-3 fas fa-home"></i>Home</button>
         </div>
 
         <div class="row">
           <button class="col btn btn-dark w-100 text-left" routerLink="/myprojects">
-            <i class="col-3 fas fa-project-diagram"></i>Mes projets</button>
+            <i class="col-3 fas fa-project-diagram"></i>My projects</button>
         </div>
 
         <div class="row">
-          <button class="col btn btn-dark w-100 text-left" routerLink="/myprojects">
-            <i class="col-3 far fa-bell"></i>Boîte de réception</button>
+          <button class="col btn btn-dark w-100 text-left" routerLink="/inbox">
+            <i [ngStyle]="{'color':inboxNotification === true ? 'red' : '' }"
+              class="col-3 far fa-bell"></i>Inbox</button>
         </div>
 
         <div class="dropdown-divider"></div>

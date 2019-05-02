@@ -63,6 +63,11 @@ export class ManagerService {
   }
 
   // Documents Methods 
+
+  getDocs(): Observable<Doc[]> {
+    return this.http.get<Doc[]>(this.apiURL + "db/docs");
+  }
+
   addDocument(document: Doc): Observable<Doc> {
     return this.http.post<Doc>(this.apiURL + "db/docs", document, httpOptions);
   }
@@ -71,6 +76,7 @@ export class ManagerService {
     return this.http.put(this.apiURL + "db/docs", document, httpOptions);
   }
 
+  // change to getProjectDocs
   getDocuments(id): Observable<Doc> {
     return this.http.get<Doc>(this.apiURL + "db/projdocs/" + id);
   }
@@ -80,8 +86,10 @@ export class ManagerService {
   }
 
   deleteDocument(document: Doc | number): Observable<Doc> {
+    console.log("document")
     const id = typeof document === 'number' ? document : document.id;
     const url = `${this.apiURL}db/docs/${id}`;
+    console.log(url);
     return this.http.delete<Doc>(url, httpOptions);
   }
 

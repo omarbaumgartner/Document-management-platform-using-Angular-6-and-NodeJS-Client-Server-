@@ -11,6 +11,9 @@ text-decoration-line: underline;
 cursor: pointer;
 }
 
+i{
+    cursor:pointer;
+}
 
 .sign{
     background-color: rgba(255, 255, 255, 0.1);
@@ -74,9 +77,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
   
 .searchbar:focus {
-    width: 35rem;
+    width: 76vw;
   }
 
 .decoration {
     box-shadow: 0 3px 0 0 #989b9e, 0 2px 8px 0 #343a40, 0 4px 10px 0 rgba(255, 255, 255, 0.5);
 }
+
+.search { position: relative; }
+.search .fa-eye{ 
+    position: absolute;
+    top: 25%;
+    left: 90%;
+    font-size: 20px;
+}
+.search .fa-eye-slash{ 
+    position: absolute;
+    top: 25%;
+    left: 90%;
+    font-size: 20px;
+  }

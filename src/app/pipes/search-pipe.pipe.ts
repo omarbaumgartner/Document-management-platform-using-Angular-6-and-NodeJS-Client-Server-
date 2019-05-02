@@ -11,7 +11,7 @@ export class SearchPipePipe implements PipeTransform {
       return value.replace(re, "<mark>" + args + "</mark>");
     } */
 
-  transform(text: string, search): string {
+  transform(text: string, search: string) {
     var pattern = search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     pattern = pattern.split(' ').filter((t) => {
       return t.length > 0;

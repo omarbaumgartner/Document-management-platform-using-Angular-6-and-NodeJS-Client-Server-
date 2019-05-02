@@ -43,6 +43,7 @@
     "ngx-autosize-input": "^2.2.2",
     "ngx-avatar": "^3.3.5",
     "ngx-contextmenu": "^5.1.1",
+    "ngx-hm-carousel": "^1.6.5-bata.1",
     "ngx-loading": "^3.0.1",
     "ngx-scrollbar": "^4.1.1",
     "npm-install-missing": "^0.1.4",

@@ -1,11 +1,15 @@
 import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { LoadingService } from './services/loading.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
 import { ManagerService } from './services/manager/manager.service';
 import { AuthGuardService } from './services/auth/auth-guard.service';
+import { NotifService } from './services/notifications/notif.service';
+import { Notif } from './models/Notif.model';
+import * as jwt_decode from "jwt-decode";
+
 
 @Component({
   selector: 'app-root',
@@ -30,12 +34,21 @@ export class AppComponent {
   role: any;
   activePage: any;
   subscription: any;
+  notifications: Notif[];
+  inboxNotification: boolean = false;
+
+  userToken: any;
 
 
   constructor(public loadingService: LoadingService,
     private authService: AuthService,
     private authGuardService: AuthGuardService,
+    private notifService: NotifService,
+    private snackbar: MatSnackBar,
     public dialog: MatDialog) {
+
+
+    this.session = this.getPayload();
 
     this.isloading.subscribe((val) => {
       this.load = val;
@@ -48,6 +61,28 @@ export class AppComponent {
 
   }
   ngOnInit() {
+    this.subscription = this.notifService.observableInbox
+      .subscribe(val => {
+        this.inboxNotification = val;
+      })
+    setInterval(() => {
+      if (this.session != undefined && this.inboxNotification != true) {
+        this.notifService.getNotifs(this.session.id)
+          .subscribe((notifications) => {
+            for (let i = 0; i < notifications.length; i++) {
+              if (notifications[i].opened == false) {
+                this.snackbar.open(notifications[i].message, "Close", {
+                  duration: 3000,
+                  verticalPosition: "top",
+                });
+                this.notifService.observableInbox.next(true);
+              }
+            }
+          })
+      }
+    }, 3000);
+
+
     if (localStorage.getItem('currentUser')) {
       this.authService.setRole();
     }
@@ -66,7 +101,15 @@ export class AppComponent {
       this.toggled = true;
   }
 
-
+  getPayload() {
+    if (localStorage.getItem('currentUser')) {
+      this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
+      console.log("User Token : " + this.userToken);
+      return jwt_decode(this.userToken);
+    }
+    else
+      return undefined;
+  }
   /*   openUploader(): void {
       const dialogRef = this.dialog.open(UploadersComponent, {
         autoFocus: true,

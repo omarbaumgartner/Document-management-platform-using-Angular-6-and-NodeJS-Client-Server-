@@ -4,8 +4,9 @@
       <label for="filename">File Name </label>
       <input type="text" class="form-control" id="filename" formControlName="filename" name="filename" required>
     </div>
+    <div [hidden]="!error" class="alert alert-danger">{{errormessage}}</div>
     <div class="form-group">
-      <button type="submit" class="btn btn-success" [disabled]="documentForm.invalid">Create</button>
+      <button type="submit" class="btn btn-success">Create</button>
     </div>
   </form>
 </div>

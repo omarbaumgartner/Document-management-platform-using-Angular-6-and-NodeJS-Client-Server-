@@ -41,9 +41,9 @@ export class AdduserComponent {
       email: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmpassword: ['', Validators.required]
-    }/* , {
+    }, {
         validator: this.MustMatch('password', 'confirmpassword')
-      } */);
+      });
 
   }
 
@@ -58,7 +58,7 @@ export class AdduserComponent {
     this.userService.checkEmail(this.user.email)
       .subscribe((user) => {
         if (user == null) {
-          this.save();
+          this.addUser();
         }
         else {
           this.errorMessage = "Email is already taken";
@@ -73,16 +73,11 @@ export class AdduserComponent {
     this.user = new User();
   }
 
-  addUser() {
-    this.submitted = true;
-    this.save();
-  }
-
   goBack(): void {
     this.location.back();
   }
 
-  private save(): void {
+  private addUser(): void {
     const md5 = new Md5();
     this.user.password = md5.appendStr(this.user.password).end();
     this.userService.addUser(this.user)

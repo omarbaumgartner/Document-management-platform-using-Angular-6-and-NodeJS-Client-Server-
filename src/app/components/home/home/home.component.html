@@ -1,16 +1,117 @@
 <div class="container">
-  <p class="h6">Projets récents</p>
+  <p class="h6">Recent Projects </p>
+
+
   <div class="dropdown-divider"></div>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-2 mr-2 " *ngFor="let myprojects of myprojects">
+      <div class="col-2 mr-2 " *ngFor="let myprojects of myprojects?.slice().reverse() |slice:0:5">
         <div class="row">
           <div class="col" (click)="viewProject(myprojects.id)">
-            <div class="row btn btn-dark d-flex justify-content-center decoration">
+            <div class="row btn d-flex justify-content-center decoration "
+              [ngClass]="{'btn-warning': myprojects.finished===false,'btn-success': myprojects.finished===true }">
               <i style="font-size: 6rem;" class="row fas fa-cubes  "></i>
             </div>
             <div class="row d-flex justify-content-center">
               <p class="text-dark text-center">{{myprojects.name}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 mr-2" *ngIf="ongoingnumber == 0 && finishednumber == 0">
+        <div class="row">
+          <div class="col">
+            <div class="row btn btn-dark d-flex justify-content-center decoration"
+              style="border-style:dashed;height: 7rem;background-color: rgba(0, 0, 0, 0.3)">
+              <!-- <i style="font-size: 6rem;" class="row fas fa-cubes  "></i> -->
+            </div>
+            <div class="row d-flex justify-content-center">
+              <p class="text-dark text-center">No recent projects</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <p class="h6">Ongoing Projects : {{ongoingnumber}} </p>
+  <div class="dropdown-divider"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <div *ngFor="let ongoingproject of ongoingprojects; let i = index;" class="col-2 mr-2 ">
+        <div>
+          <div class="row">
+            <div class="col" (click)="viewProject(ongoingprojects[i].id)">
+              <div class="row btn btn-warning d-flex justify-content-center decoration">
+                <i style="font-size: 6rem;" class="row fas fa-cubes  "></i>
+              </div>
+              <div class="row d-flex justify-content-center">
+                <p class="text-dark text-center">{{ongoingprojects[i].name}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 mr-2" *ngIf="ongoingnumber == 0">
+        <div class="row">
+          <div class="col">
+            <div class="row btn btn-dark d-flex justify-content-center decoration"
+              style="border-style:dashed;height: 7rem;background-color: rgba(0, 0, 0, 0.3)">
+              <!-- <i style="font-size: 6rem;" class="row fas fa-cubes  "></i> -->
+            </div>
+            <div class="row d-flex justify-content-center">
+              <p class="text-dark text-center">No ongoing projects</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 mr-2"
+        *ngIf="loaded == true && session.role == 'Project Manager' || session.role == 'Administrateur'">
+        <div class="row">
+          <div class="col">
+            <div routerLink="/addproject" class="row btn btn-light d-flex justify-content-center decoration"
+              style="border-style:dashed;height: 7rem;">
+              <i style="font-size: 5rem;" class="align-self-center fas fa-plus"></i>
+            </div>
+            <div class="row d-flex justify-content-center">
+              <p class="text-dark text-center">New project</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="container">
+  <p class="h6">Finished Projects : {{finishednumber}}</p>
+  <div class="dropdown-divider"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <div *ngFor="let finishedproject of finishedprojects; let i = index;" class="col-2 mr-2 ">
+        <div>
+          <div class="row">
+            <div class="col" (click)="viewProject(finishedprojects[i].id)">
+              <div class="row btn btn-success d-flex justify-content-center decoration">
+                <i style="font-size: 6rem;" class="row fas fa-cubes  "></i>
+              </div>
+              <div class="row d-flex justify-content-center">
+                <p class="text-dark text-center">{{finishedprojects[i].name}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 mr-2">
+        <div class="row" *ngIf="finishednumber == 0">
+          <div class="col">
+            <div class="row btn btn-dark d-flex justify-content-center decoration"
+              style="border-style:dashed;height: 7rem;background-color: rgba(0, 0, 0, 0.3)">
+              <!-- <i style="font-size: 6rem;" class="row fas fa-cubes  "></i> -->
+            </div>
+            <div class="row d-flex justify-content-center">
+              <p class="text-dark text-center">No finished projects</p>
             </div>
           </div>
         </div>

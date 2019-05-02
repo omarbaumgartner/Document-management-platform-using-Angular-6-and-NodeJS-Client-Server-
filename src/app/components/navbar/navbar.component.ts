@@ -10,6 +10,7 @@ import { AppComponent } from 'src/app/app.component';
 import { LoadingService } from 'src/app/services/loading.service';
 import { BehaviorSubject, Observable, interval } from 'rxjs';
 import { ManagerService } from 'src/app/services/manager/manager.service';
+import { NotifService } from 'src/app/services/notifications/notif.service';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class NavbarComponent implements OnInit {
   searchWord: string = "";
   subscription: any;
   testing: boolean;
+  inboxNotification: boolean;
 
   constructor(private authService: AuthService,
     private authGuardService: AuthGuardService,
@@ -40,6 +42,7 @@ export class NavbarComponent implements OnInit {
     private managerService: ManagerService,
     private router: Router,
     public loadingService: LoadingService,
+    public notifService: NotifService,
     public dialog: MatDialog) {
 
     this.authService.currentrole.subscribe((val) => {
@@ -49,6 +52,11 @@ export class NavbarComponent implements OnInit {
     this.userService.userProfile.subscribe((val) => {
       this.userProfile = val;
     })
+
+    this.subscription = this.notifService.observableInbox
+      .subscribe(val => {
+        this.inboxNotification = val;
+      })
 
 
 
@@ -99,6 +107,7 @@ export class NavbarComponent implements OnInit {
 
 
   logout() {
+    this.isConnected = false;
     this.userRole = null;
     localStorage.removeItem('currentUser');
     this.authService.logout(this.currentstatus);
@@ -106,7 +115,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/auth/signin']);
   }
 
-  myProfile() {
+  getMyProfile() {
     this.session = this.authService.getPayload();
     //console.log(this.session);
     this.router.navigate(['/users/' + this.session.id]);

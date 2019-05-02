@@ -1,15 +1,14 @@
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-sm-" style="width: 10rem;">
+    <div class="col-sm-" style="width: 15rem;">
       <div class="container">
         <div class="col">
           <div class="container justify-content-center ">
             <div class="row">
-              <p class="h5">Versions <i *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'"
+              <p class="h5">Versions <i *ngIf="role=='Administrateur'||role=='Redactor'"
                   style="cursor:pointer; font-size: 1rem;" (click)="newVersion()" title="New version"
                   class="fas fa-plus"></i></p>
             </div>
-
             <div class="row " *ngFor="let version of versions;let i = index">
               <button [ngClass]="contentId == versions[i] ? 'btn active' : 'btn btn-dark'"
                 (click)="viewVersion(versions[i])" class="btn btn-info">Version {{i+1}}</button>
@@ -18,29 +17,53 @@
         </div>
       </div>
       <br>
-      <div class="container alert alert-secondary">
+      <!-- Suggestions -->
+      <div class="container-fluid alert alert-secondary">
         <div class="col">
           <div class="row ">
             <p class="h5">Suggestions</p>
           </div>
-          <div class="col">
-            <button class="btn btn-info">Not yet</button>
+          <div class="row">
+            <div class="alert alert-dark">
+              No Suggestion Yet
+            </div>
+            <div class="row alert-primary" *ngFor="let suggestion of suggestions">
+              <br>
+              <p>Created by : {{suggestion.authorId}}</p><br>
+              <p>Content : {{suggestion.content}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <form [formGroup]="sugForm" (ngSubmit)="submitSuggestion()">
+              <textarea id="content" formControlName="content" class="form-control"
+                placeholder="Write your suggestion"></textarea>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block"> Submit </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
+
+
     <div class="col">
       <div class="row">
         <div class="col">
           <!--           <p class="h5">Document Editor : </p> -->
           <div class="col">
-            <p class="h4">{{document.filename}}</p>
+            <div class="row">
+              <p class="h4">{{document.filename}}</p>&nbsp;&nbsp;
+              <i *ngIf="isEditing"
+                [ngClass]="autosaving ? 'fas fa-circle-notch autosaveactive' : 'fas fa-circle-notch autosave'"
+                title="Auto Saving"></i>
+            </div>
             <!--             <div *ngFor="let version of versions;let i = index">
               <p class="h6" *ngIf='contentId == versions[i]'>Version {{i+1}}</p>
             </div> -->
           </div>
         </div>
-        <div class="row float-right" *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'">
+        <div class="row float-right" *ngIf="role=='Administrateur'||role=='Redactor'">
 
           <div class=""><button class="btn btn-dark" (click)="captureScreen()">Export as PDF</button>
           </div>
@@ -56,11 +79,10 @@
 
       <div class="row">
         <div class="col">
-          <!--           <p *ngIf="!isEditing">{{cont.content}}</p>
- -->
-          <div *ngIf="!isEditing">
+          <!--           <p *ngIf="!isEditing">{{cont.content}}</p> -->
+          <div style="height: 70vh" *ngIf="!isEditing">
             <ng-scrollbar class="lazy-scrollbar" thumbClass="white-scrollbars" [disableOnBreakpoints]="false">
-              <div [innerHTML]="cont.content">
+              <div [innerHTML]="cont?.content">
               </div>
             </ng-scrollbar>
           </div>
@@ -75,10 +97,9 @@
                     data="{{cont.content}}"></ckeditor>
                 </ng-scrollbar>
               </div>
-
             </div>
             <button type="button" class="btn btn-dark" (click)="edit()">Cancel</button>
-            <button type="button" class="btn btn-success" (click)="updateContent()">Save</button>
+            <button type="button" class="btn btn-success" (click)="updateDocumentContent()">Save</button>
           </form>
           <div class="dropdown-divider"></div>
           <div *ngIf="role=='Administrateur'||role=='Project Manager'">

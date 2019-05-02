@@ -21,7 +21,7 @@ export class FeedComponent implements OnInit {
   userType = "PieChart";
   userData = [
     ['Reviewer', 3],
-    ['Rédacteur/Propriétaire', 4],
+    ['Redactor', 4],
     ['Project Manager', 2],
     ['QA Manager', 1],
     ['Administrateur', 2]

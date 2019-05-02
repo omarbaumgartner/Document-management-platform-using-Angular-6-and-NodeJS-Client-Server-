@@ -6,8 +6,8 @@
         <div class="alert alert-secondary card" *ngIf="myprojects.finished==false">
           <p style="cursor:pointer" (click)="singleProject(myprojects.id)" class="h4">{{myprojects.name}}</p>
           <p>Description : {{myprojects.description | slice:0:slice(i)}}<a (click)="seeMore(i)" *ngIf=!expanded[i]
-              style="color:blue;cursor:pointer;">Voir plus</a>
-            <a (click)="seeMore(i)" *ngIf=expanded[i] style="color:blue;cursor:pointer;">Voir moins</a></p>
+              style="color:blue;cursor:pointer;">See more</a>
+            <a (click)="seeMore(i)" *ngIf=expanded[i] style="color:blue;cursor:pointer;">See less</a></p>
 
           <p class="h6 text-danger">Ongoing</p>
         </div>

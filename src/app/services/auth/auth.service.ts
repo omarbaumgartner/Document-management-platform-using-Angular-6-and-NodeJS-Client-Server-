@@ -69,6 +69,23 @@ export class AuthService {
     this.deconnexion(term);
   }
 
+  showOrHide(term: string, shown: boolean) {
+    console.log(term)
+    if (term == "password") {
+      term = "text";
+      shown = false;
+
+      console.log("changed to text")
+    }
+    else if (term == "text") {
+      term = "password";
+      shown = true;
+
+      console.log("changed to password")
+
+    }
+
+  }
 
 
 

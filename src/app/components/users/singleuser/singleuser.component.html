@@ -11,7 +11,7 @@
       <br>
       <!-- User Edit Button-->
       <div *ngIf="canEdit" title="Edit profile" style="float:right;position:relative;z-index: 2;"><span
-          (click)="onModify()" *ngIf="!userModify && !adminModify" class="btn btn-primary"><i
+          (click)="onModify()" *ngIf="!userModify && !adminModify" class="btn btn-primary">Edit <i
             class="fas fa-user-edit"></i></span></div>
 
       <!-- Admin Edit Button-->
@@ -20,7 +20,8 @@
 
       <!-- Admin Delete Edit Button-->
       <div *ngIf="isAdmin" title="Delete profile" style="float:right;position:relative;z-index: 2;"><span
-          (click)="delete()" *ngIf=!adminModify class="btn btn-danger"><i class="fas fa-minus-circle"></i></span></div>
+          (click)="deleteUser()" *ngIf=!adminModify class="btn btn-danger"><i class="fas fa-minus-circle"></i></span>
+      </div>
 
       <div *ngIf="!userModify && !adminModify" class="list-group-item">
         <div class="form-group">
@@ -57,6 +58,8 @@
           <label style="font-weight: bold;" for="createdAt">Joined :</label> &nbsp;
           <span>{{user.createdAt| slice:0:10}}</span>
         </div>
+
+
         <!--       <div class="form-group">
         <label style="font-weight: bold;" for="email">Projects :</label> &nbsp;
         <span>{{user.project}}</span>
@@ -97,11 +100,27 @@
         <label style="font-weight: bold;" for="email">Email :</label> &nbsp;
         <span>{{user.email}}</span>
       </div>
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password" style="font-weight: bold;">Password</label>
+        <div class="search">
+          <i (click)="onPassword()" *ngIf="!togglePassword" class="col fas fa-eye"></i>
+          <i (click)="onPassword()" *ngIf="togglePassword" class="col fas fa-eye-slash"></i>
+          <input (click)="clearPassword()" [type]="userPassword === 'password' ? 'password' : 'text'"
+            class="form-control" id="password" [formControl]="password" required [(ngModel)]="password.value"
+            name="password">
+        </div>
+        <div [hidden]="password.valid" class="alert alert-danger">
+          Password must be at least 6 characters
+        </div>
+
+
+      </div>
 
       <div class="btn-group btn-group-sm">
         <button type="button" *ngIf="userModify" class="btn btn-dark" (click)="onModifyCancel()">Cancel</button>
 
-        <button type="button" class="btn btn-success" (click)="update()"
+        <button type="button" class="btn btn-success" (click)="editUser()"
           [disabled]="!detailUserForm.form.valid">Update</button>
       </div>
     </form>
@@ -146,7 +165,7 @@
       <div class="form-group">
         <label for="role" style="font-weight: bold;">Role</label>
         <select class="form-control" id="role" required [(ngModel)]="user.role" name="role" #role="ngModel">
-          <option value="Rédacteur/Propriétaire">Rédacteur/Propriétaire</option>
+          <option value="Redactor">Redactor</option>
           <option value="Reviewer">Reviewer</option>
           <option value="Project Manager">Project Manager</option>
           <option value="QA Manager">QA Manager</option>
@@ -166,10 +185,27 @@
         </div>
       </div>
 
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password" style="font-weight: bold;">Password</label>
+        <div class="search">
+          <i (click)="onPassword()" *ngIf="!togglePassword" class="col fas fa-eye"></i>
+          <i (click)="onPassword()" *ngIf="togglePassword" class="col fas fa-eye-slash"></i>
+          <input (click)="clearPassword()" [type]="userPassword === 'password' ? 'password' : 'text'"
+            class="form-control" id="password" [formControl]="password" required [(ngModel)]="password.value"
+            name="password">
+        </div>
+        <div [hidden]="password.valid" class="alert alert-danger">
+          Password must be at least 6 characters
+        </div>
+
+
+      </div>
+
       <div class="btn-group btn-group-sm">
         <button type="button" *ngIf="adminModify" class="btn btn-dark" (click)="onModifyCancel()">Cancel</button>
 
-        <button type="button" class="btn btn-success" (click)="update()"
+        <button type="button" class="btn btn-success" (click)="editUser()"
           [disabled]="!detailUserForm.form.valid">Update</button>
       </div>
     </form>
@@ -183,6 +219,6 @@
 
   <!--
 <button type="button" class="btn btn-info" (click)="onModify()" *ngIf=!modify>Modify</button>
-<button type="button" class="btn btn-danger" (click)="delete()" *ngIf=!modify>Delete</button>
+<button type="button" class="btn btn-danger" (click)="deleteUser()" *ngIf=!modify>Delete</button>
 -->
 </div>

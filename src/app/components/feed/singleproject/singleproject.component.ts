@@ -98,7 +98,7 @@ export class SingleprojectComponent implements OnInit {
 
   }
 
-  addFile(): void {
+  addDocument(): void {
     const dialogRef = this.dialog.open(AdddocComponent, {
       autoFocus: true,
       data: {
@@ -110,7 +110,7 @@ export class SingleprojectComponent implements OnInit {
     });
   }
 
-  updateFile(document): void {
+  updateDocumentName(document): void {
     //this.submitted = true;
     this.managerService.updateDocument(document)
       .subscribe(result => {
@@ -119,8 +119,9 @@ export class SingleprojectComponent implements OnInit {
       });
   }
 
-  deleteFile($event): void {
+  deleteDocument($event): void {
     var id = $event.item.id
+    console.log($event.item.id);
     this.managerService.deleteDocument(id)
       .subscribe(result => {
         this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.projectId]));
@@ -164,14 +165,14 @@ export class SingleprojectComponent implements OnInit {
       });
   }
 
-  delete(): void {
+  deleteProject(): void {
     this.managerService.deleteProject(this.project.id)
       .subscribe(result => {
         this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/home"]));
       });
   }
 
-  finish() {
+  finishProject() {
     if (this.project.finished == false) {
       this.project.finished = true;
       this.managerService.updateProject(this.project)
@@ -248,4 +249,5 @@ export class SingleprojectComponent implements OnInit {
   showMessage(message: any) {
     console.log(message);
   }
+
 }

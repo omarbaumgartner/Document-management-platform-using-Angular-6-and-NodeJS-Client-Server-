@@ -60,7 +60,6 @@ export class UsersService {
   deleteUser(user: User | number): Observable<User> {
     const id = typeof user === 'number' ? user : user.id;
     const url = `${this.usersUrl}/${id}`;
-
     return this.http.delete<User>(url, httpOptions);
   }
 
@@ -82,12 +81,8 @@ export class UsersService {
   }
 
   fromIdToUsername(ids, users: User[]) {
-    // console.log(ids);
     var i = 0;
-    // console.log(ids);
     if (ids.length == undefined) {
-
-      //console.log(this.users[i].id)
       while (ids != users[i].id) {
         i++;
       }
@@ -96,20 +91,21 @@ export class UsersService {
     }
     else {
       var usernames = [];
-      //console.log(this.users[0]);
       var j;
       for (i = 0; i < ids.length; i++) {
         j = 0;
-        while (ids[i] != users[j].id) {
+        while (ids[i] != users[j].id && j < users.length - 1) {
           j++;
         }
         usernames.push(users[j].firstname + " " + users[j].lastname)
       }
-      return usernames;
+
     }
-
-
+    return usernames;
   }
+
+
+
 
   getUserProfile() {
     this.payload = this.getPayload();

@@ -67,7 +67,7 @@ export class AddprojectComponent implements OnInit {
       )
   }
 
-  onSubmit() {
+  submitProject() {
     this.submitted = true;
     this.project.name = this.projectForm.get('name').value;
     this.project.description = this.projectForm.get('description').value;

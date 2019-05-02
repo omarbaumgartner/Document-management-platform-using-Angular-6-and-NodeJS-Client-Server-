@@ -5,6 +5,8 @@ import { UsersService } from 'src/app/services/users/users.service';
 import { Location } from '@angular/common';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { Md5 } from 'ts-md5/dist/md5';
+import { FormControl, Validators } from '@angular/forms';
 
 
 @Component({
@@ -23,6 +25,11 @@ export class SingleuserComponent implements OnInit {
   canDelete: boolean = false;
   isAdmin: boolean = false;
   userProfile: any;
+  userPassword: string = "password";
+  togglePassword: boolean = true;
+  password: FormControl;
+  id: number;
+
 
 
   constructor(
@@ -37,12 +44,14 @@ export class SingleuserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
-    this.userService.getUserById(id)
+    this.password = new FormControl("*********", [Validators.required, Validators.minLength(6)]);
+    this.id = +this.route.snapshot.paramMap.get('id');
+    this.userService.getUserById(this.id)
       .subscribe(user => {
         this.user = user
         this.loadingService.isFinished();
         this.userProfile = user.firstname[0] + user.lastname[0];
+        // this.user.password = "**********";
       });
     if (JSON.parse(localStorage.getItem('currentUser'))) { this.authService.session = JSON.parse(localStorage.getItem('currentUser')); }
     this.onCheckAccount();
@@ -50,8 +59,13 @@ export class SingleuserComponent implements OnInit {
 
   }
 
-  update(): void {
+  editUser(): void {
     this.submitted = true;
+    const md5 = new Md5();
+    console.log("password is : " + this.password.value);
+    this.user.password = md5.appendStr(this.password.value).end();
+    console.log("hashed password is : " + this.user.password)
+    //console.log(this.user.password);
     this.userService.updateUser(this.user)
       .subscribe(result => {
         this.submitted = false;
@@ -64,7 +78,7 @@ export class SingleuserComponent implements OnInit {
       });
   }
 
-  delete(): void {
+  deleteUser(): void {
     this.submitted = true;
     this.adminModify = true;
     this.userService.deleteUser(this.user.id)
@@ -88,8 +102,14 @@ export class SingleuserComponent implements OnInit {
   onModifyCancel() {
     if (this.isAdmin == true)
       this.adminModify = false;
-    else
+    else {
+      this.userService.getUserById(this.id)
+        .subscribe(user => {
+          this.user = user
+          this.userProfile = user.firstname[0] + user.lastname[0];
+        });
       this.userModify = false;
+    }
   }
 
   onCheckAccount() {
@@ -110,6 +130,20 @@ export class SingleuserComponent implements OnInit {
         this.canDelete = false;
         console.log("Visitor")
       }
+    }
+  }
+
+  clearPassword() {
+    this.password.setValue("");
+  }
+  onPassword() {
+    if (this.userPassword == "text") {
+      this.userPassword = "password"
+      this.togglePassword = true;
+    }
+    else {
+      this.userPassword = "text";
+      this.togglePassword = false;
     }
   }
 

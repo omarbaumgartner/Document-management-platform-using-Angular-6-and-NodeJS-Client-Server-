@@ -26,6 +26,8 @@ export class SigninComponent implements OnInit {
   reseterror: any;
   isResetting: boolean;
   isreseterror: boolean;
+  userPassword: string = "password";
+  togglePassword: boolean = true;
 
   constructor(private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -56,7 +58,7 @@ export class SigninComponent implements OnInit {
     this.loadingService.isLoading();
     const email = this.signInForm.get('email').value + this.emailpattern;
     const password = this.signInForm.get('password').value;
-    this.authService.onLogin(email, password)
+    this.authService.onLogin(email.toLocaleLowerCase(), password)
       .pipe(first())
       .subscribe(
         data => {
@@ -82,7 +84,7 @@ export class SigninComponent implements OnInit {
 
   onReset() {
     const email = this.resetForm.get('email').value + this.emailpattern;
-    this.authService.onReset(email)
+    this.authService.onReset(email.toLocaleLowerCase())
       .subscribe(
         data => {
           if (data == true) {
@@ -100,6 +102,16 @@ export class SigninComponent implements OnInit {
         });
   }
 
+  onPassword() {
+    if (this.userPassword == "text") {
+      this.userPassword = "password"
+      this.togglePassword = true;
+    }
+    else {
+      this.userPassword = "text";
+      this.togglePassword = false;
+    }
+  }
 
 
 } 

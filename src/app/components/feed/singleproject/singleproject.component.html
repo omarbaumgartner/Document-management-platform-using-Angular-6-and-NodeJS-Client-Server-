@@ -1,5 +1,5 @@
 <!-- If Not Modify -->
-<div class="container">
+<div class="card container">
   <div class="row">
     <div *ngIf=!editing class="col-6 text-dark">
       <p class="h5">{{project.name}}</p>
@@ -101,7 +101,7 @@
             Add File
           </button>
           <div class="dropdown-menu">
-            <a style="cursor:pointer" class="dropdown-item" (click)="addFile()">New File</a>
+            <a style="cursor:pointer" class="dropdown-item" (click)="addDocument()">New File</a>
             <a style="cursor:pointer" class="dropdown-item" (click)="openUploader()">Import File</a>
           </div>
         </div>
@@ -109,8 +109,8 @@
       </div>
 
       <br>
-
-      <div class="">
+      <!-- Files -->
+      <div class="container">
         <div style="text-align: center;" class="row" *ngFor="let document of documents;" [contextMenu]="basicMenu"
           [contextMenuSubject]="document">
           <div class="container"> <i (click)="viewDocument(document)" style="font-size: 3rem; cursor:pointer;"
@@ -119,7 +119,7 @@
             <form *ngIf="isRenaming[document.id]" #detailDocumentForm="ngForm">
               <input AutoSizeInput type="text" class="form-control" id="filename" [(ngModel)]="document.filename"
                 name="filename" #filename="ngModel" required>
-              <button type="button" class="btn btn-success" (click)="updateFile(document)"
+              <button type="button" class="btn btn-success" (click)="updateDocumentName(document)"
                 [disabled]="!detailDocumentForm.form.valid">Update</button>
             </form>
             <hr />
@@ -129,24 +129,26 @@
     </div>
     <div *ngIf="role=='Administrateur' || session.id==project.creatorId" class="col-2">
       <!-- User Finish Button-->
-      <button *ngIf="!editing && project.finished == true" (click)="finish()" class="col btn btn-info">Continue
+      <button *ngIf="!editing && project.finished == true" (click)="finishProject()" class="col btn btn-info">Continue
         Project</button>
-      <button *ngIf="!editing && project.finished == false" (click)="finish()" class="col btn btn-success">Finish
+      <button *ngIf="!editing && project.finished == false" (click)="finishProject()" class="col btn btn-success">Finish
         Project</button>
       <!-- User Edit Button-->
       <button *ngIf=!editing (click)="edit()" class="col btn btn-warning">Edit Project</button>
       <!-- User Delete Button-->
-      <button *ngIf="!editing" class="col btn btn-danger text-dark" (click)="delete()">Remove Project</button>
+      <button *ngIf="!editing" class="col btn btn-danger text-dark" (click)="deleteProject()">Remove Project</button>
     </div>
+    <button *ngIf=!editing class="btn btn-dark" (click)="goBack()">Back</button>
+
   </div>
-  <button *ngIf=!editing class="btn btn-dark" (click)="goBack()">Back</button>
+
 </div>
 
 <context-menu *ngIf="role=='Administrateur'||role=='Project Manager'">
   <ng-template contextMenuItem (execute)="rename($event)">
     Rename
   </ng-template>
-  <ng-template contextMenuItem (execute)="deleteFile($event)">
+  <ng-template contextMenuItem (execute)="deleteDocument($event)">
     Delete
   </ng-template>
   <ng-template contextMenuItem (execute)="showMessage('File : ' + $event.doc.filename)">
