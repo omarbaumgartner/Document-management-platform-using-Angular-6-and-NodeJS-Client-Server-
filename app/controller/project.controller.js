@@ -15,8 +15,8 @@ exports.createProject = (req, res) => {
 }
 
 // List all projects
-exports.findAll = (req, res) => {
-    projectService.findAll()
+exports.listAllProjects = (req, res) => {
+    projectService.listAllProjects()
         .then(projects => {
             // Send All users to Client
             res.json(projects.sort(function (c1, c2) { return c1.id - c2.id }));
@@ -28,8 +28,8 @@ exports.findAll = (req, res) => {
 }
 
 // List user projects
-exports.findByUserId = (req, res) => {
-    projectService.findByUserId(req.body)
+exports.findProjectsByUserId = (req, res) => {
+    projectService.findProjectsByUserId(req.body)
         .then(projects => {
             // Send All users to Client
             res.json(projects);
@@ -41,8 +41,8 @@ exports.findByUserId = (req, res) => {
 }
 
 // Get single project
-exports.getProject = (req, res) => {
-    projectService.getProject(req)
+exports.getSingleProject = (req, res) => {
+    projectService.getSingleProject(req)
         .then(project => {
             // Send All users to Client
             res.json(project);
@@ -55,9 +55,9 @@ exports.getProject = (req, res) => {
 }
 
 //Update Project informations
-exports.update = (req, res) => {
+exports.updateProject = (req, res) => {
     const id = req.body.id;
-    projectService.update(req, id)
+    projectService.updateProject(req, id)
         .then(() => {
             res.status(200).json({ mgs: "Updated Successfully" });
         })
@@ -68,9 +68,9 @@ exports.update = (req, res) => {
 };
 
 // Delete a Project by Id
-exports.delete = (req, res) => {
+exports.removeProject = (req, res) => {
     const id = req.params.id;
-    projectService.remove(id)
+    projectService.removeProject(id)
         .then(() => {
             res.status(200).json({ msg: 'Deleted Successfully' });
         })

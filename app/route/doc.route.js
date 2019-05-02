@@ -24,19 +24,19 @@ module.exports = function (app) {
     app.post('/api/db/docs/newversion', docs.newDocVersion);
 
     // Retrieve Project Docs
-    app.get('/api/db/projdocs/:id', docs.getDocs);
+    app.get('/api/db/projdocs/:id', docs.getProjectDocs);
 
     // Retrieve Single Doc informations
     app.get('/api/db/singledoc/:id', docs.getSingleDoc);
 
     // Update a Doc with Id
-    app.put('/api/db/docs', docs.update);
+    app.put('/api/db/docs', docs.updateDocument);
 
     // Delete a Doc with Id
-    app.delete('/api/db/docs/:id', docs.delete);
+    app.delete('/api/db/docs/:id', docs.removeDocument);
 
     //Retrieve Content BY Id
-    app.get('/api/db/cont/:id', docs.getContByPk);
+    app.get('/api/db/cont/:id', docs.getContentById);
 
     // Update Content by Id
     app.put('/api/db/cont', docs.updateCont);
@@ -59,10 +59,10 @@ module.exports = function (app) {
 
     // Optionnal 
     //Retrieve a Doc By Id
-    app.get('/api/db/docs/:id', docs.findByPk);
+    app.get('/api/db/docs/:id', docs.findDocById);
 
     // Retrieve all Docs
-    app.get('/api/db/docs', docs.findAll);
+    app.get('/api/db/docs', docs.findAllDocs);
 
 
 

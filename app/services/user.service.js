@@ -3,10 +3,10 @@ const User = db.users;
 
 module.exports = {
     createUser,
-    findAll,
-    findByPk,
-    update,
-    remove,
+    findAllUsers,
+    findUserById,
+    updateUser,
+    removeUser,
     findByToken,
     checkEmail,
 
@@ -25,12 +25,12 @@ async function createUser(req, res) {
     })
 }
 //Retrieve all users from db
-async function findAll() {
+async function findAllUsers() {
     // Save to PostgreSQL database
     return User.findAll();
 }
 //Find User by ID
-async function findByPk(req) {
+async function findUserById(req) {
     // Save to PostgreSQL database
     return User.findByPk(req.params.id);
 }
@@ -47,13 +47,13 @@ async function findByToken(req) {
     return User.findOne({ where: { token: req.params.token } });
 }
 //Update User informations
-async function update(req, id) {
+async function updateUser(req, id) {
     // Save to PostgreSQL database
     User.update(req.body,
         { where: { id: id } });
 }
 //Remove User
-async function remove(id) {
+async function removeUser(id) {
     // Save to PostgreSQL database
     User.destroy({ where: { id: id } });
 }

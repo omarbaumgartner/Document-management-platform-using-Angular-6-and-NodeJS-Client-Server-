@@ -19,27 +19,27 @@ module.exports = {
     uploadFile,
     createDoc,
     newDocVersion,
-    getDocs,
+    getProjectDocs,
     getSingleDoc,
-    findAll,
-    findByPk,
-    getContByPk,
+    findAllDocs,
+    findDocById,
+    getContentById,
     updateCont,
     searchFor,
-    update,
-    remove,
+    updateDocument,
+    removeDocument,
 };
 
 //Retrieve a document from db by Id
-async function findByPk(req) {
+async function findDocById(req) {
     // Save to PostgreSQL database
     return Doc.findByPk(req.params.id);
 }
 
 //Get content of a document
-async function getContByPk(req) {
+async function getContentById(req) {
     console.log(req.params.id)
-    return Content.findOne({ where: { documentid: req.params.id } })
+    return Content.findOne({ where: { id: req.params.id } })
 }
 
 //Create Doc, Create content and Initialize Doc Version
@@ -117,7 +117,7 @@ function uploadFile(req, res) {
     }
 }
 
-async function getDocs(req) {
+async function getProjectDocs(req) {
     return Doc.findAll({ where: { projectid: req.params.id } })
 }
 
@@ -168,7 +168,7 @@ async function getSingleDoc(req) {
 }
 
 //Update document infos by Id
-async function update(req, id) {
+async function updateDocument(req, id) {
     // Save to PostgreSQL database
     Doc.update(req.body,
         { where: { id: id } });
@@ -180,7 +180,7 @@ async function updateCont(req, id) {
 }
 
 // Remove a document with its contents
-async function remove(id) {
+async function removeDocument(id) {
     // Save to PostgreSQL database
     Doc.destroy({ where: { id: id } })
         .then((val) => {
@@ -201,7 +201,7 @@ async function searchFor(keyword, res) {
 }
 
 //Retrieve all documents from db
-async function findAll() {
+async function findAllDocs() {
     return Doc.findAll();
 }
 

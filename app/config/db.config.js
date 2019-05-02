@@ -26,5 +26,5 @@ db.documents = require('../model/doc.model.js')(sequelize, Sequelize);
 db.contents = require('../model/content.model')(sequelize, Sequelize);
 db.sugs = require('../model/sug.model')(sequelize, Sequelize);
 db.coms = require('../model/com.model')(sequelize, Sequelize);
-
+db.notifs = require('../model/notif.model')(sequelize, Sequelize);
 module.exports = db;

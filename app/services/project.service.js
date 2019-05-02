@@ -8,11 +8,11 @@ const sequelize = db.sequelize;
 
 module.exports = {
     createProject,
-    findAll,
-    findByUserId,
-    getProject,
-    update,
-    remove
+    listAllProjects,
+    findProjectsByUserId,
+    getSingleProject,
+    updateProject,
+    removeProject
 }
 
 // Create a project
@@ -30,13 +30,13 @@ async function createProject(req, res) {
 }
 
 // List all projects
-async function findAll() {
+async function listAllProjects() {
     // Save to PostgreSQL database
     return Project.findAll();
 }
 
 // List user projects or common users projects
-async function findByUserId(req) {
+async function findProjectsByUserId(req) {
     // console.log("req.id : " + req);
     return sequelize.query("SELECT * from projects WHERE members @> ARRAY" + "[" + req + "]::integer[]", {
         model: Project,
@@ -45,19 +45,19 @@ async function findByUserId(req) {
 }
 
 // Get single project
-async function getProject(req) {
+async function getSingleProject(req) {
     return Project.findByPk(req.params.id);
 }
 
 //Update project informations
-async function update(req, id) {
+async function updateProject(req, id) {
     // Save to PostgreSQL database
     Project.update(req.body,
         { where: { id: id } });
 }
 
 // Delete a project
-async function remove(id) {
+async function removeProject(id) {
     // Save to PostgreSQL database
     Project.destroy({ where: { id: id } })
         .then((result) => {

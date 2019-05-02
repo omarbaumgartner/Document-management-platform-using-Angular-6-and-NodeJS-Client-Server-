@@ -28,8 +28,7 @@ require('./app/route/auth.route.js')(app);
 require('./app/route/project.route.js')(app);
 require('./app/route/doc.route.js')(app);
 require('./app/route/email.route.js')(app);
-
-
+require('./app/route/sug&coms.route.js')(app);
 
 
 function initial() {

@@ -14,6 +14,32 @@ exports.lostPassword = (req, res) => {
         });
 };
 
+exports.getNotifications = (req, res) => {
+    // Save to PostgreSQL database
+    emailService.getNotifications(req, res)
+        .then(val => {
+            // Send created user to client
+            res.json(val);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ msg: "error", details: err });
+        });
+};
+
+exports.updateNotifications = (req, res) => {
+    // Save to PostgreSQL database
+    emailService.updateNotifications(req, res)
+        .then(val => {
+            // Send created user to client
+            res.json(val);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ msg: "error", details: err });
+        });
+};
+
 exports.changePassword = (req, res) => {
     // Save to PostgreSQL database
     emailService.changePassword(req.body, res)

@@ -5,10 +5,10 @@ module.exports = function (app) {
     app.post('/api/users', users.createUser);
 
     // Retrieve all Users
-    app.get('/api/users', users.findAll);
+    app.get('/api/users', users.findAllUsers);
 
     // Retrieve a single User by Id
-    app.get('/api/users/id/:id', users.findByPk);
+    app.get('/api/users/id/:id', users.findUserById);
 
     // Check if an email is already existing
     app.get('/api/users/email/:email', users.checkEmail);
@@ -17,10 +17,10 @@ module.exports = function (app) {
     app.get('/api/users/token/:token', users.findByToken);
 
     // Update a User with Id
-    app.put('/api/users', users.update);
+    app.put('/api/users', users.updateUser);
 
     // Delete a User with Id
-    app.delete('/api/users/:id', users.delete);
+    app.delete('/api/users/:id', users.removeUser);
 
 
 }

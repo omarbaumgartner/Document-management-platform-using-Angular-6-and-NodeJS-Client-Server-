@@ -13,8 +13,8 @@ exports.createUser = (req, res) => {
 };
 
 // FETCH All Users
-exports.findAll = (req, res) => {
-	userService.findAll()
+exports.findAllUsers = (req, res) => {
+	userService.findAllUsers()
 		.then(users => {
 			// Send All users to Client
 			res.json(users.sort(function (c1, c2) { return c1.id - c2.id }));
@@ -26,8 +26,8 @@ exports.findAll = (req, res) => {
 };
 
 // Find a User by Id
-exports.findByPk = (req, res) => {
-	userService.findByPk(req)
+exports.findUserById = (req, res) => {
+	userService.findUserById(req)
 		.then(user => {
 			res.json(user);
 		})
@@ -65,9 +65,9 @@ exports.findByToken = (req, res) => {
 };
 
 // Update a User
-exports.update = (req, res) => {
+exports.updateUser = (req, res) => {
 	const id = req.body.id;
-	userService.update(req, id)
+	userService.updateUser(req, id)
 		.then(() => {
 			res.status(200).json({ mgs: "Updated Successfully -> User Id = " + id });
 		})
@@ -78,9 +78,9 @@ exports.update = (req, res) => {
 };
 
 // Delete a User by Id
-exports.delete = (req, res) => {
+exports.removeUser = (req, res) => {
 	const id = req.params.id;
-	userService.remove(id)
+	userService.removeUser(id)
 		.then(() => {
 			res.status(200).json({ msg: 'Deleted Successfully -> User Id = ' + id });
 		})

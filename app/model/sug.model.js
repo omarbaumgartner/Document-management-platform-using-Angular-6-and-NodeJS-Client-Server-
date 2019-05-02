@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         content: {
-            type: Sequelize.ARRAY(Sequelize.STRING)
+            type: Sequelize.STRING
         }
     });
 

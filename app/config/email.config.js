@@ -1,8 +1,5 @@
 const nodemailer = require('nodemailer');
 
-
-
-
 module.exports = function sendEmail(to, subject, message) {
     const transporter = nodemailer.createTransport({
         service: 'gmail',

@@ -27,8 +27,8 @@ exports.newDocVersion = (req, res) => {
 }
 
 // Get documents from Project ID 
-exports.getDocs = (req, res) => {
-	docsService.getDocs(req, res)
+exports.getProjectDocs = (req, res) => {
+	docsService.getProjectDocs(req, res)
 		.then(doc => {
 			res.json(doc);
 		})
@@ -50,8 +50,8 @@ exports.getSingleDoc = (req, res) => {
 		});
 }
 
-exports.getContByPk = (req, res) => {
-	docsService.getContByPk(req, res)
+exports.getContentById = (req, res) => {
+	docsService.getContentById(req, res)
 		.then(doc => {
 			res.json(doc);
 		})
@@ -63,8 +63,8 @@ exports.getContByPk = (req, res) => {
 
 
 // FETCH All Docs
-exports.findAll = (req, res) => {
-	docsService.findAll()
+exports.findAllDocs = (req, res) => {
+	docsService.findAllDocs()
 		.then(docs => {
 			// Send All users to Client
 			res.json(docs.sort(function (c1, c2) { return c1.id - c2.id }));
@@ -76,8 +76,8 @@ exports.findAll = (req, res) => {
 };
 
 // Find a Doc by Id
-exports.findByPk = (req, res) => {
-	Doc.findByPk(req.params.id).then(doc => {
+exports.findDocById = (req, res) => {
+	Doc.findDocById(req.params.id).then(doc => {
 		res.json(doc);
 	}).catch(err => {
 		console.log(err);
@@ -86,10 +86,10 @@ exports.findByPk = (req, res) => {
 };
 
 // Update a Doc
-exports.update = (req, res) => {
+exports.updateDocument = (req, res) => {
 	console.log(req.body);
 	const id = req.body.id;
-	docsService.update(req, id)
+	docsService.updateDocument(req, id)
 		.then(() => {
 			res.status(200).json({ mgs: "Updated Successfully -> Doc Id = " + id });
 		})
@@ -114,9 +114,10 @@ exports.updateCont = (req, res) => {
 }
 
 // Delete a Doc by Id
-exports.delete = (req, res) => {
+exports.removeDocument = (req, res) => {
 	const id = req.params.id;
-	docsService.remove(id)
+	console.log("Document Id is : " + id)
+	docsService.removeDocument(id)
 		.then(() => {
 			res.status(200).json({ msg: 'Deleted Successfully -> User Id = ' + id });
 		})
