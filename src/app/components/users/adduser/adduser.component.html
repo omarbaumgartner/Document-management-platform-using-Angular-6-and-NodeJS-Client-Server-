@@ -123,8 +123,8 @@
     <div [hidden]="!noError" class="alert alert-danger">{{errorMessage}}</div>
 
     <div class="form-group">
-      <button type="submit" class="btn btn-primary btn-block"> Submit </button>
-    </div> <!-- form-group// -->
+      <button type="submit" [disabled]="signUpForm.invalid" class="btn btn-primary btn-block"> Submit </button>
+    </div>
     <div [hidden]="!submitted">
       <p>Submitted Successfully</p>
       <div class="btn-group btn-group-sm">

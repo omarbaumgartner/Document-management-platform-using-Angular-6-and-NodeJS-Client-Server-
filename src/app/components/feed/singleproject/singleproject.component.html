@@ -115,7 +115,7 @@
           [contextMenuSubject]="document">
           <div class="container"> <i (click)="viewDocument(document)" style="font-size: 3rem; cursor:pointer;"
               class="fas fa-file"></i><br>
-            <label *ngIf="!isRenaming[document.id]">{{document.filename}}</label>
+            <label *ngIf="!isRenaming[document.id]">{{document.filename}}.id</label>
             <form *ngIf="isRenaming[document.id]" #detailDocumentForm="ngForm">
               <input AutoSizeInput type="text" class="form-control" id="filename" [(ngModel)]="document.filename"
                 name="filename" #filename="ngModel" required>
@@ -138,10 +138,10 @@
       <!-- User Delete Button-->
       <button *ngIf="!editing" class="col btn btn-danger text-dark" (click)="deleteProject()">Remove Project</button>
     </div>
-    <button *ngIf=!editing class="btn btn-dark" (click)="goBack()">Back</button>
-
   </div>
-
+  <div class="">
+    <button *ngIf=!editing class="btn btn-dark" (click)="goBack()">Back</button>
+  </div>
 </div>
 
 <context-menu *ngIf="role=='Administrateur'||role=='Project Manager'">

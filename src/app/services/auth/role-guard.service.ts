@@ -27,6 +27,7 @@ export class RoleGuardService {
       return true;
     }
     else {
+      console.log("no")
       this.snackBar.open("You need permissions", "Close", {
         duration: 1500,
         verticalPosition: "top",

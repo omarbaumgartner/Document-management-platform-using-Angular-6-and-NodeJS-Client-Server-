@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Project } from 'src/app/models/Project.model';
 import { Router } from '@angular/router';
 import { NgxHmCarouselBreakPointUp } from 'ngx-hm-carousel';
+import { AuthGuardService } from 'src/app/services/auth/auth-guard.service';
 
 @Component({
   selector: 'app-home',
@@ -12,15 +13,16 @@ import { NgxHmCarouselBreakPointUp } from 'ngx-hm-carousel';
 })
 export class HomeComponent implements OnInit {
   session: any;
-  myprojects: Project;
+  myprojects: Project[];
   finishedprojects: Array<Project> = [];
   ongoingprojects: Array<Project> = [];
   ongoingnumber: number = 0;
   finishednumber: number = 0;
-  loaded : boolean = false;
+  loaded: boolean = false;
 
   constructor(public managerService: ManagerService,
     private authService: AuthService,
+    private authGuard: AuthGuardService,
     public router: Router) { }
 
   ngOnInit() {

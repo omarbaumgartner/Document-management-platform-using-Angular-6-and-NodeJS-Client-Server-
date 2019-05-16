@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
+import * as jwt_decode from "jwt-decode";
 
 
 
@@ -16,117 +17,145 @@ export class AuthGuardService {
   //apiUrl = "http://52.29.87.21:8080";
   apiUrl = "http://localhost:8080";
   userToken: any;
-  isConnected: boolean;
+  // isConnected: boolean;
   isValid: Object;
   noToken: boolean;
   observableConnected = new BehaviorSubject<boolean>(false);
+  session: any;
+  actualDate: number;
 
 
 
   constructor(private router: Router,
     private http: HttpClient,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    private route: ActivatedRoute) {
 
 
-    if (this.noToken == false && this.isValid == true) {
 
-      this.isConnected = true;
-      this.observableConnected.next(true);
+    setInterval(() => {
+      if (this.getPayload()) {
+        this.session = this.getPayload();
+        this.actualDate = new Date().getTime();
+        const timestamp = Math.floor(this.actualDate / 1000);
+        if (this.session.exp < timestamp && this.isValid != false) {
+          this.observableConnected.next(false);
+          this.isValid = false;
+          console.log("Expired time")
+          this.snackBar.open("Disconnected, please reconnect", "Close", {
+            duration: 1500,
+            verticalPosition: "top",
+          });
+          //this.isConnected = false;
+          //console.log(this.isConnected)
+          this.router.navigate(['/auth/signin']);
+        }
+      }
+    }, 1 * 60 * 60)
 
-    }
-    else {
-      this.isConnected = false;
-      this.observableConnected.next(false);
 
-    }
-
-    this.updateToken();
-    setInterval(() => this.updateToken(), 1000 * 60);
-
-
+    /*     if (this.noToken == false && this.isValid == true) {
+          this.isConnected = true;
+          this.observableConnected.next(true);
+        }
+        else {
+          this.isConnected = false;
+          this.observableConnected.next(false);
+        } */
+    //setInterval(() => this.updateToken(), 1000 * 1);
   }
 
   onCheckToken() {
     this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
     return this.http.get(this.apiUrl + '/authguard/' + this.userToken)
-
   }
 
   updateToken(): any {
-    if (localStorage.getItem('currentUser')) {
+    // console.log("Checking Token")
+    if (localStorage.getItem('currentUser') && this.isValid != true) {
       this.onCheckToken()
         .subscribe(
           tokenvalidity => {
-            console.log("token validity : ", tokenvalidity)
+            //console.log("token validity : ", tokenvalidity)
             this.isValid = tokenvalidity;
-            this.noToken = false;
-
-
+            console.log("isValid : " + this.isValid)
+            if (this.isValid != true) {
+              this.router.navigate(['/auth/signin']);
+              this.observableConnected.next(false);
+              // this.isConnected = false;
+            }
+            else {
+              // this.isConnected = true;
+              this.noToken = false;
+              this.observableConnected.next(true);
+            }
           }
 
         )
     }
     else {
-      this.noToken = true;
-      this.isValid = false;
-
-    };
+      //this.isConnected = false;
+      this.observableConnected.next(false);
+    }
     //console.log("No Token : " + this.noToken);
     //console.log("Token validity : " + this.isValid);
   }
 
-
-
   canActivate(): boolean {
-    console.log("isValid : " + this.isValid)
-    console.log("No Token : " + this.noToken);
-    if (this.noToken == true && this.isValid == false) {
-      localStorage.removeItem('currentUser');
-      this.snackBar.open("You need to connect", "Close", {
-        duration: 1500,
-        verticalPosition: "top",
+    //console.log("isValid : " + this.isValid)
+    //console.log("No Token : " + this.noToken);
+    if (localStorage.getItem('currentUser')) {
+      this.onCheckToken().subscribe((val) => {
+        this.isValid = val;
+      })
+      if (this.noToken == true && this.isValid == false || !localStorage.getItem('currentUser')) {
+        localStorage.removeItem('currentUser');
+        this.snackBar.open("You need to connect", "Close", {
+          duration: 1500,
+          verticalPosition: "top",
+        });
+        this.observableConnected.next(false);
+        this.router.navigate(['/auth/signin']);
 
-      });
-      //  console.log("Nope sorry")
-      this.isConnected = false;
-      this.observableConnected.next(false);
-      this.router.navigate(['/auth/signin']);
-      console.log(this.isConnected)
-      return false;
-    }
-    else if (this.isValid == false) {
-      localStorage.removeItem('currentUser');
-      this.snackBar.open("Disconnected, please reconnect", "Close", {
-        duration: 1500,
-        verticalPosition: "top",
+        return false;
+      }
+      else if (this.isValid == false || !localStorage.getItem('currentUser')) {
+        localStorage.removeItem('currentUser');
+        this.snackBar.open("Disconnected, please reconnect", "Close", {
+          duration: 1500,
+          verticalPosition: "top",
+        });
+        this.observableConnected.next(false);
+        this.router.navigate(['/auth/signin']);
 
-      });
-      // console.log("Nope sorry")
-      this.isConnected = false;
-      this.observableConnected.next(false);
+        return false;
 
-      console.log(this.isConnected)
+      }
+      else {
+        this.observableConnected.next(true);
 
-      this.router.navigate(['/auth/signin']);
-      return false;
-
+        return true;
+      }
     }
     else {
-      // console.log("You can enter")
-      this.isConnected = true;
-      this.observableConnected.next(true);
+      this.router.navigate(['/auth/signin']);
+      return false;
 
-      console.log(this.isConnected)
-      return true;
+
     }
-  }
 
-  testing() {
-    console.log(this.isConnected);
   }
 
 
+  getPayload() {
+    if (localStorage.getItem('currentUser') != null) {
+      this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
+      return jwt_decode(this.userToken);
+    }
+    else
+      return false;
+  }
 
   //Optionnal : Login animation
   /*   openDialog(): void {
@@ -137,9 +166,6 @@ export class AuthGuardService {
 
 
   logout() {
-    console.log("Logged out");
-    // remove user from local storage to log user out
-    this.isConnected = false;
     this.isValid = false;
     localStorage.removeItem('currentUser');
 

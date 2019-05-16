@@ -20,7 +20,6 @@ import { NotifService } from 'src/app/services/notifications/notif.service';
 })
 export class NavbarComponent implements OnInit {
 
-  isConnected = this.authGuardService.isConnected;
   currentstatus = this.authService.currentstatus;
   session: any;
   userToken: any;
@@ -34,6 +33,7 @@ export class NavbarComponent implements OnInit {
   subscription: any;
   testing: boolean;
   inboxNotification: boolean;
+  isConnected: boolean;
 
   constructor(private authService: AuthService,
     private authGuardService: AuthGuardService,
@@ -82,7 +82,7 @@ export class NavbarComponent implements OnInit {
 
     if (JSON.parse(localStorage.getItem('currentUser'))) {
       this.session = this.authService.getPayload();
-      console.log(this.session);
+      //console.log(this.session);
       this.userService.getUserById(this.session.id)
         .subscribe((user) => {
           this.user = user;
@@ -112,6 +112,7 @@ export class NavbarComponent implements OnInit {
     localStorage.removeItem('currentUser');
     this.authService.logout(this.currentstatus);
     this.authGuardService.isValid = false;
+    this.authGuardService.observableConnected.next(false);
     this.router.navigate(['/auth/signin']);
   }
 
@@ -139,10 +140,6 @@ export class NavbarComponent implements OnInit {
     this.managerService.onResearch(term);
   }
 
-  test() {
-    console.log("isConnected navbar :" + this.isConnected);
-    console.log("isConnected authguard :" + this.authGuardService.isConnected);
-  }
 
 }
 

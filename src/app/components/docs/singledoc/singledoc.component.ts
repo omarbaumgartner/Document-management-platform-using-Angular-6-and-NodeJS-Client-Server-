@@ -12,6 +12,8 @@ import * as jwt_decode from "jwt-decode";
 import { Sug } from 'src/app/models/Sug.model';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DocsService } from 'src/app/services/docs/docs.service';
+import { UsersService } from 'src/app/services/users/users.service';
+import { OngoingPipe } from 'src/app/pipes/ongoing.pipe';
 
 @Component({
   selector: 'app-singledoc',
@@ -33,6 +35,14 @@ export class SingledocComponent implements OnInit {
   sugForm: any;
   submittedSug: boolean;
   suggestions: Sug;
+  textarea: string = "";
+  modifySugs: Array<boolean> = [false];
+  showedComments: Array<boolean> = [false];
+  exampleNumber: number = 2;
+  errmsg: string;
+  errstatus: boolean;
+  cancelEditTerm: string;
+
 
   constructor(private route: ActivatedRoute,
     public formBuilder: FormBuilder,
@@ -40,6 +50,7 @@ export class SingledocComponent implements OnInit {
     private managerService: ManagerService,
     private authService: AuthService,
     private loadingService: LoadingService,
+    private userService: UsersService,
     private docService: DocsService,
     private location: Location) {
     this.loadingService.isLoading();
@@ -48,10 +59,9 @@ export class SingledocComponent implements OnInit {
     setInterval(() => {
       if (this.isEditing == true) {
         this.autoSave();
-        console.log("Auto saving")
+        //console.log("Interval : Auto saving")
       }
     }, 1000 * 60);
-
 
   }
 
@@ -59,51 +69,42 @@ export class SingledocComponent implements OnInit {
     this.contentId = +this.route.snapshot.paramMap.get('id');
     this.managerService.getDocumentById(this.contentId)
       .subscribe(content => {
-        console.log(this.contentId)
         this.cont = content;
-        console.log(content);
-        console.log("yes");
         this.managerService.getSingleDocument(this.cont.documentid)
           .subscribe(document => {
             this.document = document;
             this.versions = document.versions;
-            console.log(this.versions);
             this.getSuggestions();
             this.loadingService.isFinished();
           })
-
       })
     this.sugForm = this.formBuilder.group({
       authorId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]],
       documentId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9_.]{1,15}')]],
       content: ["", [Validators.required, Validators.minLength(2), Validators.maxLength(40)]],
     });
-
-
     this.role = this.authService.currentrole.value;
-
   }
+
   getPayload() {
     if (localStorage.getItem('currentUser')) {
       this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
-      console.log("User Token : " + this.userToken);
       return jwt_decode(this.userToken);
     }
     else
       return undefined;
   }
+
   newVersion() {
     this.document.path = this.cont.content;
     this.managerService.newDocVersion(this.document)
       .subscribe(newcontent => {
         this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/docs/" + newcontent]));
       })
-
   }
 
   viewVersion(id) {
     this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/docs/" + id]));
-
   }
 
   updateDocumentContent() {
@@ -126,7 +127,6 @@ export class SingledocComponent implements OnInit {
     this.managerService.deleteDocument(id)
       .subscribe(result => {
         this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.document.projectid]));
-
       });
   }
 
@@ -147,10 +147,14 @@ export class SingledocComponent implements OnInit {
   captureScreen() {
     let doc = new jspdf();
     var data = this.cont.content;
-    doc.fromHTML(data);
+    //var splitTitle = doc.splitTextToSize(this.cont.content, 180);
+    // doc.fromHTML(data, 15, 20);
+    //doc.text(15, 20, splitTitle);
     //doc.text(data, 10, 10);
+    doc.fromHTML(data, 15, 15, {
+      'width': 180, // max width of content on PDF
+    })
     doc.save(this.document.filename)
-
   }
 
   //Suggestion Part
@@ -159,7 +163,6 @@ export class SingledocComponent implements OnInit {
     this.docService.getSuggestions(this.document.id)
       .subscribe((sugs) => {
         this.suggestions = sugs;
-        console.log(this.suggestions)
       })
   }
 
@@ -168,26 +171,137 @@ export class SingledocComponent implements OnInit {
     this.suggestion.authorId = this.session.id;
     this.suggestion.documentId = this.document.id;
     this.suggestion.content = this.sugForm.get('content').value;
-    console.log(this.suggestion);
-    this.docService.addSuggestion(this.suggestion)
-      .subscribe(result => {
-        this.getSuggestions();
-      });
+    if (this.suggestion.content == "") {
+      this.errstatus = true;
+      this.errmsg = "You can't send an empty suggestion";
+    }
+    else {
+      this.docService.addSuggestion(this.suggestion)
+        .subscribe(result => {
+          this.suggestions = null;
+          this.getSuggestions();
+        });
+      this.textarea = "";
+      this.errstatus = false;
+    }
+
+
   }
 
-  modifySuggestion(suggestion): void {
-    this.docService.updateSuggestion(suggestion)
-      .subscribe(result => {
+  modifySuggestion(suggestion: Sug): void {
+    //console.log(suggestion)
+    if (suggestion.content == "") {
 
-      });
+    }
+    else {
+      this.docService.updateSuggestion(suggestion)
+        .subscribe(result => {
+          //console.log(result)
+
+          //this.suggestions = null;
+          //console.log(this.suggestions)
+          this.ngOnInit();
+          console.log(this.suggestions)
+          this.isModifySug(suggestion.id);
+
+        });
+    }
+
   }
 
   deleteSuggestion(id: number) {
     this.docService.deleteSuggestion(id)
       .subscribe(result => {
-
+        this.suggestions = null;
+        this.ngOnInit();
       });
+
   }
 
+  translatemeArray(ids) {
+    if (ids != undefined) {
+      return this.userService.fromIdToUsername(ids, this.userService.observablePeople.value);
+    }
+  }
+
+  translateTime(creationTime: string) {
+    let word: string[];
+    let date: string[];
+    let anotherDate: string[];
+    let time: string[];
+    word = creationTime.split("T");
+    date = word;
+    time = word[1].split(".");
+    anotherDate = date[0].split("-");
+    let finalDate = anotherDate[2] + "-" + anotherDate[1] + "-" + anotherDate[0];
+    let finalTime = time[0];
+    let finalReturn = finalDate + " at " + finalTime;
+
+    return finalReturn;
+  }
+
+  isModifySug(id: number) {
+    if (this.modifySugs[id] == undefined)
+      this.modifySugs[id] = true;
+    else if (this.modifySugs[id] == false)
+      this.modifySugs[id] = true
+    else
+      this.modifySugs[id] = false
+  }
+
+  hasOpenedComments(id: number) {
+    if (this.showedComments[id] == undefined)
+      this.showedComments[id] = true;
+    else if (this.showedComments[id] == false)
+      this.showedComments[id] = true
+    else
+      this.showedComments[id] = false
+  }
+
+  Emit() {
+    if (this.document.emitted == true) {
+      this.document.emitted = false;
+
+    }
+    else
+      this.document.emitted = true;
+    this.managerService.updateDocument(this.document)
+      .subscribe((val) => {
+        console.log(val)
+      })
+  }
+
+  Validate() {
+    if (this.document.validated == true) {
+      this.document.validated = false;
+
+    }
+    else
+      this.document.validated = true;
+    this.managerService.updateDocument(this.document)
+      .subscribe((val) => {
+        console.log(val)
+      })
+  }
+
+  Publish() {
+    if (this.document.published == true) {
+      this.document.published = false;
+
+    }
+    else
+      this.document.published = true;
+    this.managerService.updateDocument(this.document)
+      .subscribe((val) => {
+        console.log(val)
+      })
+    /*       .subscribe((val) => {
+            this.managerService.getSingleDocument(this.cont.documentid)
+              .subscribe(document => {
+                this.document = document;
+                this.versions = document.versions;
+              })
+          }) */
+  }
 
 }

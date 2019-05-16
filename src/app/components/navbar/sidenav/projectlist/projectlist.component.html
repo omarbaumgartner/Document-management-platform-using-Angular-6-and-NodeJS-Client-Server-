@@ -3,17 +3,19 @@
     <div aria-expanded="false" data-toggle="dropdown">
       <div class="dropdown-toggle" id="navbarDropdownMenuLink-55" style="cursor: pointer;">
         <a (click)="checkProjects()" class="btn text-left text-light">
-          Projets
+          Projects
         </a>
       </div>
     </div>
 
     <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink-55">
+      <button *ngIf="projectnumber == 0 || projectnumber == null || projectnumber == undefined" class="btn text-light">
+        You don't have any project
+      </button>
       <div *ngFor="let myprojects of myprojects">
         <button style="padding: 10rem 10rem;" class="btn-dark text-left " (click)="viewProject(myprojects.id)"
           style="cursor:pointer;"><i class="fas fa-square"></i>&nbsp;{{myprojects.name}}</button>
       </div>
     </div>
-
   </ul>
 </div>

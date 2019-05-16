@@ -18,6 +18,7 @@ export class AdduserComponent {
   submitted = false;
   addUserForm: FormGroup;
   errorMessage: string;
+  showError: boolean = false;
   signUpForm: FormGroup;
   emailpattern = "@instadeep.com";
   passwordvalue: string;
@@ -38,7 +39,7 @@ export class AdduserComponent {
       firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
       lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
       role: ['Reviewer',],
-      email: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
+      email: ['', [Validators.required, Validators.pattern('[a-zA-Z].[a-zA-Z]{6,20}')]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmpassword: ['', Validators.required]
     }, {
@@ -55,6 +56,10 @@ export class AdduserComponent {
     this.user.role = this.signUpForm.get('role').value;
     this.user.email = this.signUpForm.get('email').value + this.emailpattern;
     this.user.password = this.signUpForm.get('password').value;
+    if (this.user.password != this.signUpForm.get('confirmpassword').value) {
+      this.showError = true;
+      this.errorMessage = "Both passwords don't match";
+    }
     this.userService.checkEmail(this.user.email)
       .subscribe((user) => {
         if (user == null) {

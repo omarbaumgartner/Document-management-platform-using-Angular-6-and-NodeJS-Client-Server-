@@ -14,7 +14,7 @@ import { User } from 'src/app/models/User.model';
 })
 export class MyprojectsComponent implements OnInit {
   session: any;
-  myprojects: Project;
+  myprojects: Project[];
   expanded: Array<boolean> = [false];
   sliced: Array<number> = [100];
   subscription: any;
@@ -34,7 +34,7 @@ export class MyprojectsComponent implements OnInit {
     this.subscription = this.userService.observablePeople
       .subscribe(users => {
         this.users = users;
-        console.log(this.users)
+        //console.log(this.users)
         //this.loadingService.isFinished();
       })
   }

@@ -40,8 +40,8 @@ export class ManagerService {
     return this.http.get<Project[]>(this.apiURL + "projects");
   }
 
-  getUserProjects(id: Array<number>): Observable<Project> {
-    return this.http.post<Project>(this.apiURL + "projects", [id], httpOptions);
+  getUserProjects(id: Array<number>): Observable<Project[]> {
+    return this.http.post<Project[]>(this.apiURL + "projects", [id], httpOptions);
   }
 
   getProjectById(id): Observable<Project> {

@@ -8,6 +8,7 @@ export class Doc {
     path: string;
     // sizeinko: number;
     versions: Array<number>;
+    emitted: boolean;
     validated: boolean;
     published: boolean;
     createdAt: string;

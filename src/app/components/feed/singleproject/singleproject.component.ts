@@ -93,7 +93,7 @@ export class SingleprojectComponent implements OnInit {
         recentId = document.versions[i];
       }
     }
-    console.log(recentId);
+    //console.log(recentId);
     this.router.navigate(['/docs/' + recentId]);
 
   }

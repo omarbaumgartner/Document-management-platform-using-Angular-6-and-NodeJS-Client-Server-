@@ -14,12 +14,14 @@ export class NotifComponent implements OnInit {
   subscription: any;
   slicing: number = 5;
   showed: boolean = false;
+  notifnumber: number = 0;
 
   constructor(private notifService: NotifService) {
     this.subscription = this.notifService.observableNotifications
       .subscribe(notifications => {
         this.notifications = notifications;
-        console.log(this.notifications)
+        if (this.notifications.length != null)
+          this.notifnumber = this.notifications.length;
       })
   }
 
@@ -43,8 +45,32 @@ export class NotifComponent implements OnInit {
 
   }
 
+  clearNotifs() {
+    this.notifService.clearNotifs(this.notifService.session.id)
+      .subscribe(val => {
+        this.notifService.reloadNotifs();
+
+      })
+  }
+
   showAll() {
     this.showed = true;
     this.slicing = 50;
+  }
+
+  translateTime(creationTime: string) {
+    let word: string[];
+    let date: string[];
+    let anotherDate: string[];
+    let time: string[];
+    word = creationTime.split("T");
+    date = word;
+    time = word[1].split(".");
+    anotherDate = date[0].split("-");
+    let finalDate = anotherDate[2] + "-" + anotherDate[1] + "-" + anotherDate[0];
+    let finalTime = time[0];
+    let finalReturn = finalDate + " at " + finalTime;
+
+    return finalReturn;
   }
 }

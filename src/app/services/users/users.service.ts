@@ -71,7 +71,7 @@ export class UsersService {
   getPayload() {
     if (localStorage.getItem('currentUser')) {
       this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
-      console.log("User Token : " + this.userToken);
+      //console.log("User Token : " + this.userToken);
       return jwt_decode(this.userToken);
     }
   }

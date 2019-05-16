@@ -33,7 +33,6 @@ export class NotifService {
               if (notifs[i].opened == false) {
                 this.observableInbox.next(true);
               }
-
             }
           }
         })
@@ -45,6 +44,11 @@ export class NotifService {
     return this.http.get<Notif[]>(this.notifsUrl + id);
   }
 
+  clearNotifs(id: number) {
+    //console.log(id);
+    return this.http.delete<Notif>(this.notifsUrl + "remove/" + id, httpOptions);
+  }
+
   openNotifs() {
     this.observableInbox.next(false);
     return this.http.get<any>(this.notifsUrl + "open/" + this.session.id);
@@ -53,7 +57,7 @@ export class NotifService {
   getPayload() {
     if (localStorage.getItem('currentUser')) {
       this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
-      console.log("User Token : " + this.userToken);
+      //console.log("User Token : " + this.userToken);
       return jwt_decode(this.userToken);
     }
   }
@@ -63,7 +67,7 @@ export class NotifService {
     this.getNotifs(this.session.id)
       .subscribe(
         notifications => {
-          console.log(notifications);
+          //console.log(notifications);
           this.observableNotifications.next(notifications);
         }
       );

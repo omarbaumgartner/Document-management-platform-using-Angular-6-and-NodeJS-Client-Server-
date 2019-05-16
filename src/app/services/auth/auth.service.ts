@@ -31,7 +31,7 @@ export class AuthService {
 
   onLogin(email: string, password: any) {
     password = Md5.hashStr(password);
-    console.log("Hashed password : " + password);
+    //console.log("Hashed password : " + password);
     return this.http.post<any>(`${this.apiUrl}/authenticate`, { email, password })
       .pipe(map(user => {
         // login successful if there's a jwt token in the response
@@ -105,7 +105,7 @@ export class AuthService {
   getPayload() {
     if (localStorage.getItem('currentUser') != null) {
       this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
-      console.log("User Token : " + this.userToken);
+      // console.log("User Token : " + this.userToken);
       return jwt_decode(this.userToken);
     }
     else

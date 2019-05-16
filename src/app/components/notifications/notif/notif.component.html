@@ -1,15 +1,26 @@
 <div class="container">
   <div class="row">
-    <p class="h4">Latest notifications</p>
+    <div class="col">
+      <p class="h4">Latest notifications</p>
+    </div>
+    <div class="col"><button [disabled]="notifnumber == 0" class="btn btn-dark float-right"
+        (click)="clearNotifs()">Clear All</button></div>
   </div>
+  <br>
   <div class="row">
     <div *ngFor="let notification of sortData|slice:0:slicing" class="container">
       <div [ngClass]="notification.opened==true ? 'row alert alert-secondary' : 'row alert alert-success'">
         <p class="col">
           {{notification?.message}}</p>
-        <p class="col-3 text-dark float-right">Date : {{notification?.createdAt|slice:0:19 }}</p>
+        <p class="col-3 text-dark float-right">Date : {{translateTime(notification?.createdAt)}}</p>
+      </div>
+    </div>
+    <div *ngIf="notifnumber == 0" class="container">
+      <div class="row alert alert-dark">
+        <p class="col">
+          You don't have notifications</p>
       </div>
     </div>
   </div>
-  <button *ngIf="showed == false" class="btn btn-dark" (click)="showAll()">Show All</button>
+  <button *ngIf="showed == false && notifnumber > 5" class="btn btn-dark" (click)="showAll()">Show All</button>
 </div>

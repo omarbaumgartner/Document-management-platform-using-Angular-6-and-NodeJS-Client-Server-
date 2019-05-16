@@ -36,7 +36,7 @@ export class AppComponent {
   subscription: any;
   notifications: Notif[];
   inboxNotification: boolean = false;
-
+  sideNav: boolean;
   userToken: any;
 
 
@@ -58,6 +58,9 @@ export class AppComponent {
       this.role = val;
     })
 
+    this.authGuardService.observableConnected.subscribe((val) => {
+      this.sideNav = val;
+    })
 
   }
   ngOnInit() {
@@ -66,6 +69,7 @@ export class AppComponent {
         this.inboxNotification = val;
       })
     setInterval(() => {
+      console.log("Interval : getNotif")
       if (this.session != undefined && this.inboxNotification != true) {
         this.notifService.getNotifs(this.session.id)
           .subscribe((notifications) => {
@@ -80,7 +84,7 @@ export class AppComponent {
             }
           })
       }
-    }, 3000);
+    }, 60000);
 
 
     if (localStorage.getItem('currentUser')) {
@@ -104,7 +108,7 @@ export class AppComponent {
   getPayload() {
     if (localStorage.getItem('currentUser')) {
       this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
-      console.log("User Token : " + this.userToken);
+      // console.log("User Token : " + this.userToken);
       return jwt_decode(this.userToken);
     }
     else

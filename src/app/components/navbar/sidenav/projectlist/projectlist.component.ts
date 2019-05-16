@@ -10,8 +10,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./projectlist.component.css']
 })
 export class ProjectlistComponent implements OnInit {
-  myprojects: Project;
+  myprojects: Project[];
   session: any;
+  projectnumber: number = 0;
 
   constructor(public authService: AuthService,
     public managerService: ManagerService,
@@ -31,6 +32,9 @@ export class ProjectlistComponent implements OnInit {
           projects => {
             //console.log(projects);
             this.myprojects = projects;
+            if (projects.length != null)
+              this.projectnumber = projects.length
+
           }
         )
     }

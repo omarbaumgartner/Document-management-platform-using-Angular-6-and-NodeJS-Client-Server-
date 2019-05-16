@@ -1,66 +1,107 @@
-<div class="container-fluid">
+<div class="container">
   <div class="row">
     <div class="col-sm-" style="width: 15rem;">
       <div class="container">
         <div class="col">
           <div class="container justify-content-center ">
-            <div class="row">
-              <p class="h5">Versions <i *ngIf="role=='Administrateur'||role=='Redactor'"
-                  style="cursor:pointer; font-size: 1rem;" (click)="newVersion()" title="New version"
-                  class="fas fa-plus"></i></p>
+            <p class="h5">Versions <i *ngIf="role=='Administrateur'||role=='Rédacteur/Propriétaire'"
+                style="cursor:pointer; font-size: 1rem;" (click)="newVersion()" title="New version"
+                class="fas fa-plus"></i></p>
+            <div class="row ">
+              <select>
+                <option *ngFor="let version of versions;let i = index" [selected]="contentId == versions[i]"
+                  [ngClass]="contentId == versions[i] ? 'btn active' : 'btn btn-dark'"
+                  (click)="viewVersion(versions[i])" class="btn btn-info">Version {{i+1}}</option>
+              </select>
             </div>
-            <div class="row " *ngFor="let version of versions;let i = index">
-              <button [ngClass]="contentId == versions[i] ? 'btn active' : 'btn btn-dark'"
-                (click)="viewVersion(versions[i])" class="btn btn-info">Version {{i+1}}</button>
-            </div>
+
           </div>
         </div>
       </div>
-      <br>
       <!-- Suggestions -->
       <div class="container-fluid alert alert-secondary">
         <div class="col">
           <div class="row ">
-            <p class="h5">Suggestions</p>
-          </div>
-          <div class="row">
-            <div class="alert alert-dark">
-              No Suggestion Yet
-            </div>
-            <div class="row alert-primary" *ngFor="let suggestion of suggestions">
-              <br>
-              <p>Created by : {{suggestion.authorId}}</p><br>
-              <p>Content : {{suggestion.content}}</p>
-            </div>
+            <p class="h5">Suggestions</p> <!-- <button (click)="getSuggestions()">Reload </button> -->
           </div>
           <div class="row">
             <form [formGroup]="sugForm" (ngSubmit)="submitSuggestion()">
-              <textarea id="content" formControlName="content" class="form-control"
-                placeholder="Write your suggestion"></textarea>
+              <textarea [(ngModel)]=textarea style="font-size: 0.9rem" id="content" formControlName="content"
+                class="form-control" placeholder="Write your suggestion"></textarea>
               <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block"> Submit </button>
+                <button type="submit" class="btn btn-sm btn-primary btn-block"> Submit </button>
               </div>
             </form>
+            <div *ngIf=errstatus class="alert alert-danger">{{errmsg}}</div>
+          </div>
+          <div class="row" style="height : 60vh; width: 130%;">
+            <ng-scrollbar class="lazy-scrollbar" thumbClass="white-scrollbars" [disableOnBreakpoints]="false">
+              <div class="row" *ngFor="let suggestion of suggestions">
+                <div class="card col-sm">
+                  <div class="card-body">
+                    <div class="">
+                      <i *ngIf="session.id == suggestion.authorId" (click)="deleteSuggestion(suggestion.id)"
+                        style="color:red" title="Delete" class="fas fa-minus-square float-right"></i>
+                      <i *ngIf="session.id == suggestion.authorId" title="Edit" (click)="isModifySug(suggestion.id)"
+                        class="fas fa-pen-square float-right"></i>
+                      <p class="card-title suggestion font-weight-bold">{{translatemeArray(suggestion?.authorId)}}</p>
+                    </div>
+                    <div class="">
+                      <p *ngIf="modifySugs[suggestion.id] != true" class="card-text suggestion">
+                        {{suggestion?.content}}
+                      </p>
+                      <textarea *ngIf="modifySugs[suggestion.id] == true" [(ngModel)]=suggestion.content
+                        style="font-size: 0.9rem" id="content" placeholder="Write your suggestion"></textarea>
+                      <div class="row" *ngIf="modifySugs[suggestion.id] == true">
+                        <div class="col"><button (click)="modifySuggestion(suggestion)"
+                            class="btn btn-sm btn-primary btn-block"> Save
+                          </button></div>
+                        <div class="col"> <button (click)="isModifySug(suggestion.id)"
+                            class="btn btn-sm btn-primary btn-block"> Cancel
+                          </button></div>
+                      </div>
+                      <h6 class="card-subtitle suggestion mb-2 text-muted">{{suggestion.updatedAt | date : 'long'}}
+                        <div class="text-dark float-right">{{exampleNumber}}&nbsp;<i
+                            (click)="hasOpenedComments(suggestion.id)" class="fas fa-comments"></i></div>
+                      </h6>
+
+                    </div>
+
+                    <div *ngIf="showedComments[suggestion.id] == true" class="">
+                      <div class="alert-sm alert-dark">Comment 1</div>
+                      <input class="input-sm" type="text">
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </ng-scrollbar>
           </div>
         </div>
       </div>
     </div>
 
-
     <div class="col">
+
       <div class="row">
         <div class="col">
           <!--           <p class="h5">Document Editor : </p> -->
           <div class="col">
             <div class="row">
-              <p class="h4">{{document.filename}}</p>&nbsp;&nbsp;
+              <p class="h4">{{document.filename}}.id</p>&nbsp;&nbsp;
+              <!--               <p>Emitted : {{document.emitted}}</p>
+              <p>Validated : {{document.validated}}</p>
+              <p>Published : {{document.published}}</p> -->
+
               <i *ngIf="isEditing"
                 [ngClass]="autosaving ? 'fas fa-circle-notch autosaveactive' : 'fas fa-circle-notch autosave'"
                 title="Auto Saving"></i>
             </div>
-            <!--             <div *ngFor="let version of versions;let i = index">
+
+            <div *ngFor="let version of versions;let i = index">
               <p class="h6" *ngIf='contentId == versions[i]'>Version {{i+1}}</p>
-            </div> -->
+            </div>
           </div>
         </div>
         <div class="row float-right" *ngIf="role=='Administrateur'||role=='Redactor'">
@@ -105,9 +146,24 @@
           <div *ngIf="role=='Administrateur'||role=='Project Manager'">
             <button class="btn btn-dark" *ngIf="!isEditing" (click)="back()">Back</button>
 
-            <button *ngIf=!isEditing class="col-1 btn btn-success float-right">Validate</button>
 
-            <button class="btn btn btn-success float-right" *ngIf="!isEditing" (click)="emit()">Emit</button>
+            <button *ngIf='!isEditing && document.emitted != true' class="btn btn btn-success float-right"
+              (click)="Emit()">Emit</button>
+            <button *ngIf='!isEditing && document.emitted == true' class="btn btn btn-primary float-right"
+              (click)="Emit()">Emitted</button>
+
+
+            <button *ngIf='!isEditing && document.validated != true' class="col-1 btn btn-success float-right"
+              (click)="Validate()">Validate</button>
+            <button *ngIf='!isEditing && document.validated == true' class="col-1 btn btn-primary float-right"
+              (click)="Validate()">Validated</button>
+
+
+            <button *ngIf='!isEditing && document.published != true' class="col-1 btn btn-success float-right"
+              (click)="Publish()">Publish</button>
+            <button *ngIf='!isEditing && document.published == true' class="col-1 btn btn-primary float-right"
+              (click)="Publish()">Published</button>
+
 
           </div>
         </div>

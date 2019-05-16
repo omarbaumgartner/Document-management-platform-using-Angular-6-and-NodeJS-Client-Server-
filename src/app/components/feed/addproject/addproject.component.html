@@ -33,18 +33,20 @@
             </div>
           </div>
           <div class="col">
+            <ng-scrollbar class="lazy-scrollbar" thumbClass="white-scrollbars" [disableOnBreakpoints]="false">
 
-            <ng-container *ngFor="let user of ( users | filter : termPipe )">
-              <div style="cursor:pointer" *ngIf="status[user.id]!=true && session.id!==user.id && user.status==true"
-                class="list-group-item" (click)="selectUser(user)" [ngClass]="status[user.id] ? 'bg-success' : ''">
-                <div class="row">
-                  <span class="badge badge-dark">{{ user.firstname }}
-                    &nbsp; {{ user.lastname }}</span>
-                  &nbsp;
-                  <span class="badge badge-secondary">{{ user.role }}</span>
+              <ng-container *ngFor="let user of ( users | filter : termPipe )">
+                <div style="cursor:pointer" *ngIf="status[user.id]!=true && session.id!==user.id && user.status==true"
+                  class="list-group-item" (click)="selectUser(user)" [ngClass]="status[user.id] ? 'bg-success' : ''">
+                  <div class="row">
+                    <span class="badge badge-dark">{{ user.firstname }}
+                      &nbsp; {{ user.lastname }}</span>
+                    &nbsp;
+                    <span class="badge badge-secondary">{{ user.role }}</span>
+                  </div>
                 </div>
-              </div>
-            </ng-container>
+              </ng-container>
+            </ng-scrollbar>
           </div>
         </div>
       </div>

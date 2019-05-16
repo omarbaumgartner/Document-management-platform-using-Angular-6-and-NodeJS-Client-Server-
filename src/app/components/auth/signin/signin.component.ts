@@ -28,6 +28,7 @@ export class SigninComponent implements OnInit {
   isreseterror: boolean;
   userPassword: string = "password";
   togglePassword: boolean = true;
+  useremail: string;
 
   constructor(private formBuilder: FormBuilder,
     private authService: AuthService,

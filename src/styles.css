@@ -97,3 +97,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     left: 90%;
     font-size: 20px;
   }
+.suggestion {
+    font-size: 0.8rem;
+}
