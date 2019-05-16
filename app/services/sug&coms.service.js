@@ -24,7 +24,7 @@ async function getSugs(req, res) {
 }
 
 async function updateSug(req, res) {
-    Sug.update(req.body, { where: { id: id } })
+    Sug.update({ content: req.body.content }, { where: { id: req.body.id } })
 }
 
 async function deleteSug(req, res) {

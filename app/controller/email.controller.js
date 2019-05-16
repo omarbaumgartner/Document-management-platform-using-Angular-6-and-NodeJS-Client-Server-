@@ -27,6 +27,20 @@ exports.getNotifications = (req, res) => {
         });
 };
 
+exports.clearNotifications = (req, res) => {
+    // Save to PostgreSQL database
+    emailService.clearNotifications(req, res)
+        .then(val => {
+            // Send created user to client
+            res.json(val);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ msg: "error", details: err });
+        });
+};
+
+
 exports.updateNotifications = (req, res) => {
     // Save to PostgreSQL database
     emailService.updateNotifications(req, res)

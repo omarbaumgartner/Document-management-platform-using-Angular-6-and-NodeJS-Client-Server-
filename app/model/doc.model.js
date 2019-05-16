@@ -18,6 +18,11 @@ module.exports = (sequelize, Sequelize) => {
 		versions: {
 			type: Sequelize.ARRAY(Sequelize.INTEGER)
 		},
+		emitted: {
+			type: Sequelize.BOOLEAN,
+			allowNull: false,
+			defaultValue: false,
+		},
 		validated: {
 			type: Sequelize.BOOLEAN,
 			allowNull: false,

@@ -13,7 +13,8 @@ module.exports = {
     changePassword,
     addUserToProject,
     getNotifications,
-    updateNotifications
+    updateNotifications,
+    clearNotifications
 };
 
 // Send email to Added User to project
@@ -21,10 +22,10 @@ async function addUserToProject(req, res) {
     for (let i = 0; i < req.members.length; i++) {
         User.findOne({ where: { id: req.members[i] } })
             .then((user) => {
-                sendEmail(user.email, '[DeepDocs] Vous êtes ajouté au projet ' + req.name, "Ajout au projet : " + req.name);
+                sendEmail(user.email, "[DeepDocs] You've been added to project : " + req.name, "You've been added to project : " + req.name);
                 Notif.create({
                     "userid": user.id,
-                    "message": "You've been added to " + req.name,
+                    "message": "You've been added to " + req.name + " project.",
                 })
             })
     }
@@ -37,7 +38,7 @@ async function lostPassword(req, res) {
             if (user != null) {
                 let tokenReset = jwt.sign({ id: user.id, role: user.role, exp: Math.floor(Date.now() / 1000) + (60 * 60 * 5) }, config.secret);
                 let link = FrontEnd + "auth/reset/" + tokenReset;
-                sendEmail(user.email, '[DeepDocs] Réinitialisation du mot de passe', PasswordResetText + link);
+                sendEmail(user.email, '[DeepDocs] Password Reset', PasswordResetText + link);
                 Notif.create({
                     "userid": user.id,
                     "message": "You asked for a password reset",
@@ -54,6 +55,10 @@ async function lostPassword(req, res) {
 // Retrieve user notifications
 async function getNotifications(req, res) {
     return Notif.findAll({ where: { userid: req.params.id } })
+}
+
+async function clearNotifications(req, res) {
+    return Notif.destroy({ where: { userid: req.params.id } })
 }
 
 async function updateNotifications(req, res) {
@@ -77,4 +82,6 @@ async function changePassword(req, res) {
 
 
 
-const PasswordResetText = "Bonjour,\nVous avez demandé une réinitialisation de votre mot de passe.\nVeuillez cliquer sur le lien ci-dessous : \n"
+
+
+const PasswordResetText = "Hi,\nResetting your password is easy. Just click the link below and follow the instructions. We'll have you up and running in no time.\n"

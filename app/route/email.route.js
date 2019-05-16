@@ -13,6 +13,9 @@ module.exports = function (app) {
     // Update notification
     app.get('/api/notif/open/:id', emails.updateNotifications)
 
+    // Clear notifications
+    app.delete('/api/notif/remove/:id', emails.clearNotifications)
+
 
 
 }
