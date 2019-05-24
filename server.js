@@ -52,10 +52,10 @@ function initial() {
 
 
   app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    //  res.setHeader('Access-Control-Allow-Methods', ['POST', 'GET']);
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    //res.setHeader('Access-Control-Allow-Credentials', true);
     next();
   });
 
@@ -82,8 +82,8 @@ app.use(errorHandler);
 
 // ---- Create a Server ----
 var server = app.listen(8080, function () {
-
-  let host = server.address().address
+  //192.168.1.9
+  let host = "192.168.1.61"
   let port = server.address().port
 
   console.log("App listening at http://%s:%s", host, port);

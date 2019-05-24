@@ -2,6 +2,7 @@ const DIR = '../uploads';
 var fs = require('fs');
 //const path = require('path');
 const db = require('../config/db.config.js');
+const projectService = require('../services/project.service');
 const Doc = db.documents;
 const Content = db.contents;
 const sequelize = db.sequelize;
@@ -28,6 +29,7 @@ module.exports = {
     searchFor,
     updateDocument,
     removeDocument,
+    restrictedSearchFor,
 };
 
 //Retrieve a document from db by Id
@@ -192,10 +194,45 @@ async function removeDocument(id) {
         });
 }
 
-// Search for a Doc by Keyword
+// Search for a Doc by Keyword ( global research )
 async function searchFor(keyword, res) {
 
     return sequelize.query("SELECT * from documents FULL OUTER JOIN contents ON documents.id = contents." + 'documentid' + " WHERE documents.filename ILIKE '%" + keyword + "%' OR contents.content ILIKE '%" + keyword + "%'");
+
+
+}
+// Search for a Doc by Keyword ( restrictred research)
+async function restrictedSearchFor(keyword, res) {
+    let i = 0;
+    let id;
+    let term;
+    while (keyword[i] != "+") {
+        i++;
+    }
+    term = keyword.substr(0, i);
+    id = keyword.slice(i + 1);
+
+    return projectService.findProjectsByUserId(id)
+        .then((val) => {
+            let projectIds = [];
+            for (i = 0; i < val.length; i++) {
+                projectIds.push(val[i].dataValues.id);
+            }
+            return Doc.findAll({ where: { projectid: projectIds } })
+                .then((val) => {
+                    let documents = [];
+                    let documentIds = [];
+                    for (i = 0; i < val.length; i++) {
+                        documents.push(val[i].dataValues);
+                        documentIds.push(val[i].dataValues.id);
+                    }
+                    if (documentIds.length != 0) {
+                        return sequelize.query("SELECT * from documents FULL OUTER JOIN contents ON documents.id = contents." + 'documentid' + " WHERE documents.filename ILIKE '%" + term + "%' AND documents.id IN (" + documentIds + ") OR contents.content ILIKE '%" + term + "%'");
+                    }
+                    else
+                        return [false];
+                })
+        })
 
 
 }

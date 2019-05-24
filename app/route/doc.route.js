@@ -44,6 +44,10 @@ module.exports = function (app) {
     // Search Engine
     app.get('/api/db/search/:keyword', docs.searchFor);
 
+    // Search Engine
+    app.get('/api/db/searchfor/:keyword', docs.restrictedSearchFor);
+
+
     // ---- Upload File Part  ----
 
     // Upload a file 

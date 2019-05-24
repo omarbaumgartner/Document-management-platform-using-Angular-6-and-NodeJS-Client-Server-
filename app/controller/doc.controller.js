@@ -136,11 +136,18 @@ exports.searchFor = (req, res) => {
 		})
 }
 
-
+// Search for a Doc by Keyword
+exports.restrictedSearchFor = (req, res) => {
+	const keyword = req.params.keyword;
+	docsService.restrictedSearchFor(keyword)
+		.then((result) => {
+			//	console.log(result);
+			res.status(200).json(result[0]);
+		})
+}
 
 // Upload ------------------
 exports.uploadFile = (req, res) => {
-
 	docsService.uploadFile(req, res)
 		.then(doc => {
 			console.log("File Uploaded");
