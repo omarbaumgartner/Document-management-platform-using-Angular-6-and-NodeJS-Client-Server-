@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Md5 } from 'ts-md5/dist/md5';
 import { FormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 
 
 @Component({
@@ -38,7 +39,8 @@ export class SingleuserComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private loadingService: LoadingService) {
+    private loadingService: LoadingService,
+    private snackBar: MatSnackBar) {
     this.loadingService.isLoading();
 
   }
@@ -74,8 +76,16 @@ export class SingleuserComponent implements OnInit {
         }
         else if (this.userModify == true)
           this.userModify = false;
-        // this.message = "User Updated Successfully!";
-      });
+      },
+        () => {
+
+        },
+        () => {
+          this.snackBar.open("User has been updated", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        });
   }
 
   deleteUser(): void {
@@ -84,8 +94,18 @@ export class SingleuserComponent implements OnInit {
     this.userService.deleteUser(this.user.id)
       .subscribe(result => {
         this.userService.reloadUsers();
-        this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/users"]));
-      });
+        this.snackBar.open("User has been deleted", "Close", {
+          duration: 3000,
+          verticalPosition: "bottom",
+        });
+      },
+        () => {
+
+        },
+        () => {
+          this.router.navigateByUrl('/users', { skipLocationChange: true }).then(() => this.router.navigate(["/users"]));
+
+        });
   }
 
   goBack(): void {

@@ -6,8 +6,10 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { Config } from 'src/app/configuration/conf';
 
-const URL = 'http://localhost:8080/api/upload';
+const URL = "http://" + Config.HOST + ":" + Config.PORT + "/api/upload'";
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };

@@ -6,6 +6,7 @@ import { User } from 'src/app/models/User.model';
 import { Doc } from 'src/app/models/Doc.model';
 import { Cont } from 'src/app/models/Cont.model';
 import { Router } from '@angular/router';
+import { Config } from 'src/app/configuration/conf';
 
 
 const httpOptions = {
@@ -16,7 +17,8 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ManagerService {
-  private apiURL = 'http://localhost:8080/api/';  // URL to web api
+
+  private apiURL = "http://" + Config.HOST + ":" + Config.PORT + "/api/";
 
   projects: Project[];
   resultnumber: any;
@@ -24,6 +26,8 @@ export class ManagerService {
   hasSearched: boolean = false;
   searchTerm: string;
   observableProjects = new BehaviorSubject<Project[]>(null);
+  observableDocs = new BehaviorSubject<Doc[]>(null);
+  abracadabra: Doc[] = new Array<Doc>();
 
   constructor(private http: HttpClient,
     private router: Router) {
@@ -33,6 +37,12 @@ export class ManagerService {
           this.observableProjects.next(projects);
         }
       );
+    this.getDocs()
+      .subscribe(
+        documents => {
+          this.observableDocs.next(documents);
+        }
+      )
   }
 
   // Projects Methods
@@ -111,6 +121,10 @@ export class ManagerService {
     return this.http.get<Doc>(this.apiURL + "db/search/" + keyword);
   }
 
+  restrictedSearchFor(keyword: string): Observable<any> {
+    return this.http.get<Doc>(this.apiURL + "db/searchfor/" + keyword);
+  }
+
   fromIdToProjectnames(id, projects: Project[]) {
     // console.log(ids);
     var i = 0;
@@ -138,6 +152,24 @@ export class ManagerService {
     }
   }
 
+  onRestrictedResearch(term: string, id: number) {
+    if (term != "") {
+      this.restrictedSearchFor(term + "+" + id)
+        .subscribe((val) => {
+          this.searchTerm = term;
+          this.resultnumber = val.length;
+          this.results = val;
+          this.test();
+          this.hasSearched = true;
+          this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/wiki"]));
+        })
+    }
+    else {
+      this.results = null;
+      this.resultnumber = 0;
+    }
+  }
+
   reloadProjects() {
     this.getProjects()
       .subscribe(
@@ -147,4 +179,32 @@ export class ManagerService {
       )
   }
 
+  test() {
+    let i;
+    let filenames = new Array<any>();
+    let ids = new Array<any>();
+    filenames[0] = this.results[0].documentid;
+    ids[0] = 0;
+    for (i = 0; i < this.results.length; i++) {
+      if (filenames.includes(this.results[i].documentid) == false) {
+        filenames.push(this.results[i].documentid);
+        ids.push(i);
+      }
+    }
+    for (i = 0; i < ids.length; i++) {
+      let temporaryContent = this.results[i].content;
+      this.results[i].content = new Array<any>();
+      this.results[i].content.push(temporaryContent);
+      for (let j = ids.length; j < this.results.length; j++) {
+        if (this.results[i].documentid == this.results[j].documentid) {
+          this.results[i].content.push(this.results[j].content);
+        }
+      }
+
+    }
+    for (i = 0; i < ids.length; i++) {
+      this.abracadabra[i] = this.results[i];
+    }
+    this.resultnumber = this.abracadabra.length;
+  }
 }

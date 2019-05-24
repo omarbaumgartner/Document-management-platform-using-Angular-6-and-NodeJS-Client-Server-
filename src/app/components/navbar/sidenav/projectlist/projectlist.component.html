@@ -13,8 +13,9 @@
         You don't have any project
       </button>
       <div *ngFor="let myprojects of myprojects">
-        <button style="padding: 10rem 10rem;" class="btn-dark text-left " (click)="viewProject(myprojects.id)"
-          style="cursor:pointer;"><i class="fas fa-square"></i>&nbsp;{{myprojects.name}}</button>
+        <button *ngIf="myprojects.finished==false" style="padding: 10rem 10rem;" class="btn-dark text-left "
+          (click)="viewProject(myprojects.id)" style="cursor:pointer;"><i class="fas fa-square"
+            style="color : #ffc107"></i>&nbsp;{{myprojects.name}}</button>
       </div>
     </div>
   </ul>

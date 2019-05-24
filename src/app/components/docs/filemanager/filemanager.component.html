@@ -1,24 +1,39 @@
 <div class="container">
   <p class="h5 text-dark">All Docs</p>
   <br>
+  <input type="text" [(ngModel)]="filterTerm">
   <div class="w-75 p-3">
-    <div *ngFor="let doc of docs " class="list-group-item" style="width: 120%; font-size:larger;">
-      <div (click)="viewDocument(doc)" style="color:black; cursor:pointer;">
+    <div *ngFor="let doc of ( docs | fileFilter : filterTerm )" class="list-group-item"
+      style="width: 120%; font-size:larger;">
+      <div style="color:black; cursor:pointer;">
 
-        <span class="badge badge-dark">{{doc.id}}</span> &nbsp;
+        <div (click)="navigateToDocument()"><span class="badge badge-dark">{{doc.id}}</span> &nbsp;
 
-        <span class="badge badge-info">{{ doc.filename }}</span>
-        &nbsp;&nbsp;
-        <span class="badge badge-warning">{{ translatemeArray(doc.authorid) }}</span>
-        &nbsp;&nbsp;
-        <span class="badge badge-light">Validated : {{ doc.validated }}</span>
-        &nbsp;&nbsp;
-        <span class="badge badge-light">Published : {{ doc.published }}</span>
-        &nbsp;&nbsp;
-        <span class="badge badge-light">Created At : {{ doc.createdAt|slice:0:19 }}</span>
-        &nbsp;&nbsp;
-        <span class="badge badge-light">Updated At : {{ doc.updatedAt|slice:0:19 }}</span>
+          <span class="badge badge-info" (click)="viewDocument(doc)">{{ doc.filename }}</span></div>
+
+
+        <span class="badge badge-light float-right" (click)="navigateToProject(doc.projectid)">Project :
+          {{ translatemeArray2(doc.projectid) }}</span>
+
+
         <br>
+        <span class="badge badge-warning"
+          (click)="navigateToUser(doc.authorid)">{{ translatemeArray(doc.authorid) }}</span>
+        <br>
+        <span class="badge badge-light">Emitted : {{ doc.emitted }}</span>
+        <br>
+        <span class="badge badge-light">Validated : {{ doc.validated }}</span>
+        <br>
+        <span class="badge badge-light">Published : {{ doc.published }}</span>
+
+        <br>
+        <div class="float-right">
+          <span class="badge badge-light">Created At : {{ doc.createdAt|slice:0:19 }}</span>
+          <br>
+          <span class="badge badge-light">Updated At : {{ doc.updatedAt|slice:0:19 }}</span>
+        </div>
+        <br>
+        <button (click)="deleteDoc(doc)">Remove</button>
       </div>
     </div>
   </div>

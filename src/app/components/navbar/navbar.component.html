@@ -14,6 +14,7 @@
         <div class="md-form my-0">
           <input class="searchbar" [(ngModel)]="searchWord" name="searchWord" type="text" placeholder="Search"
             aria-label="Search" style="margin-top: 4px;">
+          <div [hidden]="!noError" class="alert alert-danger">Research must not contain special characters</div>
         </div>
       </form>
     </div>

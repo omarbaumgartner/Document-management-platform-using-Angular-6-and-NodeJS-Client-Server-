@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Notif } from 'src/app/models/Notif.model';
 import * as jwt_decode from "jwt-decode";
+import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
+import { Config } from 'src/app/configuration/conf';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,7 +16,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class NotifService {
-  private notifsUrl = 'http://localhost:8080/api/notif/';  // URL to web api
+  private notifsUrl = "http://" + Config.HOST + ":" + Config.PORT + "/api/notif/";
 
   notifs: Notif[];
   observableNotifications = new BehaviorSubject<Notif[]>(null);
@@ -22,7 +25,9 @@ export class NotifService {
   userToken: any;
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+    private router: Router,
+    public dialog: MatDialog) {
     if (this.session) {
       this.session = this.getPayload();
       this.getNotifs(this.session.id)
@@ -72,6 +77,7 @@ export class NotifService {
         }
       );
   }
+
 
 
 }

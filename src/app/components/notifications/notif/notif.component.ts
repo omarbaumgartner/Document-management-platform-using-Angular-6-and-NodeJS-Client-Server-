@@ -20,7 +20,7 @@ export class NotifComponent implements OnInit {
     this.subscription = this.notifService.observableNotifications
       .subscribe(notifications => {
         this.notifications = notifications;
-        if (this.notifications.length != null)
+        if (this.notifications != null)
           this.notifnumber = this.notifications.length;
       })
   }
@@ -34,7 +34,7 @@ export class NotifComponent implements OnInit {
   }
 
   get sortData() {
-    if (this.notifications) {
+    if (this.notifications != null) {
       return this.notifications.sort((a, b) => {
         return <any>new Date(b.createdAt) - <any>new Date(a.createdAt);
       });

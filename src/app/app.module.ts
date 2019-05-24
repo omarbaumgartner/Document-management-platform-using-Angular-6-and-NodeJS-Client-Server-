@@ -58,6 +58,7 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { ResetComponent } from './components/auth/reset/reset.component';
 import { NotifComponent } from './components/notifications/notif/notif.component';
 import { OngoingPipe } from './pipes/ongoing.pipe';
+import { FileFilterPipe } from './pipes/file-filter.pipe';
 
 
 
@@ -218,6 +219,7 @@ const appRoutes: Routes = [
     ResetComponent,
     NotifComponent,
     OngoingPipe,
+    FileFilterPipe,
 
 
   ],

@@ -1,148 +1,258 @@
 <!-- If Not Modify -->
-<div class="card container">
+<div class="container">
   <div class="row">
-    <div *ngIf=!editing class="col-6 text-dark">
-      <p class="h5">{{project.name}}</p>
-      <label>Creator : <p>{{translatemeArray(project.creatorId)}}</p> </label><br>
-      <label>Members : <p>{{translatemeArray(project.members)}}</p></label><br>
-      <label>Description : <p>{{project.description}}</p></label><br>
-      <label>Created at : <p>{{project.createdAt|slice:0:10}}</p></label>
-
-      <p *ngIf="project.finished!=true" class="h5 text-danger">Ongoing</p>
-      <p *ngIf="project.finished==true" class="h5 text-success">Finished</p>
-    </div>
-    <!-- If Modify -->
-    <div *ngIf="editing" class="w-75 p-3">
-      <form #detailProjectForm="ngForm" class="list-group-item">
-        <!-- Project Name -->
-        <div class="form-group">
-          <label for="name" style="font-weight: bold;">Project Name :</label>
-          <input type="text" class="form-control" id="name" required [(ngModel)]="project.name" name="name"
-            #name="ngModel">
-          <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
-            Creator is required
-          </div>
-        </div>
-        <!-- Creator -->
-        <!--         <div class="form-group">
-          <label for="creatorId" style="font-weight: bold;">Creator</label>
-          <input type="text" class="form-control" id="creatorId" required [(ngModel)]="project.creatorId"
-            name="creatorId" #creatorId="ngModel">
-          <div [hidden]="creatorId.valid || creatorId.pristine" class="alert alert-danger">
-            Creator is required
-          </div>
-        </div> -->
-        <div class="form-group">
-          <label for="members" class="font-weight-bold">Members</label>
-          <div class="row">
-            <div class="col">
-              <p>Selected members :</p>
-            </div>
-            <div class="row col">
-              <input class="form-control-sm ml-3 w-75 search" [(ngModel)]="termPipe"
-                [ngModelOptions]="{standalone: true}" type="text" placeholder="Search" aria-label="Search"><i
-                class="fas fa-search" aria-hidden="true"></i>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <div *ngFor="let selectedmember of selectedmembers; let i = index "
-                (click)="deselectUser(selectedmembers[i])" class="list-group-item" style="cursor:pointer">
-                <span class="badge badge-dark">{{translatemeArray(selectedmembers[i])}}</span> &nbsp;
+    <div class="col ">
+      <div class="container " *ngIf="role=='Administrateur' || session.id==project.creatorId">
+        <div class="row float-right">
+          <div class="btn-group">
+            <i class="fas fa-cog" style="font-size: 3rem;" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false"></i>
+            <div class="dropdown-menu">
+              <div class="col ">
+                <!-- User Finish Button-->
+                <button *ngIf="!editing && project.finished == true" (click)="finishProject()"
+                  class="col btn btn-sm btn-info">Continue project
+                </button>
+                <button *ngIf="!editing && project.finished == false" (click)="finishProject()"
+                  class="col btn btn-sm btn-success">Finish project
+                </button>
+              </div>
+              <div class="col">
+                <!-- User Edit Button-->
+                <button *ngIf=!editing (click)="edit()" class="col btn btn-warning">Edit project</button>
+              </div>
+              <div class="col">
+                <!-- User Delete Button-->
+                <button *ngIf="!editing" class="col btn  btn-danger text-dark" (click)="deleteProject()">Delete
+                  project</button>
               </div>
             </div>
-            <div class="col">
+          </div>
 
-              <ng-container *ngFor="let user of ( users | filter : termPipe ); let i = index ">
-                <div style="cursor:pointer"
-                  *ngIf="status[user.id]!=true && session.id!==user.id && user.status==true && user.id != selectedmembers[i] "
-                  class="list-group-item" (click)="selectUser(user)" [ngClass]="status[user.id] ? 'bg-success' : ''">
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container">
+      <div class="card">
+
+        <div class="row">
+
+          <div class="col-6 text-dark" *ngIf=!editing>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <br>
+                  <p class="h5">{{project.name}}</p>
+                  <p *ngIf="project.finished!=true" class="h5 text-danger">Ongoing</p>
+                  <p *ngIf="project.finished==true" class="h5 text-success">Finished</p>
                   <div class="row">
-                    <span class="badge badge-dark">{{ user.firstname }}
-                      &nbsp; {{ user.lastname }}</span>
-                    &nbsp;
-                    <span class="badge badge-secondary">{{ user.role }}</span>
+                    <div class="col">
+
+                    </div>
+                  </div>
+                  <div class="dropdown-divider"></div>
+
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label>Creator : <p>{{translatemeArray(project.creatorId)}}</p> </label><br>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label>Members : <p>{{translatemeArray(project.members)}}</p></label><br>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label>Description :</label>
+                  <ng-scrollbar style="height: 35vh; width: 100%;" class="lazy-scrollbar" thumbClass="white-scrollbars"
+                    [disableOnBreakpoints]="false" [trackX]=false>
+                    <p>{{project.description}}</p>
+                  </ng-scrollbar>
+                  <br>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label>Created at : <p>{{project.createdAt|slice:0:10}}</p></label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <button *ngIf=!editing class="btn btn-dark" (click)="goBack()">Back</button>
+                </div>
+              </div>
+              <br>
+            </div>
+          </div>
+
+          <!-- If Modify -->
+          <div class="col" *ngIf="editing">
+            <div class="w-75 p-3">
+              <form #detailProjectForm="ngForm" class="list-group-item">
+                <!-- Project Name -->
+                <div class="form-group">
+                  <label for="name" style="font-weight: bold;">Project Name :</label>
+                  <input type="text" class="form-control" id="name" required [(ngModel)]="project.name" name="name"
+                    #name="ngModel">
+                  <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                    Creator is required
                   </div>
                 </div>
-              </ng-container>
+
+
+                <div class="form-group">
+                  <label for="members" class="font-weight-bold">Members</label>
+                  <div class="row">
+                    <div class="col">
+                      <p>Selected members :</p>
+                    </div>
+                    <div class="row col">
+                      <input class="form-control-sm ml-3 w-75 search" [(ngModel)]="termPipe"
+                        [ngModelOptions]="{standalone: true}" type="text" placeholder="Search" aria-label="Search"><i
+                        class="fas fa-search" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <ng-scrollbar style="height: 25vh" class="lazy-scrollbar" thumbClass="white-scrollbars"
+                        [disableOnBreakpoints]="false">
+                        <div *ngFor="let selectedmember of selectedmembers; let i = index "
+                          (click)="deselectUser(selectedmembers[i])" class="list-group-item" style="cursor:pointer">
+                          <span class="badge badge-dark">{{translatemeArray(selectedmembers[i])}}</span> &nbsp;
+                        </div>
+                      </ng-scrollbar>
+                    </div>
+                    <div class="col">
+                      <ng-scrollbar style="height: 25vh" class="lazy-scrollbar" thumbClass="white-scrollbars"
+                        [disableOnBreakpoints]="false">
+                        <ng-container *ngFor="let user of ( users | filter : termPipe ); let i = index ">
+                          <div style="cursor:pointer"
+                            *ngIf="status[user.id]!=true && session.id!==user.id && user.status==true && user.id != selectedmembers[i] "
+                            class="list-group-item" (click)="selectUser(user)"
+                            [ngClass]="status[user.id] ? 'bg-success' : ''">
+                            <div class="row">
+                              <span class="badge badge-dark">{{ user.firstname }}
+                                &nbsp; {{ user.lastname }}</span>
+                              &nbsp;
+                              <span class="badge badge-secondary">{{ user.role }}</span>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </ng-scrollbar>
+                    </div>
+                  </div>
+                </div>
+                <!-- Description -->
+                <div class="form-group">
+                  <label style="font-weight: bold;" for="description">Description :</label> &nbsp;
+                  <textarea autosize type="text" class="form-control" id="description" required
+                    [(ngModel)]="project.description" name="description" #description="ngModel"></textarea>
+                  <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
+                    Description is required
+                  </div>
+                </div>
+                <div class="btn-group btn-group-sm">
+                  <button type="button" *ngIf="editing" class="btn btn-dark" (click)="edit()">Cancel</button>
+
+                  <button type="button" class="btn btn-success" (click)="updateProject()"
+                    [disabled]="!detailProjectForm.form.valid">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div [hidden]="!submitted">
+            <p>{{message}}</p>
+            <div class="btn-group btn-group-sm">
+            </div>
+          </div>
+          <!-- ------------------ Files ---------------------- -->
+          <div class="col" *ngIf=!editing>
+            <div class="container">
+              <div class="row" *ngIf="role=='Administrateur'||role=='Project Manager'">
+
+                <div class="col">
+                  <br>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col">
+                        <p class="h5">Files</p>
+                      </div>
+                      <div class="col">
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Add File
+                          </button>
+                          <div class="dropdown-menu">
+                            <a style="cursor:pointer" class="dropdown-item" (click)="addDocument()">New File</a>
+                            <a style="cursor:pointer" class="dropdown-item" (click)="openUploader()">Import File</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <!-- Files -->
+              <div class="row">
+                <div class="col">
+
+                  <div class="container">
+                    <ng-scrollbar style="height: 70vh; width: 90wh;" class="lazy-scrollbar"
+                      thumbClass="white-scrollbars" [disableOnBreakpoints]="false" [trackY]=false [shown]=hover>
+                      <div class="row" style="text-align: center;" *ngFor="let document of documents;"
+                        [contextMenu]="basicMenu" [contextMenuSubject]="document">
+
+                        <div class="col">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col">
+                                <form class="float-left" #detailDocumentForm="ngForm">
+                                  <div (click)="viewDocument(document)"><i style="font-size: 2rem; cursor:pointer;"
+                                      class="fas fa-file"></i>
+                                    <a style="cursor : pointer"
+                                      *ngIf="!isRenaming[document.id]">{{document.filename}}.id</a>
+                                  </div>
+                                  <div *ngIf="isRenaming[document.id]">
+                                    <input maxlength="15" AutoSizeInput type="text" class="form-control w-75 p-3"
+                                      id="filename" [(ngModel)]="document.filename" name="filename" #filename="ngModel"
+                                      required>
+                                    <button type="button" class="btn btn-success" (click)="updateDocumentName(document)"
+                                      [disabled]="!detailDocumentForm.form.valid">Update</button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                            <hr />
+                          </div>
+                        </div>
+                      </div>
+                    </ng-scrollbar>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <!-- Description -->
-        <div class="form-group">
-          <label style="font-weight: bold;" for="description">Description :</label> &nbsp;
-          <textarea autosize type="text" class="form-control" id="description" required
-            [(ngModel)]="project.description" name="description" #description="ngModel"></textarea>
-          <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
-            Description is required
-          </div>
-        </div>
-        <div class="btn-group btn-group-sm">
-          <button type="button" *ngIf="editing" class="btn btn-dark" (click)="edit()">Cancel</button>
-
-          <button type="button" class="btn btn-success" (click)="updateProject()"
-            [disabled]="!detailProjectForm.form.valid">Update</button>
-        </div>
-      </form>
-    </div>
-
-    <div [hidden]="!submitted">
-      <p>{{message}}</p>
-      <div class="btn-group btn-group-sm">
       </div>
     </div>
-    <!-- ---------------------------------------- -->
-    <div class="container" *ngIf=!editing class="col-4">
-      <div *ngIf="role=='Administrateur'||role=='Project Manager'" class="row">
-        <p class="col h5">Files</p>
-        <div class="btn-group">
-          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            Add File
-          </button>
-          <div class="dropdown-menu">
-            <a style="cursor:pointer" class="dropdown-item" (click)="addDocument()">New File</a>
-            <a style="cursor:pointer" class="dropdown-item" (click)="openUploader()">Import File</a>
-          </div>
-        </div>
 
-      </div>
-
-      <br>
-      <!-- Files -->
-      <div class="container">
-        <div style="text-align: center;" class="row" *ngFor="let document of documents;" [contextMenu]="basicMenu"
-          [contextMenuSubject]="document">
-          <div class="container"> <i (click)="viewDocument(document)" style="font-size: 3rem; cursor:pointer;"
-              class="fas fa-file"></i><br>
-            <label *ngIf="!isRenaming[document.id]">{{document.filename}}.id</label>
-            <form *ngIf="isRenaming[document.id]" #detailDocumentForm="ngForm">
-              <input AutoSizeInput type="text" class="form-control" id="filename" [(ngModel)]="document.filename"
-                name="filename" #filename="ngModel" required>
-              <button type="button" class="btn btn-success" (click)="updateDocumentName(document)"
-                [disabled]="!detailDocumentForm.form.valid">Update</button>
-            </form>
-            <hr />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="role=='Administrateur' || session.id==project.creatorId" class="col-2">
-      <!-- User Finish Button-->
-      <button *ngIf="!editing && project.finished == true" (click)="finishProject()" class="col btn btn-info">Continue
-        Project</button>
-      <button *ngIf="!editing && project.finished == false" (click)="finishProject()" class="col btn btn-success">Finish
-        Project</button>
-      <!-- User Edit Button-->
-      <button *ngIf=!editing (click)="edit()" class="col btn btn-warning">Edit Project</button>
-      <!-- User Delete Button-->
-      <button *ngIf="!editing" class="col btn btn-danger text-dark" (click)="deleteProject()">Remove Project</button>
-    </div>
-  </div>
-  <div class="">
-    <button *ngIf=!editing class="btn btn-dark" (click)="goBack()">Back</button>
   </div>
 </div>
+
+
 
 <context-menu *ngIf="role=='Administrateur'||role=='Project Manager'">
   <ng-template contextMenuItem (execute)="rename($event)">
@@ -151,7 +261,15 @@
   <ng-template contextMenuItem (execute)="deleteDocument($event)">
     Delete
   </ng-template>
-  <ng-template contextMenuItem (execute)="showMessage('File : ' + $event.doc.filename)">
-    Download
-  </ng-template>
 </context-menu>
+
+
+<!-- Creator -->
+<!--         <div class="form-group">
+          <label for="creatorId" style="font-weight: bold;">Creator</label>
+          <input type="text" class="form-control" id="creatorId" required [(ngModel)]="project.creatorId"
+            name="creatorId" #creatorId="ngModel">
+          <div [hidden]="creatorId.valid || creatorId.pristine" class="alert alert-danger">
+            Creator is required
+          </div>
+        </div> -->

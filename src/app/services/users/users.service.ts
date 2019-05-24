@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from 'src/app/models/User.model';
 import * as jwt_decode from "jwt-decode";
+import { Config } from 'src/app/configuration/conf';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,7 +14,8 @@ const httpOptions = {
 })
 export class UsersService {
   //private usersUrl = 'http://52.29.87.21:8080/api/users';  // URL to web api
-  private usersUrl = 'http://localhost:8080/api/users';  // URL to web api
+  private usersUrl = "http://" + Config.HOST + ":" + Config.PORT + "/api/users";
+
 
   user: User;
   userToken: any;

@@ -5,26 +5,107 @@
         <div class="row">
           <p class="h3">Search</p>
         </div>
-        <form class="row" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+        <form class="row" [formGroup]="searchForm" (ngSubmit)="onRestrictedSubmit()">
           <div class="col"><input class="input-group mb-3" type="text" placeholder="Search" [ngModel]="term"
-              formControlName="keyword" aria-label="Search"></div>
-          <div class="col-2"><button type="submit" class="btn btn-primary btn-block"> Search </button></div>
+              formControlName="keyword" aria-label="Search">
+            <div [hidden]="!noError" class="alert alert-danger">Research must not contain special characters</div>
+          </div>
+          <div class="col-2"><button type="submit" class="btn btn-outline-primary btn-block" [disabled]="dis"> Search
+            </button>
+          </div>
         </form>
       </div>
     </div>
     <div class="row" *ngIf="hasSearched">
       <div class="col">
         <br>
-        <p class="h4"> {{resultnumber}} Results for "{{keywords}}"</p>
+        <p class="h4"> {{resultnumber}} Results for "{{keywords}}"
+          <button (click)="sortByDate()" class="btn btn-dark float-right">Sort By Time</button>
+          <button (click)="sortByName()" class="btn btn-dark float-right">Sort By Name</button>
+        </p>
+        <!--  -->
+
+        <!-- <div>
+          <div class="dropdown-divider "></div>
+          <div class="container" *ngFor="let results of sortData">
+            <div class="row" aria-expanded="false" data-toggle="dropdown">
+              <div id="navbarDropdownMenuLink-55" class="col h5 dropdown-toggle"><i class="fas fa-file"></i><a
+                  class="btn" (click)="viewDocc(results.id)" [innerHTML]="results.filename | searchPipe : keywords"></a>
+              </div>
+              <div class="col">
+                <a>Project : </a>
+                <p class="boldOnHover" (click)="singleProject(results?.projectid)">
+                  {{translatemeArray(results?.projectid)}}</p>
+                <p>Last update : {{translateTime(results?.updatedAt)}}</p>
+              </div>
+            </div>
+            <div class="row dropdown-menu" aria-labelledby="navbarDropdownMenuLink-55">
+              <div [innerHTML]="results?.content | searchPipe : keywords "></div>
+            </div>
+            <div class="dropdown-divider "></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+
         <div>
-          <!--           <div class="row">
+          <div class="dropdown-divider "></div>
+          <div class="container" *ngFor="let abracadabra of sortData2">
+            <div class="row">
+              <div (click)="expand(abracadabra.id)" class="col h5 dropdown-toggle">
+                <i class="fas fa-file"></i>
+                <a class="btn" (click)="viewDocc(abracadabra.id)"
+                  [innerHTML]="abracadabra.filename | searchPipe : keywords"></a>
+              </div>
+              <div class="col">
+                <a>Project : </a>
+                <p class="boldOnHover" (click)="singleProject(abracadabra?.projectid)">
+                  {{translatemeArray(abracadabra?.projectid)}}</p>
+                <p>Last update : {{translateTime(abracadabra?.updatedAt)}}</p>
+              </div>
+            </div>
+            <div class="row" *ngIf="expanded[abracadabra.id]==true">
+              <ng-scrollbar style="height: 25vh;" class="lazy-scrollbar" thumbClass="white-scrollbars"
+                [disableOnBreakpoints]="false">
+                <div class="container">
+                  <div class="row">
+                    <div class="col">
+                      <div style="height: auto;" class="border-dark"
+                        *ngFor="let content of abracadabra.content; let i = index;">
+                        <a style="cursor: pointer" (click)="viewDocc(abracadabra.versions[i])"
+                          class="text font-weight-bold text-dark">Version {{i+1}}</a>
+                        <p class="card" style="font-size: 15px" [innerHTML]="content | searchPipe : keywords ">
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-scrollbar>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+      <!--           <div class="row">
             <div class="col"><a>Documents</a></div>
             <div class="col"><a class="font-weight-bold"></a></div>
           </div> -->
-          <div class="dropdown-divider "></div>
 
-          <div class="container" *ngFor="let results of results">
-            <div class="row">
+
+
+
+      <!--             <div class="row">
               <div class="col h5"><i class="fas fa-file"></i><a class="btn" (click)="viewDocc(results.id)"
                   [innerHTML]="results.filename | searchPipe : keywords"></a></div>
               <div class="col">
@@ -36,14 +117,15 @@
               <div [innerHTML]="results?.content | searchPipe : keywords "></div>
             </div>
             <div class="dropdown-divider "></div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-
-
+          <div aria-expanded="false" data-toggle="dropdown">
+  <div class="dropdown-toggle" id="navbarDropdownMenuLink-55" style="cursor: pointer;">
+    <i class="fas fa-file"></i><a class="btn" (click)="viewDocc(results.id)"
+      [innerHTML]="results.filename | searchPipe : keywords"></a>
   </div>
 </div>
+
+<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink-55">
+  <div>
+    <div [innerHTML]="results?.content | searchPipe : keywords "></div>
+  </div>
+</div> -->

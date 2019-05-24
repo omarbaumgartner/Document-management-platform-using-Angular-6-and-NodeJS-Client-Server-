@@ -33,10 +33,17 @@
               </div>
             </form>
             <div *ngIf=errstatus class="alert alert-danger">{{errmsg}}</div>
+
           </div>
+
           <div class="row" style="height : 60vh; width: 130%;">
+            <button *ngIf="sugnumber != 0" (click)="sortSug()" class="btn btn-dark btn-sm">
+              Sort by date
+              <i *ngIf="increasing" class="fas fa-arrow-down"></i>
+              <i *ngIf="!increasing" class="fas fa-arrow-up"></i>
+            </button>
             <ng-scrollbar class="lazy-scrollbar" thumbClass="white-scrollbars" [disableOnBreakpoints]="false">
-              <div class="row" *ngFor="let suggestion of suggestions">
+              <div class="row" *ngFor="let suggestion of sortData">
                 <div class="card col-sm">
                   <div class="card-body">
                     <div class="">
@@ -144,25 +151,38 @@
           </form>
           <div class="dropdown-divider"></div>
           <div *ngIf="role=='Administrateur'||role=='Project Manager'">
+            <div class="container">
+              <div class="row float-right">
+                <div class="col">
+                  <button *ngIf='!isEditing && document.emitted != true' class="btn btn btn-success float-right"
+                    (click)="Emit()">Emit</button>
+                  <button *ngIf='!isEditing && document.emitted == true' class="btn btn btn-primary float-right"
+                    (click)="Emit()">Emitted</button>
+                </div>
+                <div class="col">
+                  <button *ngIf='!isEditing && document.validated != true' class="btn btn-success float-right"
+                    (click)="Validate()">Validate</button>
+                  <button *ngIf='!isEditing && document.validated == true' class="btn btn-primary float-right"
+                    (click)="Validate()">Validated</button>
+                </div>
+                <div class="col">
+                  <button *ngIf='!isEditing && document.published != true' class="btn btn-success float-right"
+                    (click)="Publish()">Publish</button>
+                  <button *ngIf='!isEditing && document.published == true' class="btn btn-primary float-right"
+                    (click)="Publish()">Published</button>
+                </div>
+              </div>
+            </div>
             <button class="btn btn-dark" *ngIf="!isEditing" (click)="back()">Back</button>
 
 
-            <button *ngIf='!isEditing && document.emitted != true' class="btn btn btn-success float-right"
-              (click)="Emit()">Emit</button>
-            <button *ngIf='!isEditing && document.emitted == true' class="btn btn btn-primary float-right"
-              (click)="Emit()">Emitted</button>
 
 
-            <button *ngIf='!isEditing && document.validated != true' class="col-1 btn btn-success float-right"
-              (click)="Validate()">Validate</button>
-            <button *ngIf='!isEditing && document.validated == true' class="col-1 btn btn-primary float-right"
-              (click)="Validate()">Validated</button>
 
 
-            <button *ngIf='!isEditing && document.published != true' class="col-1 btn btn-success float-right"
-              (click)="Publish()">Publish</button>
-            <button *ngIf='!isEditing && document.published == true' class="col-1 btn btn-primary float-right"
-              (click)="Publish()">Published</button>
+
+
+
 
 
           </div>

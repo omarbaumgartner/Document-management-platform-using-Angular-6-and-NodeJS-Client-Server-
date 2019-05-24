@@ -1,21 +1,22 @@
+<button (click)="test()">Test</button>
 <br>
 <div class="container">
   <button class="btn btn-warning" routerLink="/users">Manage Users</button>
-  <google-chart [dynamicResize]="dynamicResize" [options]="myOptions" [title]="userTitle" [type]="userType"
-    [data]="userData">
+  <google-chart *ngIf="showUsers" [dynamicResize]="dynamicResize" [options]="myOptions" [title]="userTitle"
+    [type]="userType" [data]="userData">
   </google-chart>
 </div>
 <div class="container">
   <button class="btn btn-warning" routerLink="/users">Manage Projects</button>
-  <google-chart [columnNames]="projectColumns" [dynamicResize]="dynamicResize" [options]="myOptions"
-    [title]="projectTitle" [type]="projectType" [data]="projectData">
+  <google-chart *ngIf="showProjects" [columnNames]="projectColumns" [dynamicResize]="dynamicResize"
+    [options]="myOptions" [title]="projectTitle" [type]="projectType" [data]="projectData">
   </google-chart>
 </div>
 
 <div class="container">
   <button class="btn btn-warning" routerLink="/filemanager">Manage Files</button>
-  <google-chart [columnNames]="fileColumns" [dynamicResize]="dynamicResize" [options]="myOptions" [title]="fileTitle"
-    [type]="fileType" [data]="fileData">
+  <google-chart *ngIf="showFiles" [columnNames]="fileColumns" [dynamicResize]="dynamicResize" [options]="myOptions"
+    [title]="fileTitle" [type]="fileType" [data]="fileData">
   </google-chart>
 </div>
 

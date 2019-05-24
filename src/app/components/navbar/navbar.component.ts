@@ -34,6 +34,7 @@ export class NavbarComponent implements OnInit {
   testing: boolean;
   inboxNotification: boolean;
   isConnected: boolean;
+  noError: boolean;
 
   constructor(private authService: AuthService,
     private authGuardService: AuthGuardService,
@@ -63,6 +64,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.searchWord = null;
     this.subscription = this.authGuardService.observableConnected
       .subscribe((val) => {
         this.isConnected = val;
@@ -137,7 +139,14 @@ export class NavbarComponent implements OnInit {
   }
 
   searchFor(term) {
-    this.managerService.onResearch(term);
+    let session = this.authService.getPayload();
+    if (term.includes("/") == true || term.includes("\\") == true) {
+      this.noError = true;
+    }
+    else {
+      this.noError = false;
+      this.managerService.onRestrictedResearch(term, session.id);
+    }
   }
 
 

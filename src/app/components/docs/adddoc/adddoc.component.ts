@@ -17,7 +17,7 @@ export class AdddocComponent implements OnInit {
   documentForm: FormGroup;
   projectId: number;
   maxlength: number = 15;
-  errormessage: string = "Filename need to be between 1 and 15 characters";
+  errormessage: string = "Filename need to be between 3 and 15 characters";
   error: boolean = false;
 
 
@@ -34,13 +34,13 @@ export class AdddocComponent implements OnInit {
 
   onSubmit() {
     this.document.filename = this.documentForm.get('filename').value;
-    if (this.document.filename.length <= this.maxlength) {
+    if (this.document.filename.length <= this.maxlength && this.document.filename.length > 3) {
       this.document.projectid = this.data.projectId;
       this.document.authorid = this.data.authorId;
       this.document.path = "";
       this.managerService.addDocument(this.document)
         .subscribe(result => {
-          this.error = true;
+          this.error = false;
           this.dialog.closeAll();
           //this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.data.projectId]));
 

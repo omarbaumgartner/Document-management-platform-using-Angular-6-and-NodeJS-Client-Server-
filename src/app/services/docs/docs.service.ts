@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Doc } from 'src/app/models/Doc.model';
 import { Tree } from '@angular/router/src/utils/tree';
 import { Sug } from 'src/app/models/Sug.model';
+import { Config } from 'src/app/configuration/conf';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,8 +14,10 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class DocsService {
-  private docsUrl = 'http://localhost:8080/api/db/docs';  // URL to web api
-  private apiURL = 'http://localhost:8080/api/';  // URL to web api
+  private apiURL = "http://" + Config.HOST + ":" + Config.PORT + "/api/";
+  private docsUrl = this.apiURL + 'db/docs';  // URL to web api
+
+
   docs: Doc[];
 
   constructor(private http: HttpClient) { }
@@ -36,7 +39,7 @@ export class DocsService {
   /* Suggestions */
 
   getSuggestions(id: number) {
-    return this.http.get<Sug>(this.apiURL + "db/sugs/" + id);
+    return this.http.get<Sug[]>(this.apiURL + "db/sugs/" + id);
   }
 
   addSuggestion(suggestion: Sug) {

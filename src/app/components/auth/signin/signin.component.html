@@ -3,23 +3,29 @@
     <article class="card-body">
       <h4 class="card-title mb-4 mt-1">Sign in</h4>
       <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
-        <div class="input-group mb-3">
-          <input [(ngModel)]="useremail" type="text" id="email" class="form-control" formControlName="email"
-            placeholder="Email" style="font-size: 20px;height: 110%;">
-          <span class="text-dark h2 font-weight-bold ">@instadeep.com</span>
+        <div class="form-group input-group mb-3">
+          <input [(ngModel)]="email" type="text" id="email" class="form-control" formControlName="email"
+            placeholder="Email"
+            [ngClass]="{'border border-danger':signInForm.get('email').touched && signInForm.get('email').invalid}">
+          <span class="text-dark h3">@instadeep.com</span>
         </div>
         <div class="form-group">
           <div class="search">
             <i (click)="onPassword()" *ngIf="togglePassword == false" class="col fas fa-eye"></i>
             <i (click)="onPassword()" *ngIf="togglePassword == true" class="col fas fa-eye-slash"></i>
-            <input style="font-size: 20px;height: 110%;" [type]="userPassword === 'password' ? 'password' : 'text'"
-              id="password" class="form-control" autocomplete="off" placeholder="**********" formControlName="password">
+            <input [type]="userPassword === 'password' ? 'password' : 'text'" id="password" class="form-control"
+              autocomplete="off" placeholder="**********" formControlName="password"
+              [ngClass]="{'border border-danger':signInForm.get('password').touched && signInForm.get('password').invalid}">
           </div>
         </div> <!-- form-group// -->
         <div [hidden]="!iserror" class="alert alert-danger">{{error}}</div>
         <div class="form-group">
-          <button type="submit" class="btn btn-primary btn-block" [disabled]="signInForm.invalid"> Login </button>
+          <button type="submit" class="btn btn-outline-primary btn-block cursor" [disabled]="signInForm.invalid"> Login
+          </button>
         </div> <!-- form-group// -->
+
+        <a class="float-left" style="cursor:pointer" routerLink="/users/user/add">Visitor</a>
+
         <a class="float-right" style="cursor:pointer" (click)="isResetting = true">Forgot?</a>
       </form>
     </article>
@@ -32,13 +38,14 @@
       <h4 class="card-title mb-4 mt-1">Reset your password</h4>
       <form [formGroup]="resetForm" (ngSubmit)="onReset()">
         <div class="input-group mb-3">
-          <input type="text" [(ngModel)]="useremail" class="form-control" formControlName="email" placeholder="Email"
-            style="font-size: 20px;height: 110%;">
-          <span class="text-dark h2 font-weight-bold ">@instadeep.com</span>
+          <input type="text" [(ngModel)]="email" class="form-control" formControlName="email" placeholder="Email"
+            [ngClass]=" {'border border-danger':resetForm.get('email').dirty && resetForm.get('email').invalid}">
+          <span class="text-dark h3">@instadeep.com</span>
         </div>
-        <div [hidden]="!isreseterror" class="alert alert-danger">{{reseterror}}</div>
+        <div [hidden]=" !isreseterror" class="alert alert-danger">{{reseterror}}</div>
         <div class="form-group">
-          <button type="submit" class="btn btn-primary btn-block" [disabled]="resetForm.invalid"> Reset </button>
+          <button type="submit" class="btn btn-outline-primary btn-block cursor" [disabled]="resetForm.invalid"> Reset
+          </button>
         </div> <!-- form-group// -->
         <a class="float-right" style="cursor:pointer" (click)="isResetting = false">Cancel</a>
 

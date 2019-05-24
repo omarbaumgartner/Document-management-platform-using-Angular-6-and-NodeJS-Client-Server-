@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 
 @Component({
@@ -23,12 +24,15 @@ export class AdduserComponent {
   emailpattern = "@instadeep.com";
   passwordvalue: string;
   noError: boolean = false;
+  takenEmail: boolean;
+  matchedPassword: boolean;
 
 
   constructor(private formBuilder: FormBuilder,
     private userService: UsersService,
     private location: Location,
-    private router: Router, ) {
+    private router: Router,
+    private snackBar: MatSnackBar) {
 
   }
 
@@ -36,10 +40,10 @@ export class AdduserComponent {
 
   ngOnInit() {
     this.signUpForm = this.formBuilder.group({
-      firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
-      lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z]{0,15}')]],
+      firstname: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z '-]+$/)]],
+      lastname: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z '-]+$/)]],
       role: ['Reviewer',],
-      email: ['', [Validators.required, Validators.pattern('[a-zA-Z].[a-zA-Z]{6,20}')]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){4,18}[a-zA-Z0-9]$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmpassword: ['', Validators.required]
     }, {
@@ -59,6 +63,7 @@ export class AdduserComponent {
     if (this.user.password != this.signUpForm.get('confirmpassword').value) {
       this.showError = true;
       this.errorMessage = "Both passwords don't match";
+      this.matchedPassword = true;
     }
     this.userService.checkEmail(this.user.email)
       .subscribe((user) => {
@@ -68,6 +73,7 @@ export class AdduserComponent {
         else {
           this.errorMessage = "Email is already taken";
           this.noError = true;
+          this.takenEmail = true;
         }
       })
   }
@@ -88,8 +94,17 @@ export class AdduserComponent {
     this.userService.addUser(this.user)
       .subscribe(result => {
         this.userService.reloadUsers();
-        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/users"]));
-      });
+        this.snackBar.open("User has been added", "Close", {
+          duration: 3000,
+          verticalPosition: "bottom",
+        });
+      },
+        () => {
+
+        },
+        () => {
+          this.router.navigateByUrl('/users', { skipLocationChange: true }).then(() => this.router.navigate(["/users"]));
+        });
   }
 
   MustMatch(controlName: string, matchingControlName: string) {
@@ -110,6 +125,8 @@ export class AdduserComponent {
       }
     }
   }
+
+
 
 
 

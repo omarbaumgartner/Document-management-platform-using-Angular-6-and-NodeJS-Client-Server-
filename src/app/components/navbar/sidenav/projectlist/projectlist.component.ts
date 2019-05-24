@@ -20,7 +20,6 @@ export class ProjectlistComponent implements OnInit {
 
   ngOnInit() {
     this.getMyProjects();
-
   }
 
 
@@ -34,7 +33,6 @@ export class ProjectlistComponent implements OnInit {
             this.myprojects = projects;
             if (projects.length != null)
               this.projectnumber = projects.length
-
           }
         )
     }
@@ -45,11 +43,9 @@ export class ProjectlistComponent implements OnInit {
 
   checkProjects() {
     this.getMyProjects();
-    console.log(this.myprojects);
   }
 
   viewProject(id) {
-
     this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/myprojects/" + id]));
   }
 

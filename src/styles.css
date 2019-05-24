@@ -45,6 +45,9 @@ li {
     text-indent: 1px;
     text-overflow: '';
 }
+button {
+    cursor: pointer;
+}
 .dropdown-menu::before, 
 .dropdown-menu::after {
     border: none;
@@ -99,4 +102,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 .suggestion {
     font-size: 0.8rem;
+}
+
+.boldOnHover{
+    cursor: pointer;
+}
+
+.boldOnHover:hover {
+    font-weight: bold;
+    cursor: pointer;
+
+}
+
+.cursor {
+    cursor : pointer;
 }

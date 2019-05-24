@@ -7,6 +7,7 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthGuardService } from 'src/app/services/auth/auth-guard.service';
 import { UsersService } from 'src/app/services/users/users.service';
+import { AppComponent } from 'src/app/app.component';
 
 
 
@@ -28,7 +29,6 @@ export class SigninComponent implements OnInit {
   isreseterror: boolean;
   userPassword: string = "password";
   togglePassword: boolean = true;
-  useremail: string;
 
   constructor(private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -38,18 +38,19 @@ export class SigninComponent implements OnInit {
     private loadingService: LoadingService,
     private authGuard: AuthGuardService,
     private userService: UsersService,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    private appComponent: AppComponent) {
 
   }
 
   ngOnInit() {
     this.signInForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{2,15}/)]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){2,18}[a-zA-Z0-9]$/)]],
       password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
     });
 
     this.resetForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{2,15}/)]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){2,18}[a-zA-Z0-9]$/)]],
     })
 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -63,23 +64,36 @@ export class SigninComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
+          console.log("isValid : " + this.authGuard.isValid);
+
+          this.authGuard.noToken = false;
+          this.authGuard.isValid = true;
+          this.authGuard.observableConnected.next(true);
+          this.authService.connexion(this.authService.currentstatus);
+
+          //  this.router.navigate([this.returnUrl]);
+          //this.dialog.closeAll();
+          console.log("isValid : " + this.authGuard.isValid);
+        },
+        error => {
+          console.log("isValid : " + this.authGuard.isValid);
+
+          this.loadingService.isFinished();
+          this.iserror = true;
+          this.error = error.error.message;
+        }, () => {
+          this.authGuard.updateToken();
+          this.userService.getUserProfile();
+          this.appComponent.ngOnInit();
           this.loadingService.isFinished();
           this.snackBar.open("Connected", "", {
             duration: 3000,
             verticalPosition: "top",
           });
-          this.authGuard.updateToken();
-          this.userService.getUserProfile();
-          this.authGuard.noToken = false;
-          //  this.router.navigate([this.returnUrl]);
           this.router.navigate(['/home']);
-          this.authService.connexion(this.authService.currentstatus);
-          this.dialog.closeAll();
-        },
-        error => {
-          this.loadingService.isFinished();
-          this.iserror = true;
-          this.error = error.error.message;
+
+          console.log("isValid : " + this.authGuard.isValid);
+
         });
   }
 
@@ -91,7 +105,7 @@ export class SigninComponent implements OnInit {
           if (data == true) {
             this.isResetting = false;
             this.isreseterror = false;
-            this.snackBar.open("An email has been sent !", "Close", {
+            this.snackBar.open("An email recovery has been sent !", "Close", {
               duration: 3000,
               verticalPosition: "top",
             });

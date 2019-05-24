@@ -1,123 +1,109 @@
-<!--<div class="card">
-  <h3>Add User</h3>
+<div class="container alert alert-white ">
+  <i (click)="goBack()" style="font-size: 2.5rem;" class="far fa-arrow-alt-circle-left"></i>
 
-  <div [hidden]="submitted" class="w-50 p-3">
-    <form #addUserForm="ngForm">
-      <div class="form-group">
-        <label for="firstname">First Name</label>
-        <input type="text" class="form-control" id="firstname" placeholder="User's FirstName" required
-          [(ngModel)]="user.firstname" name="firstname" #firstname="ngModel">
-        <div [hidden]="firstname.valid || firstname.pristine" class="alert alert-danger">
-          First Name is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="lastname">Last Name</label>
-        <input type="text" class="form-control" id="lastname" placeholder="User's LastName" required
-          [(ngModel)]="user.lastname" name="lastname" #lastname="ngModel">
-        <div [hidden]="lastname.valid || lastname.pristine" class="alert alert-danger">
-          Last Name is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="role">Role</label>
-        <select class="form-control" id="role" required [(ngModel)]="user.role" name="role" #role="ngModel">
-          <option [ngValue]="undefined" selected>User's Role</option>
-          <option value="Rédacteur/Propriétaire">Rédacteur/Propriétaire</option>
-          <option value="Reviewer">Reviewer</option>
-          <option value="Project Manager">Project Manager</option>
-          <option value="QA Manager">QA Manager</option>
-          <option value="Administrateur">Administrateur</option>
-        </select>
-        <div [hidden]="role.valid || role.pristine" class="alert alert-danger">
-          Role is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="string" class="form-control" minlength="4" maxlength="10" id="email"
-          pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{4,10}$" placeholder="User's Email" required [(ngModel)]="user.email"
-          name="email" #email="ngModel">
-        <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
-          Email is required/invalid
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" pattern="[0-9a-zA-Z]{6,}"
-          placeholder="User's Password" required [(ngModel)]="user.password" name="password" #password="ngModel">
-        <div [hidden]="password.length || password.pristine" class="alert alert-danger">
-          Password is invalid. Minimum 6 characters.
-        </div>
-      </div>
-
-      <div class="btn-group btn-group-sm">
-        <button type="button" class="btn btn-dark" (click)="goBack()">Back</button>
-        <button type="button" class="btn btn-dark" (click)="addUser()" [disabled]="!addUserForm.form.valid">Add</button>
-      </div>
-    </form>
-  </div>
-
-  <div [hidden]="!submitted">
-    <p>Submitted Successfully! -> <span class="badge badge-light">{{user.firstname}} {{user.lastname}}</span></p>
-    <div class="btn-group btn-group-sm">
-      <button type="button" class="btn btn-dark" (click)="goBack()">Users</button>
-      <button type="button" class="btn btn-dark" (click)="newUser(); addUserForm.reset()">Add again</button>
-    </div>
-  </div>
-</div>
-<br>-->
-<div class="alert alert-dark">
   <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" style="width: 60%; margin: auto;"
-    class="alert alert-light text-dark font-weight-bold h5">
-
-    <div class="form-group ">
-      <label for="firstname">First Name </label>
-      <input type="text" class="form-control" id="firstname" formControlName="firstname" placeholder="User's FirstName"
-        name="firstname" required [ngClass]="{ 'is-invalid': f.firstname.errors && f.firstname.touched}">
+    class="alert alert-light text-dark border border-dark">
+    <p class="font-weight-bold h5">User Form</p>
+    <div class="dropdown-divider"></div>
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col form-group w-25">
+            <div class="container">
+              <p>First name
+                <input type="text " class="form-control" id="firstname" formControlName="firstname"
+                  placeholder="First name" name="firstname" required
+                  [ngClass]="{'border border-danger':f.firstname.touched && f.firstname.invalid}">
+              </p>
+            </div>
+          </div>
+          <div class="col form-group w-25">
+            <div class="container">
+              <p>Last name
+                <input type="text" class="form-control" id="lastname" formControlName="lastname" placeholder="Last name"
+                  required name="lastname"
+                  [ngClass]="{'border border-danger':f.lastname.touched && f.lastname.invalid}">
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="lastname">Last Name</label>
-      <input type="text" class="form-control" id="lastname" formControlName="lastname" placeholder="User's LastName"
-        required name="lastname" [ngClass]="{ 'is-invalid': f.lastname.errors && f.lastname.touched}">
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col form-group">
+            <div class="container">
+              <p>Role
+                <select class="form-control" id="role" required name="role" formControlName="role">
+                  <option [ngValue]="undefined" selected>User's Role</option>
+                  <option value="Redactor">Redactor</option>
+                  <option value="Reviewer">Reviewer</option>
+                  <option value="Project Manager">Project Manager</option>
+                  <option value="QA Manager">QA Manager</option>
+                  <option value="Administrateur">Administrateur</option>
+                </select>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="role">Role</label>
-      <select class="form-control" id="role" required name="role" formControlName="role">
-        <option [ngValue]="undefined" selected>User's Role</option>
-        <option value="Redactor">Redactor</option>
-        <option value="Reviewer">Reviewer</option>
-        <option value="Project Manager">Project Manager</option>
-        <option value="QA Manager">QA Manager</option>
-        <option value="Administrateur">Administrateur</option>
-      </select>
-    </div>
-
-    <label for="email">Email</label><br>
-    <div class="input-group mb-3">
-      <input type="text" id="email" class="form-control" formControlName="email" placeholder="Email"
-        style="font-size: 20px;height: 110%;">
-      <span class="text-dark h2 font-weight-bold ">@instadeep.com</span>
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input style="font-size: 20px;height: 110%;" type="password" id="password" class="form-control"
-        placeholder="**********" formControlName="password">
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col form-group">
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <p>Email
+                    <input type="text" id="email" class="form-control" formControlName="email" placeholder="Username"
+                      [ngClass]="{'border border-danger':f.email.touched && f.email.invalid || takenEmail}"></p>
+                </div>
+                <div class="col align-self-center ">
+                  <p style="margin-top:8px;" class="h3">@instadeep.com</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
 
-    <div class="form-group">
-      <label for="confirmpassword">Confirm your password</label>
-      <input style="font-size: 20px;height: 110%;" type="password" id="confirmpassword" class="form-control"
-        placeholder="**********" formControlName="confirmpassword">
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col form-group">
+            <div class="container">
+              <p>Password
+                <input type="password" id="password" class="form-control" placeholder="**********"
+                  formControlName="password"
+                  [ngClass]="{'border border-danger':f.password.touched && f.password.invalid}"></p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col form-group">
+            <div class="container">
+              <p>Confirm your password
+                <input type="password" id="confirmpassword" class="form-control" placeholder="**********"
+                  formControlName="confirmpassword"
+                  [ngClass]="{'border border-danger':f.confirmpassword.touched && f.confirmpassword.invalid}"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 
     <div [hidden]="!iserror" class="alert alert-danger">{{error}}</div>
     <div [hidden]="!noError" class="alert alert-danger">{{errorMessage}}</div>

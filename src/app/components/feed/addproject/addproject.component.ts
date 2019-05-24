@@ -7,6 +7,7 @@ import { ManagerService } from 'src/app/services/manager/manager.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-addproject',
@@ -28,13 +29,15 @@ export class AddprojectComponent implements OnInit {
   session: any;
   termPipe: string;
   subscription: any;
+  resultid: number;
 
 
   constructor(public formBuilder: FormBuilder,
     public userService: UsersService,
     public managerService: ManagerService,
     public router: Router,
-    public location: Location) {
+    public location: Location,
+    public snackBar: MatSnackBar) {
     this.userService.reloadUsers();
 
   }
@@ -50,7 +53,7 @@ export class AddprojectComponent implements OnInit {
     this.members.push(this.session.id);
     this.projectForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]],
-      description: ['', [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9_.]{1,15}')]],
+      description: ['', [Validators.required]],
       creatorId: [this.session.id, [Validators.required]],
       members: [this.members, Validators.minLength(2)],
     });
@@ -75,9 +78,18 @@ export class AddprojectComponent implements OnInit {
     this.project.members = this.projectForm.get('members').value;
     this.managerService.addProject(this.project)
       .subscribe(result => {
-        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + result.id]));
+        this.snackBar.open(this.project.name + " has been created", "Close", {
+          duration: 3000,
+          verticalPosition: "bottom",
+        });
+        this.resultid = result.id
+      },
+        () => {
 
-      });
+        },
+        () => {
+          this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.resultid]));
+        });
   }
 
   selectUser(user) {

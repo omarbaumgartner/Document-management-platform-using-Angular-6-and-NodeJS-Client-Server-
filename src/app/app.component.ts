@@ -9,6 +9,7 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
 import { NotifService } from './services/notifications/notif.service';
 import { Notif } from './models/Notif.model';
 import * as jwt_decode from "jwt-decode";
+import { FeedComponent } from './components/feed/feed.component';
 
 
 @Component({

@@ -1,8 +1,12 @@
 <div class="alert alert-dark">
+
   <div class="container">
+    <i (click)="goBack()" style="font-size: 2.5rem;" class="far fa-arrow-alt-circle-left"></i>
+
     <form [formGroup]="projectForm" (ngSubmit)="submitProject()" style="width: 70%; margin: auto;"
-      class="alert alert-light text-dark h5">
-      <p class="font-weight-bold">Project Form</p>
+      class="alert alert-light text-dark border-dark">
+      <p class="font-weight-bold h5">Project Form</p>
+      <div class="dropdown-divider"></div>
       <div class="form-group ">
         <label for="name">Project Name </label>
         <input type="text" class="form-control" id="name" formControlName="name" placeholder="Your project's name"
@@ -10,8 +14,8 @@
       </div>
       <div class="form-group ">
         <label for="description">Description </label>
-        <input type="text" class="form-control" id="description" formControlName="description"
-          placeholder="Your project's description" name="description" required>
+        <textarea type="text" class="form-control" id="description" formControlName="description"
+          placeholder="Your project's description" name="description" required></textarea>
       </div>
 
       <div class="form-group">
@@ -27,14 +31,17 @@
         </div>
         <div class="row">
           <div class="col">
-            <div *ngFor="let selectedmember of selectedmembers; let i = index " (click)=" deselectUser(members[i])"
-              class="list-group-item" style="cursor:pointer">
-              <span class="badge badge-dark">{{selectedmembers[i]}}</span> &nbsp;
-            </div>
+            <ng-scrollbar style="height: 25vh" class="lazy-scrollbar" thumbClass="white-scrollbars"
+              [disableOnBreakpoints]="false">
+              <div *ngFor="let selectedmember of selectedmembers; let i = index " (click)=" deselectUser(members[i])"
+                class="list-group-item" style="cursor:pointer">
+                <span class="badge badge-dark">{{selectedmembers[i]}}</span> &nbsp;
+              </div>
+            </ng-scrollbar>
           </div>
           <div class="col">
-            <ng-scrollbar class="lazy-scrollbar" thumbClass="white-scrollbars" [disableOnBreakpoints]="false">
-
+            <ng-scrollbar style="height: 25vh" class="lazy-scrollbar" thumbClass="white-scrollbars"
+              [disableOnBreakpoints]="false">
               <ng-container *ngFor="let user of ( users | filter : termPipe )">
                 <div style="cursor:pointer" *ngIf="status[user.id]!=true && session.id!==user.id && user.status==true"
                   class="list-group-item" (click)="selectUser(user)" [ngClass]="status[user.id] ? 'bg-success' : ''">
@@ -53,11 +60,12 @@
       <div [hidden]="!iserror" class="alert alert-danger">{{error}}</div>
 
       <div class="form-group">
-        <button type="submit" class="btn btn-primary btn-block" [disabled]="projectForm.invalid"> Submit </button>
+        <button type="submit" class="btn btn-outline-primary btn-block" [disabled]="projectForm.invalid"> Submit
+        </button>
       </div> <!-- form-group// -->
 
     </form>
+    <button class="btn btn-dark" (click)="goBack()">Back</button>
 
   </div>
-  <button class="btn btn-dark" (click)="goBack()">Back</button>
 </div>

@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { UsersService } from 'src/app/services/users/users.service';
 import { User } from 'src/app/models/User.model';
 import { Doc } from 'src/app/models/Doc.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { Location } from '@angular/common';
 import { AdddocComponent } from '../../docs/adddoc/adddoc.component';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
@@ -48,6 +48,7 @@ export class SingleprojectComponent implements OnInit {
     private managerService: ManagerService,
     private userService: UsersService,
     public dialog: MatDialog,
+    public snackBar: MatSnackBar,
     private location: Location,
   ) {
     this.loadingService.isLoading();
@@ -61,7 +62,6 @@ export class SingleprojectComponent implements OnInit {
         this.project = project;
         this.members = this.project.members;
         var i;
-
         this.selectedmembers = this.project.members;
         for (i = 0; i < this.project.members.length; i++) {
           this.status[this.project.members[i]] = true;
@@ -69,15 +69,20 @@ export class SingleprojectComponent implements OnInit {
         this.managerService.getDocuments(this.projectId)
           .subscribe(document => {
             this.documents = document;
-            //console.log(this.document);
-            this.loadingService.isFinished();
-
           })
-      });
+      },
+        () => {
+
+        },
+        () => {
+          this.loadingService.isFinished();
+        });
+
     this.subscription = this.userService.observablePeople
       .subscribe(users => {
         this.users = users;
       })
+
     this.role = this.authService.currentrole.value;
     this.session = this.userService.getPayload();
 
@@ -106,17 +111,28 @@ export class SingleprojectComponent implements OnInit {
         authorId: this.session.id,
       }
     }).afterClosed().subscribe((val) => {
+      this.snackBar.open("Document has been created", "Close", {
+        duration: 3000,
+        verticalPosition: "bottom",
+      });
       this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.projectId]));
     });
   }
 
-  updateDocumentName(document): void {
+  updateDocumentName(document: Doc): void {
     //this.submitted = true;
     this.managerService.updateDocument(document)
       .subscribe(result => {
         this.isRenaming[document.id] = false;
         //this.message = "Projec Updated Successfully!";
-      });
+      },
+        () => { },
+        () => {
+          this.snackBar.open("Document has been updated", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        });
   }
 
   deleteDocument($event): void {
@@ -124,9 +140,17 @@ export class SingleprojectComponent implements OnInit {
     console.log($event.item.id);
     this.managerService.deleteDocument(id)
       .subscribe(result => {
-        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.projectId]));
 
-      });
+      },
+        () => { },
+        () => {
+
+          this.snackBar.open("Document has been deleted", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+          this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/myprojects/" + this.projectId]));
+        });
   }
 
   openUploader(): void {
@@ -162,14 +186,32 @@ export class SingleprojectComponent implements OnInit {
       .subscribe(result => {
         this.edit();
         //this.message = "Projec Updated Successfully!";
-      });
+      },
+        () => {
+
+        },
+        () => {
+          this.snackBar.open("Project has been updated", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        });
   }
 
   deleteProject(): void {
     this.managerService.deleteProject(this.project.id)
       .subscribe(result => {
-        this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/home"]));
-      });
+      },
+        () => {
+
+        },
+        () => {
+          this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/home"]));
+          this.snackBar.open("Project has been deleted", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        });
   }
 
   finishProject() {
@@ -178,13 +220,20 @@ export class SingleprojectComponent implements OnInit {
       this.managerService.updateProject(this.project)
         .subscribe(result => {
           //this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/myprojects"]));
+          this.snackBar.open("Project is set as finished", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
         });
     }
     else {
       this.project.finished = false;
       this.managerService.updateProject(this.project)
         .subscribe(result => {
-          //this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/myprojects"]));
+          this.snackBar.open("Project is set as ongoing", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
         });
     }
 

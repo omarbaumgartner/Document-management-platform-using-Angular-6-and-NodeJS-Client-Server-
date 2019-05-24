@@ -14,6 +14,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { DocsService } from 'src/app/services/docs/docs.service';
 import { UsersService } from 'src/app/services/users/users.service';
 import { OngoingPipe } from 'src/app/pipes/ongoing.pipe';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-singledoc',
@@ -34,7 +35,7 @@ export class SingledocComponent implements OnInit {
   suggestion = new Sug();
   sugForm: any;
   submittedSug: boolean;
-  suggestions: Sug;
+  suggestions: Sug[];
   textarea: string = "";
   modifySugs: Array<boolean> = [false];
   showedComments: Array<boolean> = [false];
@@ -42,12 +43,16 @@ export class SingledocComponent implements OnInit {
   errmsg: string;
   errstatus: boolean;
   cancelEditTerm: string;
+  newcontentid: Doc;
+  increasing: boolean;
+  sugnumber: number;
 
 
   constructor(private route: ActivatedRoute,
     public formBuilder: FormBuilder,
     private router: Router,
     private managerService: ManagerService,
+    private snackBar: MatSnackBar,
     private authService: AuthService,
     private loadingService: LoadingService,
     private userService: UsersService,
@@ -59,7 +64,10 @@ export class SingledocComponent implements OnInit {
     setInterval(() => {
       if (this.isEditing == true) {
         this.autoSave();
-        //console.log("Interval : Auto saving")
+        this.snackBar.open("Autosaving ..", "", {
+          duration: 2500,
+          verticalPosition: "bottom",
+        });
       }
     }, 1000 * 60);
 
@@ -75,9 +83,15 @@ export class SingledocComponent implements OnInit {
             this.document = document;
             this.versions = document.versions;
             this.getSuggestions();
-            this.loadingService.isFinished();
           })
-      })
+      },
+        () => {
+
+        },
+        () => {
+          this.loadingService.isFinished();
+        })
+
     this.sugForm = this.formBuilder.group({
       authorId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]],
       documentId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9_.]{1,15}')]],
@@ -99,12 +113,20 @@ export class SingledocComponent implements OnInit {
     this.document.path = this.cont.content;
     this.managerService.newDocVersion(this.document)
       .subscribe(newcontent => {
-        this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/docs/" + newcontent]));
-      })
+        this.newcontentid = newcontent;
+        this.snackBar.open("New version has been created", "Close", {
+          duration: 3000,
+          verticalPosition: "bottom",
+        });
+      },
+        () => { },
+        () => {
+          this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/docs/" + this.newcontentid]));
+        })
   }
 
   viewVersion(id) {
-    this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/docs/" + id]));
+    this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/docs/" + id]));
   }
 
   updateDocumentContent() {
@@ -112,7 +134,13 @@ export class SingledocComponent implements OnInit {
       .subscribe((val) => {
         this.isEditing = false;
         window.scroll(0, 0);
-      })
+      },
+        () => { }, () => {
+          this.snackBar.open("Document has been saved", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        })
   }
 
   autoSave() {
@@ -126,8 +154,15 @@ export class SingledocComponent implements OnInit {
   deleteFile(id): void {
     this.managerService.deleteDocument(id)
       .subscribe(result => {
-        this.router.navigateByUrl('', { skipLocationChange: false }).then(() => this.router.navigate(["/myprojects/" + this.document.projectid]));
-      });
+        this.snackBar.open("Document has been saved", "Close", {
+          duration: 3000,
+          verticalPosition: "bottom",
+        });
+      },
+        () => { },
+        () => {
+          this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/myprojects/" + this.document.projectid]));
+        });
   }
 
   edit() {
@@ -163,6 +198,7 @@ export class SingledocComponent implements OnInit {
     this.docService.getSuggestions(this.document.id)
       .subscribe((sugs) => {
         this.suggestions = sugs;
+        this.sugnumber = this.suggestions.length;
       })
   }
 
@@ -179,8 +215,15 @@ export class SingledocComponent implements OnInit {
       this.docService.addSuggestion(this.suggestion)
         .subscribe(result => {
           this.suggestions = null;
-          this.getSuggestions();
-        });
+        },
+          () => { },
+          () => {
+            this.getSuggestions();
+            this.snackBar.open("Suggestion has been submitted", "Close", {
+              duration: 3000,
+              verticalPosition: "bottom",
+            });
+          });
       this.textarea = "";
       this.errstatus = false;
     }
@@ -197,13 +240,18 @@ export class SingledocComponent implements OnInit {
       this.docService.updateSuggestion(suggestion)
         .subscribe(result => {
           //console.log(result)
-
           //this.suggestions = null;
           //console.log(this.suggestions)
+          //console.log(this.suggestions)
+
           this.ngOnInit();
-          console.log(this.suggestions)
           this.isModifySug(suggestion.id);
 
+        }, () => { }, () => {
+          this.snackBar.open("Suggestion has been updated", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
         });
     }
 
@@ -214,7 +262,14 @@ export class SingledocComponent implements OnInit {
       .subscribe(result => {
         this.suggestions = null;
         this.ngOnInit();
-      });
+      },
+        () => { },
+        () => {
+          this.snackBar.open("Suggestion has been deleted", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        });
 
   }
 
@@ -261,47 +316,93 @@ export class SingledocComponent implements OnInit {
   Emit() {
     if (this.document.emitted == true) {
       this.document.emitted = false;
-
+      this.managerService.updateDocument(this.document)
+        .subscribe((val) => {
+          this.snackBar.open("Document has been set to not emitted", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        })
     }
-    else
+    else {
       this.document.emitted = true;
-    this.managerService.updateDocument(this.document)
-      .subscribe((val) => {
-        console.log(val)
-      })
+      this.managerService.updateDocument(this.document)
+        .subscribe((val) => {
+          this.snackBar.open("Document has been emitted", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        })
+    }
   }
 
   Validate() {
     if (this.document.validated == true) {
       this.document.validated = false;
-
+      this.managerService.updateDocument(this.document)
+        .subscribe((val) => {
+          this.snackBar.open("Document has been set to not validated", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        })
     }
-    else
+    else {
       this.document.validated = true;
-    this.managerService.updateDocument(this.document)
-      .subscribe((val) => {
-        console.log(val)
-      })
+      this.managerService.updateDocument(this.document)
+        .subscribe((val) => {
+          this.snackBar.open("Document has been validated", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        })
+    }
   }
 
   Publish() {
     if (this.document.published == true) {
       this.document.published = false;
-
+      this.managerService.updateDocument(this.document)
+        .subscribe((val) => {
+          this.snackBar.open("Document has been set to not published", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        })
     }
-    else
+    else {
       this.document.published = true;
-    this.managerService.updateDocument(this.document)
-      .subscribe((val) => {
-        console.log(val)
-      })
-    /*       .subscribe((val) => {
-            this.managerService.getSingleDocument(this.cont.documentid)
-              .subscribe(document => {
-                this.document = document;
-                this.versions = document.versions;
-              })
-          }) */
+      this.managerService.updateDocument(this.document)
+        .subscribe((val) => {
+          this.snackBar.open("Document has been published", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        })
+    }
+  }
+
+  get sortData() {
+    if (this.suggestions) {
+      return this.suggestions.sort((a, b) => {
+        if (this.increasing == true || null)
+          return <any>new Date(b.updatedAt) - <any>new Date(a.updatedAt);
+        else
+          return <any>new Date(a.updatedAt) - <any>new Date(b.updatedAt);
+      });
+    }
+    else {
+      return null;
+    }
+  }
+
+  sortSug() {
+    if (this.increasing === true || this.increasing === null) {
+      this.increasing = false;
+    }
+    else {
+      this.increasing = true;
+    }
   }
 
 }

@@ -6,14 +6,13 @@ import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import * as jwt_decode from "jwt-decode";
 import { AuthGuardService } from './auth-guard.service';
-
+import { Config } from '../../configuration/conf';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  apiUrl = "http://localhost:8080";
-  //apiUrl = "http://52.29.87.21:8080";
+  apiUrl = "http://" + Config.HOST + ":" + Config.PORT;
   currentstatus = new BehaviorSubject<boolean>(false);
   currentrole = new BehaviorSubject<any>("Reviewer");
   canEdit: boolean;
@@ -25,7 +24,7 @@ export class AuthService {
   constructor(private http: HttpClient,
     private router: Router,
     private authGuard: AuthGuardService) {
-    if (this.getPayload())
+    if (localStorage.getItem('currentUser'))
       this.session = this.getPayload();
   }
 
@@ -39,8 +38,9 @@ export class AuthService {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           console.log("Logged in, check localStorage")
           localStorage.setItem('currentUser', JSON.stringify(user));
-          this.authGuard.isValid = true;
           this.setRole();
+          this.authGuard.isValid = true;
+
         }
         else {
           console.log("There is an error");
@@ -103,6 +103,7 @@ export class AuthService {
   }
 
   getPayload() {
+
     if (localStorage.getItem('currentUser') != null) {
       this.userToken = JSON.parse(localStorage.getItem('currentUser')).token;
       // console.log("User Token : " + this.userToken);
