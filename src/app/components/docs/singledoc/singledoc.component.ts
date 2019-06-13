@@ -15,6 +15,7 @@ import { DocsService } from 'src/app/services/docs/docs.service';
 import { UsersService } from 'src/app/services/users/users.service';
 import { OngoingPipe } from 'src/app/pipes/ongoing.pipe';
 import { MatSnackBar } from '@angular/material';
+import { Com } from 'src/app/models/Com.model';
 
 @Component({
   selector: 'app-singledoc',
@@ -33,19 +34,29 @@ export class SingledocComponent implements OnInit {
   userToken: any;
   session: any;
   suggestion = new Sug();
-  sugForm: any;
   submittedSug: boolean;
-  suggestions: Sug[];
   textarea: string = "";
-  modifySugs: Array<boolean> = [false];
-  showedComments: Array<boolean> = [false];
   exampleNumber: number = 2;
   errmsg: string;
   errstatus: boolean;
   cancelEditTerm: string;
   newcontentid: Doc;
   increasing: boolean;
+
+  suggestions: Sug[];
+  sugForm: any;
   sugnumber: number;
+  modifySugs: Array<boolean> = [false];
+
+
+  comForm: any;
+  comment = new Com();
+  comments: Com[];
+  comnumber: Array<number> = [];
+  modifyComs: Array<boolean> = [false];
+  showedComments: Array<boolean> = [false];
+  sugIds: Array<number> = [0];
+
 
 
   constructor(private route: ActivatedRoute,
@@ -97,6 +108,13 @@ export class SingledocComponent implements OnInit {
       documentId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9_.]{1,15}')]],
       content: ["", [Validators.required, Validators.minLength(2), Validators.maxLength(40)]],
     });
+
+    this.comForm = this.formBuilder.group({
+      authorId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9]{1,15}')]],
+      suggestionId: ["", [Validators.required, Validators.pattern('.*\\S.*[a-zA-Z0-9_.]{1,15}')]],
+      content: ["", [Validators.required, Validators.minLength(2), Validators.maxLength(40)]],
+    });
+
     this.role = this.authService.currentrole.value;
   }
 
@@ -199,6 +217,7 @@ export class SingledocComponent implements OnInit {
       .subscribe((sugs) => {
         this.suggestions = sugs;
         this.sugnumber = this.suggestions.length;
+        this.getComments();
       })
   }
 
@@ -273,6 +292,105 @@ export class SingledocComponent implements OnInit {
 
   }
 
+  //Comment Part
+
+  getComments() {
+    this.docService.getComments(this.document.id)
+      .subscribe((comments) => {
+        this.comments = comments;
+        for (let i = 0; i < this.suggestions.length; i++) {
+          this.comnumber[this.suggestions[i].id] = 0;
+        }
+        console.log(this.comnumber);
+        for (let i = 0; i < this.suggestions.length; i++) {
+          for (let y = 0; y < this.comments.length; y++) {
+            if (this.suggestions[i].id == this.comments[y].suggestionid) {
+              this.comnumber[this.suggestions[i].id]++;
+            }
+          }
+        }
+        console.log(this.comnumber);
+
+      })
+  }
+
+  submitComment(id: number) {
+    console.log("submitted")
+    this.comment.authorId = this.session.id;
+    this.comment.suggestionid = id;
+    this.comment.documentid = this.document.id;
+    this.comment.content = this.comForm.get('content').value;
+    if (this.comment.content == "") {
+      this.errstatus = true;
+      this.errmsg = "You can't send an empty comment";
+      console.log("Empty")
+    }
+    else {
+      this.docService.addComment(this.comment)
+        .subscribe(result => {
+          this.comments = null;
+        },
+          () => { },
+          () => {
+            this.getComments();
+            this.snackBar.open("Comment has been submitted", "Close", {
+              duration: 3000,
+              verticalPosition: "bottom",
+            });
+          });
+      this.textarea = "";
+      this.errstatus = false;
+    }
+
+
+  }
+
+  modifyComment(comment: Com): void {
+    //console.log(suggestion)
+    if (comment.content == "") {
+
+    }
+    else {
+      this.docService.updateComment(comment)
+        .subscribe(result => {
+          //console.log(result)
+          //this.suggestions = null;
+          //console.log(this.suggestions)
+          //console.log(this.suggestions)
+
+          this.ngOnInit();
+          this.isModifyCom(comment.id);
+
+        }, () => { }, () => {
+          this.snackBar.open("Suggestion has been updated", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        });
+    }
+
+  }
+
+  deleteComment(id: number) {
+    this.docService.deleteComment(id)
+      .subscribe(result => {
+        this.comments = null;
+        this.ngOnInit();
+      },
+        () => { },
+        () => {
+          this.snackBar.open("Suggestion has been deleted", "Close", {
+            duration: 3000,
+            verticalPosition: "bottom",
+          });
+        });
+
+  }
+
+  test() {
+    console.log(this.comnumber);
+  }
+
   translatemeArray(ids) {
     if (ids != undefined) {
       return this.userService.fromIdToUsername(ids, this.userService.observablePeople.value);
@@ -302,6 +420,15 @@ export class SingledocComponent implements OnInit {
       this.modifySugs[id] = true
     else
       this.modifySugs[id] = false
+  }
+
+  isModifyCom(id: number) {
+    if (this.modifyComs[id] == undefined)
+      this.modifyComs[id] = true;
+    else if (this.modifyComs[id] == false)
+      this.modifyComs[id] = true
+    else
+      this.modifyComs[id] = false
   }
 
   hasOpenedComments(id: number) {

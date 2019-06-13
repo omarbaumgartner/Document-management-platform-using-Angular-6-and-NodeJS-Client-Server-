@@ -104,7 +104,6 @@ export class SingleuserComponent implements OnInit {
         },
         () => {
           this.router.navigateByUrl('/users', { skipLocationChange: true }).then(() => this.router.navigate(["/users"]));
-
         });
   }
 

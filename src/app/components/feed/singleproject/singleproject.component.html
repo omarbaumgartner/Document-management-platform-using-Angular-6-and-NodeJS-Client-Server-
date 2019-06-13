@@ -1,33 +1,10 @@
 <!-- If Not Modify -->
 <div class="container">
-  <div class="row">
+  <!--   <div class="row">
     <div class="col ">
       <div class="container " *ngIf="role=='Administrateur' || session.id==project.creatorId">
         <div class="row float-right">
-          <div class="btn-group">
-            <i class="fas fa-cog" style="font-size: 3rem;" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false"></i>
-            <div class="dropdown-menu">
-              <div class="col ">
-                <!-- User Finish Button-->
-                <button *ngIf="!editing && project.finished == true" (click)="finishProject()"
-                  class="col btn btn-sm btn-info">Continue project
-                </button>
-                <button *ngIf="!editing && project.finished == false" (click)="finishProject()"
-                  class="col btn btn-sm btn-success">Finish project
-                </button>
-              </div>
-              <div class="col">
-                <!-- User Edit Button-->
-                <button *ngIf=!editing (click)="edit()" class="col btn btn-warning">Edit project</button>
-              </div>
-              <div class="col">
-                <!-- User Delete Button-->
-                <button *ngIf="!editing" class="col btn  btn-danger text-dark" (click)="deleteProject()">Delete
-                  project</button>
-              </div>
-            </div>
-          </div>
+
 
 
 
@@ -36,7 +13,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="row">
     <div class="container">
       <div class="card">
@@ -199,6 +176,42 @@
                           </div>
                         </div>
                       </div>
+                      <div class="col">
+
+                      </div>
+                      <div class="col">
+
+                      </div>
+                      <div class="col">
+
+                      </div>
+                      <div class="col">
+                        <div class="btn-group">
+                          <i class="fas fa-cog" style="font-size: 2rem;" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"></i>
+                          <div class="dropdown-menu">
+                            <div class="col ">
+                              <!-- User Finish Button-->
+                              <button *ngIf="!editing && project.finished == true" (click)="finishProject()"
+                                class="col btn btn-sm btn-info">Continue project
+                              </button>
+                              <button *ngIf="!editing && project.finished == false" (click)="finishProject()"
+                                class="col btn btn-sm btn-success">Finish project
+                              </button>
+                            </div>
+                            <div class="col">
+                              <!-- User Edit Button-->
+                              <button *ngIf=!editing (click)="edit()" class="col btn btn-warning">Edit project</button>
+                            </div>
+                            <div class="col">
+                              <!-- User Delete Button-->
+                              <button *ngIf="!editing" class="col btn  btn-danger text-dark"
+                                (click)="deleteProject()">Delete
+                                project</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div class="dropdown-divider"></div>
                   </div>
@@ -208,10 +221,10 @@
               <!-- Files -->
               <div class="row">
                 <div class="col">
-
                   <div class="container">
+
                     <ng-scrollbar style="height: 70vh; width: 90wh;" class="lazy-scrollbar"
-                      thumbClass="white-scrollbars" [disableOnBreakpoints]="false" [trackY]=false [shown]=hover>
+                      thumbClass="white-scrollbars" [disableOnBreakpoints]="false" [trackX]="false" [shown]=hover>
                       <div class="row" style="text-align: center;" *ngFor="let document of documents;"
                         [contextMenu]="basicMenu" [contextMenuSubject]="document">
 
@@ -220,18 +233,42 @@
                             <div class="row">
                               <div class="col">
                                 <form class="float-left" #detailDocumentForm="ngForm">
-                                  <div (click)="viewDocument(document)"><i style="font-size: 2rem; cursor:pointer;"
-                                      class="fas fa-file"></i>
-                                    <a style="cursor : pointer"
-                                      *ngIf="!isRenaming[document.id]">{{document.filename}}.id</a>
+                                  <div class="container">
+                                    <div class="row">
+                                      <div class='col'>
+                                        <div *ngIf="!isRenaming[document.id]" (click)="viewDocument(document)"><i
+                                            style="font-size: 2rem; cursor:pointer;" class="fas fa-file"></i>&nbsp;
+                                          <a style="cursor : pointer">{{document.filename}}.id</a>
+                                        </div>
+                                        <div *ngIf="isRenaming[document.id]">
+                                          <div class="container">
+                                            <div class="row">
+                                              <div class="col-1">
+                                                <i style="font-size: 2rem; cursor:pointer;" class="fas fa-file"></i>
+                                              </div>
+                                              <div class="col">
+                                                <input maxlength="15" AutoSizeInput type="text"
+                                                  class="form-control w-100 p-3" id="filename"
+                                                  [(ngModel)]="document.filename" name="filename" #filename="ngModel"
+                                                  required>
+                                              </div>
+                                              <div class="col">
+                                                <button type="button" class="btn btn-success"
+                                                  (click)="updateDocumentName(document)"
+                                                  [disabled]="!detailDocumentForm.form.valid">Update</button>
+                                              </div>
+                                              <div class="col-1">
+
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div *ngIf="isRenaming[document.id]">
-                                    <input maxlength="15" AutoSizeInput type="text" class="form-control w-75 p-3"
-                                      id="filename" [(ngModel)]="document.filename" name="filename" #filename="ngModel"
-                                      required>
-                                    <button type="button" class="btn btn-success" (click)="updateDocumentName(document)"
-                                      [disabled]="!detailDocumentForm.form.valid">Update</button>
+                                  <div>
                                   </div>
+
                                 </form>
                               </div>
                             </div>
@@ -257,6 +294,9 @@
 <context-menu *ngIf="role=='Administrateur'||role=='Project Manager'">
   <ng-template contextMenuItem (execute)="rename($event)">
     Rename
+  </ng-template>
+  <ng-template contextMenuItem (execute)="exportAsPDF($event)">
+    Export as PDF
   </ng-template>
   <ng-template contextMenuItem (execute)="deleteDocument($event)">
     Delete

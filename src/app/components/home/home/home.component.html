@@ -10,7 +10,7 @@
           <div class="col" (click)="viewProject(myprojects.id)">
             <div class="row btn d-flex justify-content-center decoration "
               [ngClass]="{'btn-warning': myprojects.finished===false,'btn-success': myprojects.finished===true }">
-              <i style="font-size: 6rem;" class="row fas fa-cubes  "></i>
+              <i style="font-size: 5rem;" class="row fas fa-cubes  "></i>
             </div>
             <div class="row d-flex justify-content-center">
               <p class="text-dark text-center">{{myprojects.name}}</p>
@@ -44,7 +44,7 @@
           <div class="row">
             <div class="col" (click)="viewProject(ongoingprojects[i].id)">
               <div class="row btn btn-warning d-flex justify-content-center decoration">
-                <i style="font-size: 6rem;" class="row fas fa-cubes  "></i>
+                <i style="font-size: 5rem;" class="row fas fa-cubes  "></i>
               </div>
               <div class="row d-flex justify-content-center">
                 <p class="text-dark text-center">{{ongoingprojects[i].name}}</p>
@@ -71,7 +71,7 @@
         <div class="row">
           <div class="col">
             <div routerLink="/addproject" class="row btn btn-light d-flex justify-content-center decoration"
-              style="border-style:dashed;height: 7rem;">
+              style="border-style:dashed;height: 6rem;">
               <i style="font-size: 5rem;" class="align-self-center fas fa-plus"></i>
             </div>
             <div class="row d-flex justify-content-center">
@@ -94,7 +94,7 @@
           <div class="row">
             <div class="col" (click)="viewProject(finishedprojects[i].id)">
               <div class="row btn btn-success d-flex justify-content-center decoration">
-                <i style="font-size: 6rem;" class="row fas fa-cubes  "></i>
+                <i style="font-size: 5rem;" class="row fas fa-cubes  "></i>
               </div>
               <div class="row d-flex justify-content-center">
                 <p class="text-dark text-center">{{finishedprojects[i].name}}</p>

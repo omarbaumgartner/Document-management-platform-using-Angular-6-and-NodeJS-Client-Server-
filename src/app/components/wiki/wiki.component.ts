@@ -34,6 +34,7 @@ export class WikiComponent implements OnInit {
   increasing: boolean = null;
   noError: boolean = false;
   expanded = new Array<boolean>(false);
+  docs: Doc[];
 
   constructor(private managerService: ManagerService,
     private formBuilder: FormBuilder,
@@ -51,6 +52,11 @@ export class WikiComponent implements OnInit {
       .subscribe(projects => {
         this.projects = projects;
       })
+    this.subscription = this.managerService.observableDocs
+      .subscribe(docs => {
+        this.docs = docs;
+      })
+
     this.searchForm = this.formBuilder.group({
       keyword: ['']
     })
@@ -63,6 +69,8 @@ export class WikiComponent implements OnInit {
   }
 
   onRestrictedSubmit() {
+    this.managerService.reloadProjects();
+    this.managerService.reloadDocuments();
     this.keywords = this.searchForm.get('keyword').value;
     if (this.keywords.includes("/") == true || this.keywords.includes("\\") == true) {
       this.noError = true;
@@ -71,14 +79,14 @@ export class WikiComponent implements OnInit {
     else {
       this.noError = false;
       let searchTerm = this.keywords + "+" + this.session.id;
-      if (this.keywords != "" || this.keywords.match(/[a-z]/i)) {
+      if (this.keywords != "" || this.keywords.match(/[a-z]/i) || this.keywords != null || this.keywords != undefined) {
+        //If not admin
         if (this.session.role != "Administrateur") {
           this.managerService.restrictedSearchFor(searchTerm)
             .subscribe(result => {
               if (result == false) {
                 this.resultnumber = 0;
                 this.results = null;
-                // this.test();
                 this.hasSearched = true;
               }
               else {
@@ -86,7 +94,6 @@ export class WikiComponent implements OnInit {
                 if (this.resultnumber != 0) {
                   this.test();
                   this.results = result;
-
                 }
                 else {
                   this.results = null;
@@ -96,18 +103,19 @@ export class WikiComponent implements OnInit {
 
             })
         }
+        //If admin
         else {
           this.managerService.searchFor(this.keywords)
             .subscribe(result => {
-              //  this.resultnumber = result.length;
               this.resultnumber = result.length;
-              console.log(this.resultnumber)
               if (this.resultnumber != 0) {
                 this.results = result;
                 this.test();
               }
               else {
                 this.results = null;
+                this.abracadabra = [];
+
               }
               this.hasSearched = true;
             })
@@ -115,11 +123,13 @@ export class WikiComponent implements OnInit {
       }
       else {
         this.results = null;
-        this.abracadabra = [];
+        this.abracadabra = null;
         this.resultnumber = 0;
       }
     }
-
+    console.log(this.results);
+    console.log(this.abracadabra);
+    console.log(this.resultnumber);
   }
 
   viewDocc(id: number) {

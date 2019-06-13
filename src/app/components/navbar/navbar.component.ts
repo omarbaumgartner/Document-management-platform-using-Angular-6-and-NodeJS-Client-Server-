@@ -144,8 +144,11 @@ export class NavbarComponent implements OnInit {
       this.noError = true;
     }
     else {
+      this.managerService.reloadProjects();
+      this.managerService.reloadDocuments();
       this.noError = false;
       this.managerService.onRestrictedResearch(term, session.id);
+      this.searchWord = "";
     }
   }
 

@@ -21,7 +21,7 @@
       <!-- Suggestions -->
       <div class="container-fluid alert alert-secondary">
         <div class="col">
-          <div class="row ">
+          <div class="row">
             <p class="h5">Suggestions</p> <!-- <button (click)="getSuggestions()">Reload </button> -->
           </div>
           <div class="row">
@@ -33,54 +33,109 @@
               </div>
             </form>
             <div *ngIf=errstatus class="alert alert-danger">{{errmsg}}</div>
-
           </div>
 
-          <div class="row" style="height : 60vh; width: 130%;">
-            <button *ngIf="sugnumber != 0" (click)="sortSug()" class="btn btn-dark btn-sm">
+          <div class="row">
+            <button *ngIf="sugnumber != 0" (click)="sortSug()" class="btn btn-dark btn-sm float-right">
               Sort by date
               <i *ngIf="increasing" class="fas fa-arrow-down"></i>
               <i *ngIf="!increasing" class="fas fa-arrow-up"></i>
             </button>
+          </div>
+
+
+
+          <div class="row">
             <ng-scrollbar class="lazy-scrollbar" thumbClass="white-scrollbars" [disableOnBreakpoints]="false">
-              <div class="row" *ngFor="let suggestion of sortData">
-                <div class="card col-sm">
-                  <div class="card-body">
-                    <div class="">
-                      <i *ngIf="session.id == suggestion.authorId" (click)="deleteSuggestion(suggestion.id)"
-                        style="color:red" title="Delete" class="fas fa-minus-square float-right"></i>
-                      <i *ngIf="session.id == suggestion.authorId" title="Edit" (click)="isModifySug(suggestion.id)"
-                        class="fas fa-pen-square float-right"></i>
-                      <p class="card-title suggestion font-weight-bold">{{translatemeArray(suggestion?.authorId)}}</p>
-                    </div>
-                    <div class="">
-                      <p *ngIf="modifySugs[suggestion.id] != true" class="card-text suggestion">
-                        {{suggestion?.content}}
-                      </p>
-                      <textarea *ngIf="modifySugs[suggestion.id] == true" [(ngModel)]=suggestion.content
-                        style="font-size: 0.9rem" id="content" placeholder="Write your suggestion"></textarea>
-                      <div class="row" *ngIf="modifySugs[suggestion.id] == true">
-                        <div class="col"><button (click)="modifySuggestion(suggestion)"
-                            class="btn btn-sm btn-primary btn-block"> Save
-                          </button></div>
-                        <div class="col"> <button (click)="isModifySug(suggestion.id)"
-                            class="btn btn-sm btn-primary btn-block"> Cancel
-                          </button></div>
+              <div *ngFor="let suggestion of sortData">
+                <div class="">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="">
+                        <i *ngIf="session.id == suggestion.authorId" (click)="deleteSuggestion(suggestion.id)"
+                          style="color:red" title="Delete" class="fas fa-minus-square float-right"></i>
+                        <i *ngIf="session.id == suggestion.authorId" title="Edit" (click)="isModifySug(suggestion.id)"
+                          class="fas fa-pen-square float-right"></i>
+                        <p class="card-title suggestion font-weight-bold">{{translatemeArray(suggestion?.authorId)}}
+                        </p>
+                        <div class="dropdown-divider"></div>
                       </div>
-                      <h6 class="card-subtitle suggestion mb-2 text-muted">{{suggestion.updatedAt | date : 'long'}}
-                        <div class="text-dark float-right">{{exampleNumber}}&nbsp;<i
-                            (click)="hasOpenedComments(suggestion.id)" class="fas fa-comments"></i></div>
-                      </h6>
+                      <div class="">
+                        <p *ngIf="modifySugs[suggestion.id] != true" class="card-text suggestion">
+                          {{suggestion?.content}}
+                        </p>
+                        <textarea *ngIf="modifySugs[suggestion.id] == true" [(ngModel)]=suggestion.content
+                          style="font-size: 0.9rem" id="content" placeholder="Write your suggestion"></textarea>
+                        <div class="row" *ngIf="modifySugs[suggestion.id] == true">
+                          <div class="col"><button (click)="modifySuggestion(suggestion)"
+                              class="btn btn-sm btn-primary btn-block"> Save
+                            </button></div>
+                          <div class="col"> <button (click)="isModifySug(suggestion.id)"
+                              class="btn btn-sm btn-primary btn-block"> Cancel
+                            </button></div>
+                        </div>
+                        <h6 class="card-subtitle suggestion mb-2 text-muted">
+                          {{suggestion.updatedAt | date : 'long'}}
+                          <div class="text-dark float-right">{{comnumber[suggestion.id]}}&nbsp;<i
+                              (click)="hasOpenedComments(suggestion.id)" class="fas fa-comments"></i></div>
+                        </h6>
 
+                      </div>
+
+                      <div *ngIf="showedComments[suggestion.id] == true" class="card">
+                        <div class="container suggestion" *ngFor="let comment of comments?.reverse()">
+                          <div class="" *ngIf="suggestion.id == comment.suggestionid">
+                            <div class="row">
+                              <div class="col">
+                                <i *ngIf="session.id == comment.authorId" (click)="deleteComment(comment.id)"
+                                  style="color:red" title="Delete" class="fas fa-minus-square float-right"></i>
+                                <i *ngIf="session.id == comment.authorId" title="Edit" (click)="isModifyCom(comment.id)"
+                                  class="fas fa-pen-square float-right"></i>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col">
+                                <p class="font-weight-bold">{{translatemeArray(comment?.authorId)}}</p>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col">
+                                <p *ngIf="modifyComs[comment.id] != true">{{comment.content}}</p>
+                                <input class="input-sm" type="text" *ngIf="modifyComs[comment.id] == true"
+                                  [(ngModel)]=comment.content style="font-size: 0.9rem; width: 80%;" id="content"
+                                  placeholder="Write your comment">
+                              </div>
+                              <div class="row" *ngIf="modifyComs[comment.id] == true">
+                                <div class="col"><button (click)="modifyComment(comment)"
+                                    class="btn btn-sm btn-primary btn-block"> Save
+                                  </button></div>
+                                <div class="col"> <button (click)="isModifyCom(comment.id)"
+                                    class="btn btn-sm btn-primary btn-block"> Cancel
+                                  </button></div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col">
+                                <h6 class="card-subtitle suggestion mb-2 text-muted">
+                                  {{comment.updatedAt | date : 'long'}} </h6>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="suggestion.id == comment.suggestionid" class="dropdown-divider"></div>
+                        </div>
+                        <div class="">
+                          <form [formGroup]="comForm" (ngSubmit)="submitComment(suggestion?.id)">
+                            <textarea [(ngModel)]=textarea style="font-size: 0.9rem" id="content"
+                              formControlName="content" class="form-control"
+                              placeholder="Write your comment"></textarea>
+                            <div class="form-group">
+                              <button type="submit" class="btn btn-sm btn-primary btn-block"> Submit </button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
                     </div>
-
-                    <div *ngIf="showedComments[suggestion.id] == true" class="">
-                      <div class="alert-sm alert-dark">Comment 1</div>
-                      <input class="input-sm" type="text">
-                    </div>
-
                   </div>
-
                 </div>
               </div>
             </ng-scrollbar>

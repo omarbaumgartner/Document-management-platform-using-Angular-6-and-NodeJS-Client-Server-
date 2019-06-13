@@ -1,40 +1,80 @@
 <div class="container">
-  <p class="h5 text-dark">All Docs</p>
+  <div class="row">
+    <div class="col">
+      <p class="h2 text-dark">All Docs</p>
+    </div>
+  </div>
+  <div class="dropdown-divider"></div>
   <br>
-  <input type="text" [(ngModel)]="filterTerm">
-  <div class="w-75 p-3">
-    <div *ngFor="let doc of ( docs | fileFilter : filterTerm )" class="list-group-item"
-      style="width: 120%; font-size:larger;">
-      <div style="color:black; cursor:pointer;">
+  <div clas="row">
+    <div class="col">
 
-        <div (click)="navigateToDocument()"><span class="badge badge-dark">{{doc.id}}</span> &nbsp;
+      <div class="container">
+        <div class="row">
 
-          <span class="badge badge-info" (click)="viewDocument(doc)">{{ doc.filename }}</span></div>
-
-
-        <span class="badge badge-light float-right" (click)="navigateToProject(doc.projectid)">Project :
-          {{ translatemeArray2(doc.projectid) }}</span>
-
-
-        <br>
-        <span class="badge badge-warning"
-          (click)="navigateToUser(doc.authorid)">{{ translatemeArray(doc.authorid) }}</span>
-        <br>
-        <span class="badge badge-light">Emitted : {{ doc.emitted }}</span>
-        <br>
-        <span class="badge badge-light">Validated : {{ doc.validated }}</span>
-        <br>
-        <span class="badge badge-light">Published : {{ doc.published }}</span>
-
-        <br>
-        <div class="float-right">
-          <span class="badge badge-light">Created At : {{ doc.createdAt|slice:0:19 }}</span>
-          <br>
-          <span class="badge badge-light">Updated At : {{ doc.updatedAt|slice:0:19 }}</span>
+          <div class="col">
+            <input type="text" class="input" [(ngModel)]="filterTerm">
+          </div>
         </div>
         <br>
-        <button (click)="deleteDoc(doc)">Remove</button>
+        <div *ngIf="filenumber==0 " class="row">
+          <div class="col">
+            <div class="list-group-item">
+              <p class="h4">No files yet.</p>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="filenumber!=0 ">
+          <div class="col-8">
+            <div *ngFor="let doc of ( docs | fileFilter : filterTerm )" class="list-group-item"
+              style="width: 120%; font-size:larger;">
+              <div class="container" style="color:black; cursor:pointer;">
+                <div class="row">
+                  <div class="col">
+                    <div (click)="viewDocument(doc)"><span class="badge badge-dark">{{doc?.id}}</span> &nbsp;
+
+                      <span class="badge badge-info" (click)="viewDocument(doc)">{{ doc?.filename }}</span></div>
+                  </div>
+                  <div class="col">
+                    <div> <span class="badge badge-light float-right" (click)="navigateToProject(doc.projectid)">Project
+                        :
+                        {{ translatemeArray2(doc?.projectid) }}</span></div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col">
+                    <span class="badge badge-warning"
+                      (click)="navigateToUser(doc.authorid)">{{ translatemeArray(doc?.authorid) }}</span>
+                  </div>
+                  <div class="col">
+                    <div class="float-right">
+                      <span class="badge badge-light">Created At : {{ doc?.createdAt|slice:0:19 }}</span>
+                      <br>
+                      <span class="badge badge-light">Updated At : {{ doc?.updatedAt|slice:0:19 }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <span class="badge badge-light">Emitted : {{ doc?.emitted }}</span>
+                    <br>
+                    <span class="badge badge-light">Validated : {{ doc?.validated }}</span>
+                    <br>
+                    <span class="badge badge-light">Published : {{ doc?.published }}</span>
+                  </div>
+                  <div class="col"><br>
+                    <button (click)="deleteDoc(doc)" class="btn btn-danger float-right">Remove</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
 </div>

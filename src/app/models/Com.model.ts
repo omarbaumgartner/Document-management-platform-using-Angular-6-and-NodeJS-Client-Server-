@@ -1,8 +1,9 @@
 export class Com {
     id: number;
-    suggestionId: number;
+    suggestionid: number;
+    documentid: number;
     authorId: number;
-    content: Array<string>;
+    content: string;
     createdAt: string;
     updatedAt: string;
 }

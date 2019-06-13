@@ -5,6 +5,7 @@ import { Doc } from 'src/app/models/Doc.model';
 import { Tree } from '@angular/router/src/utils/tree';
 import { Sug } from 'src/app/models/Sug.model';
 import { Config } from 'src/app/configuration/conf';
+import { Com } from 'src/app/models/Com.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -54,6 +55,22 @@ export class DocsService {
     return this.http.delete<Sug>(this.apiURL + "db/sugs/" + id)
   }
 
+  // Comments 
+  getComments(id: number) {
+    return this.http.get<Com[]>(this.apiURL + "db/coms/" + id);
+  }
+
+  addComment(comment: Com) {
+    return this.http.post<Com>(this.apiURL + "db/coms", comment, httpOptions);
+  }
+
+  updateComment(comment: Com) {
+    return this.http.put(this.apiURL + "db/coms", comment, httpOptions)
+  }
+
+  deleteComment(id: number) {
+    return this.http.delete<Sug>(this.apiURL + "db/coms/" + id)
+  }
 
 
 }

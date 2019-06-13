@@ -24,14 +24,14 @@ export class FeedComponent implements OnInit {
   showUsers: boolean;
 
 
-  projectTitle = "Projects Overview"
+  projectTitle = "Projects regarding members"
   projectType = "BarChart";
   projectData = new Array<Array<string | number>>();
   projectColumns = ['', 'Members'];
   showProjects: boolean;
 
 
-  fileTitle = "Files Overview"
+  fileTitle = "Files regarding their status"
   fileType = "PieChart"
   fileData = new Array<Array<string | number>>();
 

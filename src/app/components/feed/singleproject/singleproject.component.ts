@@ -13,6 +13,8 @@ import { AdddocComponent } from '../../docs/adddoc/adddoc.component';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { UploadersComponent } from '../../docs/uploaders/uploaders.component';
 import { ContextMenuComponent } from 'ngx-contextmenu';
+import * as jspdf from 'jspdf';
+
 
 @Component({
   selector: 'app-singleproject',
@@ -128,7 +130,7 @@ export class SingleprojectComponent implements OnInit {
       },
         () => { },
         () => {
-          this.snackBar.open("Document has been updated", "Close", {
+          this.snackBar.open("Document name has been changed to " + document.filename, "Close", {
             duration: 3000,
             verticalPosition: "bottom",
           });
@@ -297,6 +299,25 @@ export class SingleprojectComponent implements OnInit {
 
   showMessage(message: any) {
     console.log(message);
+  }
+
+  exportAsPDF(event) {
+    let doc = new jspdf();
+    let docId = event.item;
+    let recentId = docId.versions[0];
+    for (let i = 0; i < docId.versions.length; i++) {
+      if (recentId < docId.versions[i]) {
+        recentId = docId.versions[i];
+      }
+    }
+    this.managerService.getDocumentById(recentId)
+      .subscribe((val) => {
+        var data = val.content;
+        doc.fromHTML(data, 15, 15, {
+          'width': 180, // max width of content on PDF
+        })
+        doc.save(event.item.filename)
+      })
   }
 
 }

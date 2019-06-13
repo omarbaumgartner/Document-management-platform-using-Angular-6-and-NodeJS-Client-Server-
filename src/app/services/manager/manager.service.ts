@@ -156,10 +156,21 @@ export class ManagerService {
     if (term != "") {
       this.restrictedSearchFor(term + "+" + id)
         .subscribe((val) => {
+          console.log(term);
+          console.log(id);
+          console.log(val);
           this.searchTerm = term;
-          this.resultnumber = val.length;
-          this.results = val;
-          this.test();
+          if (val.length != undefined && val.length > 0) {
+            this.results = val;
+            this.resultnumber = val.length;
+            this.test();
+          }
+          else {
+            console.log("is null")
+            this.results = [];
+            this.abracadabra = [];
+            this.resultnumber = 0;
+          }
           this.hasSearched = true;
           this.router.navigateByUrl('', { skipLocationChange: true }).then(() => this.router.navigate(["/wiki"]));
         })
@@ -175,6 +186,15 @@ export class ManagerService {
       .subscribe(
         projects => {
           this.observableProjects.next(projects);
+        }
+      )
+  }
+
+  reloadDocuments() {
+    this.getDocs()
+      .subscribe(
+        docs => {
+          this.observableDocs.next(docs);
         }
       )
   }

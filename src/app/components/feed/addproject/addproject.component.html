@@ -1,8 +1,6 @@
 <div class="alert alert-dark">
 
   <div class="container">
-    <i (click)="goBack()" style="font-size: 2.5rem;" class="far fa-arrow-alt-circle-left"></i>
-
     <form [formGroup]="projectForm" (ngSubmit)="submitProject()" style="width: 70%; margin: auto;"
       class="alert alert-light text-dark border-dark">
       <p class="font-weight-bold h5">Project Form</p>
@@ -66,6 +64,7 @@
 
     </form>
     <button class="btn btn-dark" (click)="goBack()">Back</button>
+
 
   </div>
 </div>

@@ -22,6 +22,7 @@ import { FileFilterPipe } from 'src/app/pipes/file-filter.pipe';
 export class FilemanagerComponent implements OnInit {
 
   docs: Doc[];
+  filenumber: number = 0;
   users: User[];
   subscription: any;
   projects: import("/home/omar/Desktop/WebClient V2/src/app/models/Project.model").Project[];
@@ -36,7 +37,7 @@ export class FilemanagerComponent implements OnInit {
     public dialog: MatDialog
   ) {
     this.userService.reloadUsers();
-    this.loadingService.isLoading();
+    //  this.loadingService.isLoading();
   }
 
   ngOnInit() {
@@ -57,7 +58,9 @@ export class FilemanagerComponent implements OnInit {
     return this.managerService.getDocs()
       .subscribe(
         docs => {
+          console.log(docs)
           this.docs = docs;
+          this.filenumber = this.docs.length;
           this.loadingService.isFinished();
         }
       );
@@ -73,7 +76,7 @@ export class FilemanagerComponent implements OnInit {
     }
     console.log(document.versions)
     console.log(recentId);
-    //this.router.navigate(['/docs/' + recentId]);
+    this.router.navigate(['/docs/' + recentId]);
 
   }
 
@@ -102,8 +105,8 @@ export class FilemanagerComponent implements OnInit {
     this.router.navigate(['/myprojects/' + id]);
 
   }
-  navigatoToDocument(id : number) {
-    this.router.navigate(['/docs/'])
+  navigatoToDocument(id: number) {
+    this.router.navigate(['/docs/' + id])
   }
 
 }

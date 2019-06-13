@@ -1,24 +1,29 @@
-<button (click)="test()">Test</button>
-<br>
+<!-- <button (click)="test()">Test</button>
+ --><br>
 <div class="container">
   <button class="btn btn-warning" routerLink="/users">Manage Users</button>
   <google-chart *ngIf="showUsers" [dynamicResize]="dynamicResize" [options]="myOptions" [title]="userTitle"
     [type]="userType" [data]="userData">
   </google-chart>
 </div>
-<div class="container">
-  <button class="btn btn-warning" routerLink="/users">Manage Projects</button>
-  <google-chart *ngIf="showProjects" [columnNames]="projectColumns" [dynamicResize]="dynamicResize"
-    [options]="myOptions" [title]="projectTitle" [type]="projectType" [data]="projectData">
-  </google-chart>
-</div>
 
 <div class="container">
-  <button class="btn btn-warning" routerLink="/filemanager">Manage Files</button>
-  <google-chart *ngIf="showFiles" [columnNames]="fileColumns" [dynamicResize]="dynamicResize" [options]="myOptions"
-    [title]="fileTitle" [type]="fileType" [data]="fileData">
-  </google-chart>
+  <div class="row">
+    <div class="col-6">
+      <button class="btn btn-warning" routerLink="/users">Manage Projects</button>
+      <google-chart *ngIf="showProjects" [columnNames]="projectColumns" [dynamicResize]="dynamicResize"
+        [options]="myOptions" [title]="projectTitle" [type]="projectType" [data]="projectData">
+      </google-chart>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-warning" routerLink="/filemanager">Manage Files</button>
+      <google-chart *ngIf="showFiles" [columnNames]="fileColumns" [dynamicResize]="dynamicResize" [options]="myOptions"
+        [title]="fileTitle" [type]="fileType" [data]="fileData">
+      </google-chart>
+    </div>
+  </div>
 </div>
+
 
 <!-- <div class="container bg-light">
   <div class="row">
