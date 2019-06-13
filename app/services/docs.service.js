@@ -80,7 +80,7 @@ async function createDoc(req, res) {
             else {
                 //console.log("this is a new doc")
                 Content.create({
-                    "content": "",
+                    "content": " ",
                     "documentid": DocVal.id,
 
                 }).then((ContentVal) => {
@@ -201,6 +201,39 @@ async function searchFor(keyword, res) {
 
 
 }
+
+/* // Search for a Doc by Keyword ( restrictred research)
+async function notrestrictedSearchFor(keyword, res) {
+    let i = 0;
+    let id;
+    let term;
+    while (keyword[i] != "+") {
+        i++;
+    }
+    term = keyword.substr(0, i);
+    id = keyword.slice(i + 1);
+
+    return Doc.findAll()
+        .then((val) => {
+            let documents = [];
+            let documentIds = [];
+            for (i = 0; i < val.length; i++) {
+                documents.push(val[i].dataValues);
+                documentIds.push(val[i].dataValues.id);
+            }
+            if (documentIds.length != 0) {
+                return sequelize.query("SELECT * from documents FULL OUTER JOIN contents ON documents.id = contents." + 'documentid' + " WHERE documents.filename ILIKE '%" + term + "%' AND documents.id IN (" + documentIds + ") OR contents.content ILIKE '%" + term + "%'");
+            }
+            else
+                return [false];
+        })
+} */
+
+
+
+
+
+
 // Search for a Doc by Keyword ( restrictred research)
 async function restrictedSearchFor(keyword, res) {
     let i = 0;

@@ -14,6 +14,8 @@ module.exports = {
     updateProject,
     removeProject
 }
+Doc.hasMany(Content);
+Content.belongsTo(Doc);
 
 // Create a project
 async function createProject(req, res) {
@@ -61,9 +63,12 @@ async function removeProject(id) {
     // Save to PostgreSQL database
     Project.destroy({ where: { id: id } })
         .then((result) => {
-            Doc.destroy({ where: { projectid: result.id } })
-        })
-        .then((result) => {
-            Content.destroy({ where: { documentid: id } });
+            Doc.destroy({
+                where: { projectid: id },
+                include: [{
+                    model: Content,
+                    as: 'contents'
+                }]
+            })
         })
 }

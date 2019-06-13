@@ -1,6 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Comment = sequelize.define('comment', {
-        suggestionId: {
+        suggestionid: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        documentid: {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
@@ -9,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         content: {
-            type: Sequelize.ARRAY(Sequelize.STRING)
+            type: Sequelize.STRING
         }
     });
 

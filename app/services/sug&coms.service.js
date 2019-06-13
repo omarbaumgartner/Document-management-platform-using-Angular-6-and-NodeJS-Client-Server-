@@ -9,7 +9,12 @@ module.exports = {
     getSugs,
     updateSug,
     deleteSug,
+    newCom,
+    getComs,
+    updateCom,
+    deleteCom,
 };
+
 
 async function newSug(req, res) {
     return Sug.create({
@@ -29,4 +34,30 @@ async function updateSug(req, res) {
 
 async function deleteSug(req, res) {
     Sug.destroy({ where: { id: req.params.id } })
+}
+
+async function newCom(req, res) {
+    console.log(req);
+    return Com.create({
+        "suggestionid": req.suggestionid,
+        "documentid": req.documentid,
+        "authorId": req.authorId,
+        "content": req.content,
+    })
+}
+
+async function getComs(req, res) {
+    return Com.findAll({
+        where: {
+            documentid: req.params.id
+        }
+    })
+}
+
+async function updateCom(req, res) {
+    Com.update({ content: req.body.content }, { where: { id: req.body.id } })
+}
+
+async function deleteCom(req, res) {
+    Com.destroy({ where: { id: req.params.id } })
 }

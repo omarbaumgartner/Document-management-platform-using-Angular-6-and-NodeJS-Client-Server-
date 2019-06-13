@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = require('./app/config/db.config.js');
 // force: true will drop the table if it already exists
 db.sequelize.sync({ force: false }).then(() => {
-  console.log('Drop and Resync with { force: false }');
+  // console.log('Drop and Resync with { force: false }');
   initial();
 });
 
@@ -83,7 +83,7 @@ app.use(errorHandler);
 // ---- Create a Server ----
 var server = app.listen(8080, function () {
   //192.168.1.9
-  let host = "192.168.1.61"
+  let host = process.argv[2];
   let port = server.address().port
 
   console.log("App listening at http://%s:%s", host, port);

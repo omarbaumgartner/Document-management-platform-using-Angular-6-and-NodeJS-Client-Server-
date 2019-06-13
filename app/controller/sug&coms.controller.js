@@ -43,3 +43,47 @@ exports.deleteSug = (req, res) => {
             res.status(500).json({ msg: "error", details: err });
         });
 };
+
+exports.getComs = (req, res) => {
+    sugscomsService.getComs(req, res)
+        .then(sug => {
+            res.json(sug)
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ msg: "error", details: err });
+        });
+};
+
+exports.newCom = (req, res) => {
+    sugscomsService.newCom(req.body, res)
+        .then(sug => {
+            res.json(sug)
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ msg: "error", details: err });
+        });
+};
+
+exports.updateCom = (req, res) => {
+    sugscomsService.updateCom(req, res)
+        .then(sug => {
+            res.json(sug)
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ msg: "error", details: err });
+        });
+};
+
+exports.deleteCom = (req, res) => {
+    sugscomsService.deleteCom(req, res)
+        .then(sug => {
+            res.json(sug)
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ msg: "error", details: err });
+        });
+};
